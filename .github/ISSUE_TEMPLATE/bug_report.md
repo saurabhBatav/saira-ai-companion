@@ -2,45 +2,47 @@
 name: 🐛 Bug Report
 about: Create a report to help us improve Saira
 title: '[BUG] '
-labels: ['bug']
+labels: ['bug', 'needs-triage']
+assignees: ''
 ---
 
 ## 🐛 Bug Description
-Clear description of the bug.
+A clear and concise description of what the bug is.
 
 ## 🔄 Steps to Reproduce
-1. Step 1
-2. Step 2
-3. See error
+1. Go to '...'
+2. Click on '....'
+3. Scroll down to '....'
+4. See error
 
 ## ✅ Expected Behavior
-What should happen.
+A clear and concise description of what you expected to happen.
 
 ## 📱 Environment
-- OS: [e.g. macOS 13.0]
-- Version: [e.g. 0.1.0]
-- Device: [e.g. MacBook Pro M2]
+- **OS**: [e.g. macOS 13.0, iOS 16.1]
+- **App Version**: [e.g. 0.1.0]
+- **Device**: [e.g. MacBook Pro M2, iPhone 14]
+- **Browser** (if applicable): [e.g. Chrome 115, Safari 16]
+
+## 📸 Screenshots
+If applicable, add screenshots to help explain your problem.
 
 ## 📝 Additional Context
-Any other context about the problem.
-EOL
+Add any other context about the problem here.
 
-    cat > .github/ISSUE_TEMPLATE/feature_request.md << 'EOL'
----
-name: 💡 Feature Request
-about: Suggest an idea for Saira
-title: '[FEATURE] '
-labels: ['enhancement']
----
+## 🔍 Logs
+If applicable, paste any relevant log output here.
 
-## 💡 Feature Description
-Clear description of the feature.
+```
+[Paste logs here]
+```
 
-## 🎯 Problem Statement
-What problem does this solve?
-
-## 💭 Proposed Solution
-Describe your solution.
-
-## 📝 Additional Context
-Any other context or screenshots.
+## 🏷️ Component
+Which component is affected?
+- [ ] Voice Processing
+- [ ] Emotion Detection
+- [ ] Memory System
+- [ ] UI/UX
+- [ ] Mobile App
+- [ ] Speaker Interface
+- [ ] Other: ___________
