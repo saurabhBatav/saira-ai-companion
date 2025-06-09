@@ -1,0 +1,37 @@
+site_name: Saira AI Companion Docs
+site_url: https://saurabhbatav.github.io/saira-ai-companion/
+repo_url: https://github.com/saurabhBatav/saira-ai-companion
+repo_name: saurabhBatav/saira-ai-companion
+theme:
+  name: material
+  features:
+    - navigation.tabs
+    - navigation.instant
+    - content.code.annotate
+    - search.suggest
+    - search.highlight
+nav:
+  - Home: index.md
+  - Architecture: architecture.md
+  - API Reference: api/README.md
+  - Development Guide: development.md
+  - Deployment: deployment.md
+  - Contributing: ../CONTRIBUTING.md
+  - Changelog: changelog.md
+markdown_extensions:
+  - admonition
+  - codehilite
+  - footnotes
+  - toc:
+      permalink: true
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          setup_commands:
+            - import sys; sys.path.append('src')
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/saurabhBatav/saira-ai-companion
