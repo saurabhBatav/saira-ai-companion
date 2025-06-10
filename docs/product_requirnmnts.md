@@ -252,6 +252,139 @@ Positioned between traditional AI assistants (Siri, Alexa) and therapy/coaching 
 - **Context Switching**: Smooth transitions between topics and personality modes
 - **Multi-Modal**: Seamless blend of voice, text, and visual interactions
 
+### 5.3 Detailed UI Specifications for Wireframing
+
+#### 5.3.1 Mac Application Layout
+**Main Interface Structure:**
+- **Header Bar** (60px height): Saira avatar (40px circle), personality mode selector, settings icon
+- **Central Chat Area** (70% of window): Conversation bubbles with timestamps, emotional indicators
+- **Input Area** (100px height): Microphone button (primary), text input field, send button
+- **Sidebar** (300px width, collapsible): Memory recalls, daily summary, mood tracker
+- **Status Indicators**: Listening (pulsing blue), Processing (spinning), Speaking (wave animation)
+
+**Conversation Bubble Design:**
+- User messages: Right-aligned, blue (#007AFF), rounded corners (12px)
+- Saira responses: Left-aligned, adaptive color based on personality mode, avatar thumbnail
+- Emotion indicators: Small colored dots (red=angry, blue=sad, green=happy, yellow=excited)
+- Timestamp: 12px gray text below each bubble
+
+**Avatar Specifications:**
+- **Size**: 40px in header, 24px in chat bubbles
+- **Expression States**: Happy, sad, thinking, speaking, listening (5 distinct facial expressions)
+- **Animation**: Subtle breathing effect, mouth movement during speech
+- **Personality Modes**: Different color schemes and styling per mode
+
+#### 5.3.2 iPhone App Layout
+**Navigation Structure:**
+- **Tab Bar** (80px height): Chat, Journal, Memories, Settings (4 main tabs)
+- **Header** (100px height): Avatar, personality toggle, voice/text mode switch
+- **Content Area**: Adaptive based on current tab
+
+**Chat Tab:**
+- **Conversation View**: Full-screen chat with floating voice button
+- **Voice Button**: 80px floating action button, center bottom, with waveform animation
+- **Quick Actions**: Emotion check-in, daily summary, memory search (horizontal scroll)
+
+**Journal Tab:**
+- **Entry List**: Card-based layout with date, mood indicator, preview text
+- **Entry Editor**: Full-screen with mood selector, voice-to-text, AI suggestions
+- **Mood Timeline**: Visual graph showing emotional patterns over time
+
+**Memories Tab:**
+- **Search Bar**: Natural language search ("What did I say about work?")
+- **Memory Cards**: Date, context, related emotions, quick actions
+- **Filters**: By date, emotion, personality mode, topics
+
+#### 5.3.3 Smart Speaker Interface (Visual Elements)
+**LED Ring Patterns:**
+- **Idle**: Soft breathing white light
+- **Listening**: Blue wave pattern
+- **Processing**: Yellow spinning pattern  
+- **Speaking**: Green wave synchronized with speech
+- **Different Emotions**: Color shifts based on detected emotion
+
+**Physical Controls:**
+- **Mute Button**: Top button with LED indicator
+- **Volume Ring**: Touch-sensitive outer ring
+- **Personality Switch**: Physical toggle or voice command
+
+#### 5.3.4 Emotional UI Theming System
+**Color Palettes by Personality Mode:**
+
+**Mom Mode:**
+- Primary: Warm orange (#FF8C42)
+- Secondary: Soft pink (#FFB3BA)
+- Background: Cream (#FFF8E7)
+- Text: Deep brown (#5D4037)
+
+**Girlfriend Mode:**
+- Primary: Romantic red (#E91E63)
+- Secondary: Soft purple (#CE93D8)
+- Background: Light rose (#FCE4EC)
+- Text: Dark purple (#4A148C)
+
+**Best Friend Mode:**
+- Primary: Friendly blue (#2196F3)
+- Secondary: Bright green (#4CAF50)
+- Background: Light blue (#E3F2FD)
+- Text: Dark blue (#0D47A1)
+
+**Coach Mode:**
+- Primary: Energetic orange (#FF5722)
+- Secondary: Strong red (#F44336)
+- Background: Light orange (#FFF3E0)
+- Text: Dark orange (#BF360C)
+
+#### 5.3.5 Component Specifications
+
+**Buttons:**
+- **Primary Action**: 48px height, rounded corners (24px), personality color
+- **Secondary Action**: 40px height, outline style, gray border
+- **Voice Button**: 80px circle, floating, with microphone icon and pulse animation
+- **Disabled State**: 50% opacity, no hover effects
+
+**Form Elements:**
+- **Text Input**: 48px height, rounded corners (8px), border on focus
+- **Dropdown**: Native system style, personality color accent
+- **Switches**: iOS-style toggle switches, personality color when active
+- **Sliders**: Personality color track, white handle with shadow
+
+**Cards:**
+- **Memory Cards**: 16px padding, 8px border radius, subtle shadow, white background
+- **Journal Entries**: 20px padding, left border in mood color, gray background
+- **Summary Cards**: Gradient background based on overall mood, white text
+
+**Navigation:**
+- **Tab Bar**: iOS style with icons, active tab in personality color
+- **Navigation Bar**: Clean, minimal, back button and title
+- **Breadcrumbs**: For deep navigation, shows current path
+
+#### 5.3.6 Responsive Design Breakpoints
+- **Mobile**: 320px - 768px (iPhone layouts)
+- **Tablet**: 768px - 1024px (iPad layouts, if supported)
+- **Desktop**: 1024px+ (Mac app window sizing)
+- **Minimum Window Size**: 800x600px for Mac app
+
+#### 5.3.7 Loading and Error States
+**Loading States:**
+- **Initial Load**: Skeleton screens with personality colors
+- **Voice Processing**: Animated waveform with processing message
+- **Memory Search**: Animated search icon with "Thinking..." text
+- **Sync Status**: Small indicator showing sync progress
+
+**Error States:**
+- **Network Error**: Friendly message with retry button
+- **Voice Recognition Failed**: "I didn't catch that" with retry option
+- **Memory Not Found**: "I don't remember that" with search suggestions
+- **System Error**: Graceful degradation with manual alternatives
+
+#### 5.3.8 Accessibility Specifications
+- **Color Contrast**: WCAG AA compliance (4.5:1 ratio minimum)
+- **Font Sizes**: 16px minimum, scalable up to 24px
+- **Touch Targets**: 44px minimum for all interactive elements
+- **Screen Reader**: Semantic HTML, proper ARIA labels
+- **Keyboard Navigation**: Tab order, focus indicators, keyboard shortcuts
+
 ### 5.3 Accessibility Requirements
 - **Voice Control**: Complete functionality available through voice
 - **Visual Indicators**: Alternative feedback for hearing impaired users
@@ -448,11 +581,124 @@ Positioned between traditional AI assistants (Siri, Alexa) and therapy/coaching 
 - **Usage Patterns**: Users prefer voice in private settings, text in public
 - **Feature Requests**: Memory persistence across devices, proactive emotional support
 
-### 11.3 Technical Specifications
-- **Minimum System Requirements**: macOS 12+, iOS 15+, 4GB RAM
-- **Recommended Hardware**: M1 Mac or newer, iPhone 12 or newer
-- **Network Requirements**: Broadband for initial setup, low bandwidth for sync
-- **Storage Requirements**: 2GB initial, 1GB per year of conversation data
+### 11.4 Wireframing Specifications
+
+#### 11.4.1 Screen Flow Diagrams
+**Mac App User Flows:**
+1. **Onboarding Flow**: Welcome → Personality Setup → Voice Calibration → Privacy Settings → First Conversation
+2. **Daily Usage Flow**: Launch → Quick Greeting → Conversation → Memory Creation → Session End
+3. **Memory Recall Flow**: Memory Search → Results Display → Conversation Context → Related Memories
+4. **Settings Flow**: Main Settings → Personality Modes → Privacy Controls → Voice Settings → Sync Status
+
+**iPhone App User Flows:**
+1. **First Launch**: Splash → Permissions → Account Setup → Sync with Mac → Tutorial
+2. **Daily Check-in**: Notification → Open App → Mood Selection → Voice/Text Response → Summary
+3. **Journal Entry**: Journal Tab → New Entry → Mood Selector → Voice Input → AI Suggestions → Save
+4. **Quick Conversation**: Voice Button Hold → Speak → Response → Follow-up Options
+
+#### 11.4.2 Key Screen Specifications
+
+**Mac App - Main Chat Screen:**
+```
+┌─────────────────────────────────────────────────────────────────┐
+│ [Avatar] Saira - Best Friend Mode          [Settings] [Close]   │ 60px
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  Hey! How are you feeling today? 😊                    10:30 AM │ 
+│                                                                 │
+│                               I'm a bit stressed about work 😔  │
+│                                                        10:31 AM │
+│                                                                 │
+│  I understand. Want to talk about what's                        │
+│  causing the stress? I'm here to listen 💙         10:31 AM     │
+│                                                                 │
+│                     [Mood: Anxious] [Related Memory: Work]      │
+├─────────────────────────────────────────────────────────────────┤
+│ [🎤] Type a message...                              [Send]      │ 100px
+└─────────────────────────────────────────────────────────────────┘
+```
+
+**iPhone App - Chat Interface:**
+```
+┌─────────────────────┐
+│ ◀ Saira    Mom Mode │ 60px
+├─────────────────────┤
+│                     │
+│ Good morning        │
+│ sweetie! How did    │
+│ you sleep? 🌅       │
+│           9:15 AM   │
+│                     │
+│       Pretty well!  │
+│       Thanks mom 💕 │
+│           9:16 AM   │
+│                     │
+│ That makes me so    │
+│ happy to hear! 😊   │
+│           9:16 AM   │
+│                     │
+│                     │
+│                     │
+├─────────────────────┤
+│      [🎤]           │ 80px
+│   Hold to speak     │
+└─────────────────────┘
+```
+
+**iPhone App - Journal Entry:**
+```
+┌─────────────────────┐
+│ ◀ New Journal Entry │
+├─────────────────────┤
+│ How are you feeling?│
+│ 😊 😔 😠 😰 😴        │
+│                     │
+│ ┌─────────────────┐ │
+│ │ Today I had a   │ │
+│ │ really great    │ │
+│ │ meeting with... │ │
+│ │                 │ │
+│ │ [🎤 Voice input]│  │
+│ └─────────────────┘ │
+│                     │
+│ AI Suggestions:     │
+│ • Reflect on what   │
+│   made it great     │
+│ • Set goals for     │
+│   tomorrow          │
+├─────────────────────┤
+│ [Cancel]    [Save]  │
+└─────────────────────┘
+```
+
+#### 11.4.3 Component Library for Wireframing
+**Standard Components:**
+- Navigation bars with specific heights and elements
+- Button styles with exact dimensions and states
+- Input fields with validation states
+- Card layouts with spacing specifications
+- Avatar components with expression variants
+- Loading states and animations
+- Modal dialogs and overlays
+
+**Custom Components:**
+- Personality mode selector
+- Emotion indicator badges
+- Voice waveform visualizer
+- Memory relationship graphs
+- Mood timeline charts
+- Conversation bubble variants
+
+#### 11.4.4 Design System Export
+**For AI Wireframing Tools:**
+- Component dimensions in pixels
+- Color hex codes for all themes
+- Typography scale (font sizes, weights)
+- Spacing system (8px grid)
+- Border radius values
+- Shadow specifications
+- Animation timing curves
+- Icon library requirements
 
 ---
 
