@@ -224,6 +224,10 @@ The local database will be SQLite, encrypted with SQLCipher. All tables will inc
     * `emotion_recording_consent` (INTEGER, BOOLEAN, NOT NULL) - Consent for emotion data recording.
     * `memory_recording_consent` (INTEGER, BOOLEAN, NOT NULL) - Consent for memory recording.
     * `journaling_enabled` (INTEGER, BOOLEAN, DEFAULT 1)
+    * `last_active_status` (TEXT, NULLABLE) - e.g., 'online', 'offline', 'typing'
+    * `last_active_device` (TEXT, NULLABLE) - Identifier for the last active device
+    * `analytics_opt_in` (INTEGER, BOOLEAN, DEFAULT 0) - User consent for privacy-respecting analytics
+
 * **Conversations Table:**
     * `id` (TEXT, PRIMARY KEY, UUID)
     * `user_id` (TEXT, FOREIGN KEY to Users.id, NOT NULL)
@@ -291,7 +295,7 @@ The local database will be SQLite, encrypted with SQLCipher. All tables will inc
     * `user_id` (TEXT, FOREIGN KEY to Users.id, NULLABLE) - NULL for system-defined profiles.
     * `name` (TEXT, NOT NULL)
     * `description` (TEXT, NULLABLE)
-    * `llm_prompt_template` (TEXT, NOT NULL) - Core prompt for LLM to adopt personality.
+        `llm_prompt_template` (TEXT, NOT NULL) - Core prompt for LLM to adopt personality.
     * `tone_preferences` (TEXT, NULLABLE) - JSON object for specific tone adjustments.
     * `memory_visibility_rules` (TEXT, NULLABLE) - JSON object for rules on what memories are accessible.
     * `is_custom` (INTEGER, BOOLEAN, DEFAULT 0) - Indicates if user-created.
@@ -327,17 +331,37 @@ The local database will be SQLite, encrypted with SQLCipher. All tables will inc
     * `created_at` (TIMESTAMP, NOT NULL, DEFAULT CURRENT_TIMESTAMP)
     * `updated_at` (TIMESTAMP, NOT NULL, DEFAULT CURRENT_TIMESTAMP)
     * `completed_at` (TIMESTAMP, NULLABLE)
+* **Feedback Table (NEW):**
+    * `feedback_id` (INTEGER, PRIMARY KEY)
+    * `user_id` (TEXT, FOREIGN KEY to `Users.id`, NOT NULL)
+    * `message_id` (TEXT, FOREIGN KEY to `Messages.id`, NULLABLE) - For specific message feedback
+    * `feedback_type` (TEXT, NOT NULL) - e.g., 'emotion_correction', 'response_quality', 'general'
+    * `is_helpful` (INTEGER, BOOLEAN, NULLABLE) - true/false for thumbs up/down
+    * `corrected_emotion_category` (TEXT, NULLABLE) - e.g., 'happy' if Saira misidentified
+    * `user_comment` (TEXT, NULLABLE) - Detailed text feedback
+    * `created_at` (TIMESTAMP, NOT NULL, DEFAULT CURRENT_TIMESTAMP)
+* **UsageAnalyticsEvents Table (NEW):**
+    * `event_id` (INTEGER, PRIMARY KEY)
+    * `client_id` (TEXT, NOT NULL) - Anonymous unique client ID, not linked to `user_id`
+    * `event_name` (TEXT, NOT NULL) - e.g., 'feature_accessed', 'session_duration', 'performance_metric'
+    * `event_data` (TEXT, NULLABLE) - JSON string for event-specific metrics, e.g., `{"feature": "Journaling"}`
+    * `event_timestamp` (TIMESTAMP, NOT NULL, DEFAULT CURRENT_TIMESTAMP)
+    * `app_version` (TEXT, NULLABLE)
+    * `os_version` (TEXT, NULLABLE)
+    * `device_type` (TEXT, NULLABLE) - e.g., 'mac', 'iphone'
 
 **Indexing Strategy:**
 
 * Indexes on foreign keys (`user_id`, `conversation_id`, `personality_profile_id`, `nudge_preference_id`).
-* Indexes on `timestamp` for time-series data (Conversations, Messages, JournalEntries, NudgeHistory, Tasks).
+* Indexes on `timestamp` for time-series data (Conversations, Messages, JournalEntries, NudgeHistory, Tasks, Feedback, UsageAnalyticsEvents).
 * Unique index on `MoodSummaries.date` per `user_id`.
 * `sqlite-vec` virtual table for `Memories.embedding` for efficient vector search [[16, 17], S\_R147, S\_R153].
 * Indexes on `name` for PersonalityProfiles for quick lookup.
 * Index on `Tasks.user_id` and `Tasks.status` for efficient task retrieval.
+* Index on `Feedback.user_id` and `Feedback.message_id`.
+* Index on `UsageAnalyticsEvents.client_id` and `UsageAnalyticsEvents.event_name`.
 
-**Foreign Key Relationships:** Enforce ON DELETE CASCADE for Messages to Conversations, Goals, JournalEntries, MoodSummaries, NudgePreferences, NudgeHistory, Tasks to Users.
+**Foreign Key Relationships:** Enforce ON DELETE CASCADE for Messages to Conversations, Goals, JournalEntries, MoodSummaries, NudgePreferences, NudgeHistory, Tasks, Feedback to Users.
 
 **Database Migration/Versioning:** Use a lightweight schema migration tool (e.g., a custom Node.js script) to manage database schema changes. Each migration will be versioned and applied sequentially on app launch.
 
@@ -415,6 +439,25 @@ These are TypeScript interfaces and classes that define the communication contra
     * `POST /ai/ser/detect_file`: Detect emotion from an audio file.
         * Request: `{ filePath: string }`
         * Response: `{ arousal: number, valence: number, category: string }`
+    * `GET /ai/ser/mood_summary` (NEW): Provides an aggregated emotional mood summary over a configurable time window (e.g., last 5 minutes) based on recent `Messages` entries.
+        * Endpoint:** `GET /ai/ser/mood_summary?minutes=5` (default 5 minutes)
+        * Parameters:** `minutes` (optional, integer): Duration in minutes for aggregation.
+        * Response:**
+            ```json
+            {
+                "overall_mood": "sad", // Dominant emotion category over the period
+                "mood_intensity": 0.7, // Average arousal/valence intensity
+                "mood_breakdown": {
+                    "happy": 0.2,
+                    "sad": 0.5,
+                    "neutral": 0.2,
+                    "angry": 0.1
+                }, // Distribution of emotion categories
+                "start_timestamp": "ISO_DATE_STRING",
+                "end_timestamp": "ISO_DATE_STRING"
+            }
+            ```
+        * Backend Logic: Query `Messages Table`, filter by timestamp, aggregate `emotion_category`, `emotion_arousal`, `emotion_valence` to derive `overall_mood` and `mood_intensity`.
     * `POST /ai/embeddings/generate`: Generate text embedding.
         * Request: `{ text: string }`
         * Response: `{ embedding: number[] }`
@@ -445,31 +488,102 @@ These are TypeScript interfaces and classes that define the communication contra
     * `POST /rag/ingest_document`: Initiates document ingestion.
         * Request: `{ userId: string, filePath: string, autoIngest: boolean }`
         * Response: `{ success: boolean, documentId: string }`
-    * **POST /tasks/create (NEW - Handled by `task_manager.ts`):**
+    * `POST /tasks/create` (NEW - Handled by `task_manager.ts`):
         * Request: `{ userId: string, taskType: TaskType, taskData: any }`
         * Response: `{ taskId: string, status: 'pending' }` (Immediate response)
-    * **GET /tasks/:taskId/status (NEW - Handled by `task_manager.ts`):**
+    * `GET /tasks/:taskId/status` (NEW - Handled by `task_manager.ts`):
         * Request: `None`
         * Response: `{ status: TaskStatus, result?: any, error?: string }`
-    * **GET /tasks/:taskId/result (NEW - Optional, Handled by `task_manager.ts`):**
+    * `GET /tasks/:taskId/result` (NEW - Optional, Handled by `task_manager.ts`):
         * Request: `None`
         * Response: `{ result: any }`
+    * `POST /feedback/submit` (NEW): Allows users to submit feedback on Saira's performance, particularly for emotional accuracy or response quality.
+        * Endpoint: `POST /feedback/submit`
+        * Request Body:
+            ```json
+            {
+                "message_id": "msg_123", // Optional: The ID of the message being reviewed
+                "feedback_type": "emotion_correction",
+                "is_helpful": false, // Optional: true/false for thumbs up/down
+                "corrected_emotion_category": "sad", // Optional: User's correction for emotion
+                "user_comment": "Saira thought I was angry, but I was just frustrated." // Optional: User's text comment
+            }
+            ```
+        * Response: `200 OK` or `400 Bad Request` with error details.
+        * Backend Logic: Validate input, insert data into `Feedback Table`.
+    * `POST /analytics/log_event` (NEW):Receives anonymized usage events from the client, only if the user has opted in.
+        * Endpoint: `POST /analytics/log_event`
+        * Request Body:
+            ```json
+            {
+                "event_name": "DeepTalk_Session_Ended",
+                "event_data": {
+                    "duration_seconds": 360,
+                    "message_count": 25,
+                    "emotion_shift_score": 0.7
+                },
+                "client_id": "anon_client_12345", // Anonymous, non-PII ID
+                "app_version": "1.0.0",
+                "os_version": "macOS_14.5",
+                "device_type": "mac"
+            }
+            ```
+        * Response: `200 OK` (no content).
+        * Backend Logic: Check `analytics_opt_in` status for the `client_id` (if identifiable, otherwise rely on client-side opt-in check). Sanitize `event_data` to ensure no PII is included. Insert into `UsageAnalyticsEvents Table`. This endpoint must be distinct and isolated from the main data sync and user data pathways.
 
 * **WebSocket Endpoints (for real-time streaming on `ai_inference_server.ts` and `task_manager.ts`):**
 
     * `/ws/audio_stream`: Bidirectional audio streaming for ASR, SER, and TTS.
         * Client sends raw audio chunks (e.g., PCM ArrayBuffer).
         * Server sends back real-time transcription updates, emotion data, and TTS audio chunks.
+        * Example extended payload from Server to Client:
+            ```json
+            {
+                "type": "audio_analysis",
+                "timestamp": "ISO_DATE_STRING",
+                "transcript_partial": "...",
+                "emotion_arousal": 0.8,
+                "emotion_valence": -0.3,
+                "emotion_category": "angry"
+            }
+            ```
     * `/ws/wake_word`: For continuous wake word detection.
         * Client streams raw audio.
         * Server sends `wakeWordDetected` event.
-    * **/ws/task\_updates (NEW - Handled by `task_manager.ts`):**
-        * **Purpose:** Provides real-time updates on task status.
+    * `/ws/task_updates (NEW - Handled by `task_manager.ts`):
+        * Purpose:** Provides real-time updates on task status.
         * Server sends:
             * `{ taskId: string, status: 'created', timestamp: number }`
             * `{ taskId: string, status: 'in-progress', timestamp: number, progress?: number }`
             * `{ taskId: string, status: 'completed', timestamp: number, result: any }`
             * `{ taskId: string, status: 'failed', timestamp: number, error: string }`
+    * **`/ws/device_context (NEW):`**
+        * **Description:** A persistent WebSocket connection for real-time exchange of critical, transient device context data (e.g., current active conversation ID, user's real-time emotional state, active personality mode, "typing" status).
+        * **Client (Device A) to Server Messages:**
+            ```json
+            // When user starts interacting
+            { "type": "status_update", "status": "active", "conversation_id": "conv_abc", "device_type": "mac" }
+            // When emotion changes significantly
+            { "type": "emotion_update", "emotion_category": "happy", "arousal": 0.7, "valence": 0.6 }
+            // When user is typing/speaking
+            { "type": "typing_status", "is_typing": true, "conversation_id": "conv_xyz" }
+            ```
+        * **Server to Client (Device B) Messages:**
+            * Server broadcasts relevant updates to other active devices of the same user.
+            * Example message:
+                ```json
+                {
+                    "type": "context_sync",
+                    "source_device_id": "device_abc",
+                    "data": {
+                        "active_conversation_id": "conv_abc",
+                        "current_mood": "happy",
+                        "active_personality_id": "mom_personality",
+                        "last_spoken_text_snippet": "Hey Saira, how are you?"
+                    }
+                }
+                ```
+        * **Backend Logic:** Maintain a map of active user connections and their device IDs. On receiving a context update from one device, update the user's ephemeral state and broadcast to other connected devices of that user.
 
 #### Node.js Backend (Internal APIs using C++ Native Addons and Python `child_process`):
 
@@ -508,90 +622,88 @@ These are TypeScript interfaces and classes that define the communication contra
 **Error Handling:** Standard JavaScript Error objects for Node.js services. HTTP endpoints will use appropriate status codes (e.g., 400 for bad requests, 500 for internal errors). WebSocket errors will be communicated via specific error messages. C++ native addon errors will be propagated as JavaScript errors. The `TaskManager` will also record `error_message` in the `Tasks` table for failed tasks and communicate them via WebSocket.
 
 4.  **Frontend Architecture (React Native for macOS with TypeScript)**
-    *   **Component Hierarchy:**
-        *   `App.tsx` (Root Component)
-            *   `OnboardingScreen.tsx` (Conditional on `onboarding_completed` flag)
-            *   `AppNavigator.tsx` (Handles main tab navigation)
-                *   `ConversationScreen.tsx` (Chat interface)
-                    *   `MessageBubble.tsx`
-                    *   `VoiceInputIndicator.tsx`
-                *   `JournalingScreen.tsx` (Daily Check-ins, Journal Entries)
-                    *   `MoodSummaryCard.tsx`
-                    *   `JournalEntryList.tsx`
-                    *   `JournalEntryDetailView.tsx`
-                *   `DeepTalkScreen.tsx` (Specialized conversation mode)
-                *   `ProfileSettingsScreen.tsx` (User settings, privacy, personality)
-                    *   `PersonalitySelectionView.tsx`
-                    *   `PrivacyDashboardView.tsx`
-                    *   `ModelManagementView.tsx`
-                *   `SharedComponents/` (e.g., `CustomButton.tsx`, `LoadingIndicator.tsx`, `AlertView.tsx`)
-    *   **Reusable Component Library:** Develop a consistent set of React Native components (Views, Text, Buttons, etc.) to ensure a cohesive UI/UX. Use TypeScript for strict type checking and better developer experience.
-    *   **State Management:**
-        *   `useState` and `useEffect` hooks for local component state.
-        *   `useContext` or a library like `Zustand`/`Jotai` for global application state (e.g., user profile, active conversation, AI service status) to avoid prop drilling.
-        *   `React Query` or `SWR` for data fetching and caching from the local Node.js backend.
-    *   **Routing and Navigation:**
-        *   `React Navigation` library for tab-based navigation and stack navigation within tabs.[3]
-        *   Programmatic navigation for onboarding flow and specific actions (e.g., opening Deep Talk from a nudge).
-    *   **Responsive Design:** Utilize React Native's `Flexbox` for layout and `Dimensions` API for adapting to screen size changes. Consider `Platform.OS === 'macos'` for macOS-specific UI adjustments.
+    * **Component Hierarchy:**
+        * `App.tsx` (Root Component)
+            * `OnboardingScreen.tsx` (Conditional on `onboarding_completed` flag)
+            * `AppNavigator.tsx` (Handles main tab navigation)
+                * `ConversationScreen.tsx` (Chat interface)
+                    * `MessageBubble.tsx`
+                    * `VoiceInputIndicator.tsx`
+                * `JournalingScreen.tsx` (Daily Check-ins, Journal Entries)
+                    * `MoodSummaryCard.tsx`
+                    * `JournalEntryList.tsx`
+                    * `JournalEntryDetailView.tsx`
+                * `DeepTalkScreen.tsx` (Specialized conversation mode)
+                * `ProfileSettingsScreen.tsx` (User settings, privacy, personality)
+                    * `PersonalitySelectionView.tsx`
+                    * `PrivacyDashboardView.tsx`
+                    * `ModelManagementView.tsx`
+                * `SharedComponents/` (e.g., `CustomButton.tsx`, `LoadingIndicator.tsx`, `AlertView.tsx`)
+    * **Reusable Component Library:** Develop a consistent set of React Native components (Views, Text, Buttons, etc.) to ensure a cohesive UI/UX. Use TypeScript for strict type checking and better developer experience.
+    * **State Management:**
+        * `useState` and `useEffect` hooks for local component state.
+        * `useContext` or a library like `Zustand`/`Jotai` for global application state (e.g., user profile, active conversation, AI service status) to avoid prop drilling.
+        * `React Query` or `SWR` for data fetching and caching from the local Node.js backend.
+    * **Routing and Navigation:**
+        * `React Navigation` library for tab-based navigation and stack navigation within tabs.[3]
+        * Programmatic navigation for onboarding flow and specific actions (e.g., opening Deep Talk from a nudge).
+    * **Responsive Design:** Utilize React Native's `Flexbox` for layout and `Dimensions` API for adapting to screen size changes. Consider `Platform.OS === 'macos'` for macOS-specific UI adjustments.
 
 5.  **Detailed CRUD Operations**
 
-    *   **User (CRUD via `UserManager` in Frontend, interacts with `data_manager.ts` in Backend)**
-        *   **Create:** `createUser(name: string, initialPreferences: UserPreferencesDTO)`
-            *   **Validation:** `name` not empty, `initialPreferences` valid.
-            *   **Required Fields:** `name`, `gdpr_ccpa_consent`, `emotion_recording_consent`, `memory_recording_consent`.
-            *   **Flow:** Onboarding UI collects data -> `UserManager.createUser` calls `IPCService` -> `data_manager.ts` receives request -> `data_manager.ts` uses `sqlite_vec_addon` to insert into `Users` table.
-        *   **Read:** `getUser(id: string)`, `getPrivacySettings(userId: string)`
-            *   **Filtering:** By `id`.
-            *   **Pagination/Sorting:** Not applicable for single user retrieval.
-            *   **Flow:** Profile Settings UI requests user data -> `UserManager.getUser` calls `IPCService` -> `data_manager.ts` queries `Users` table.
-        *   **Update:** `updateUser(id: string, updates: UserUpdateDTO)`, `updatePrivacySettings(userId: string, settings: PrivacySettingsDTO)`
-            *   **Partial Updates:** `UserUpdateDTO` allows updating specific fields (e.g., `preferred_tone_style`, `sync_enabled`).
-            *   **Validation:** Ensure updates are valid (e.g., `sync_frequency` is a valid enum value).
-            *   **Flow:** Profile Settings UI modifies data -> `UserManager.updateUser` calls `IPCService` -> `data_manager.ts` updates `Users` table.
-        *   **Delete:** `deleteUser(id: string)`
-            *   **Soft Delete:** Not applicable for primary user.
-            *   **Hard Delete:** Full deletion of user and all associated data (conversations, memories, journals, etc.) from the local database.
-            *   **Flow:** Privacy Dashboard UI initiates deletion (with confirmation) -> `UserManager.deleteUser` calls `IPCService` -> `data_manager.ts` deletes from `Users` table and cascades deletes.
-
-    *   **Conversation (CRUD via `ConversationManager` in Frontend, interacts with `data_manager.ts` in Backend)**
-        *   **Create:** `startConversation(userId: string, personalityId: string)`
-            *   **Validation:** `userId` and `personalityId` must exist.
-            *   **Required Fields:** `user_id`, `start_time`, `personality_profile_id`.
-            *   **Flow:** User initiates new conversation -> `ConversationManager.startConversation` calls `IPCService` -> `data_manager.ts` inserts into `Conversations`.
-        *   **Read:** `getConversation(id: string)`, `getConversations(userId: string, pagination: PaginationDTO)`
-            *   **Filtering:** By `id` or `user_id`.
-            *   **Pagination:** `offset`, `limit` for conversation list.
-            *   **Sorting:** By `start_time` (descending).
-            *   **Flow:** Conversation History UI loads list -> `ConversationManager.getConversations` calls `IPCService` -> `data_manager.ts` queries `Conversations`.
-        *   **Update:** `updateConversationTitle(id: string, title: string)`, `endConversation(id: string)`
-            *   **Partial Updates:** Update title, set `end_time`.
-            *   **Validation:** `title` not empty.
-            *   **Flow:** User edits title or ends conversation -> `ConversationManager.updateConversationTitle`/`endConversation` calls `IPCService` -> `data_manager.ts` updates `Conversations`.
-        *   **Delete:** `deleteConversation(id: string)`
-            *   **Soft Delete:** Not applicable.
-            *   **Hard Delete:** Deletes conversation and cascades to `Messages` associated.
-            *   **Flow:** User deletes conversation from history -> `ConversationManager.deleteConversation` calls `IPCService` -> `data_manager.ts` deletes from `Conversations`.
-
-    *   **Message (CRUD via `MessageManager` in Frontend, interacts with `data_manager.ts` in Backend)**
-        *   **Create:** `addMessage(conversationId: string, sender: SenderType, content: string, audioPath?: string, emotions?: EmotionDataDTO)`
-            *   **Validation:** `conversationId` exists, `content` not empty.
-            *   **Required Fields:** `conversation_id`, `sender_type`, `content`, `timestamp`.
-            *   **Flow:** User speaks/types or AI responds -> `MessageManager.addMessage` calls `IPCService` -> `data_manager.ts` inserts into `Messages`.
-        *   **Read:** `getMessages(conversationId: string, pagination: PaginationDTO)`
-            *   **Filtering:** By `conversationId`.
-            *   **Pagination:** `offset`, `limit` for message history.
-            *   **Sorting:** By `timestamp` (ascending).
-            *   **Flow:** Conversation Screen loads messages -> `MessageManager.getMessages` calls `IPCService` -> `data_manager.ts` queries `Messages`.
-        *   **Update:** `updateMessage(id: string, content: string)`
-            *   **Partial Updates:** Only `content` can be updated.
-            *   **Validation:** `content` not empty.
-            *   **Flow:** User edits their message (e.g., typo correction) -> `MessageManager.updateMessage` calls `IPCService` -> `data_manager.ts` updates `Messages`.
-        *   **Delete:** `deleteMessage(id: string)`
-            *   **Soft Delete:** Not applicable.
-            *   **Hard Delete:** Deletes specific message.
-            *   **Flow:** User deletes a specific message from history -> `MessageManager.deleteMessage` calls `IPCService` -> `data_manager.ts` deletes from `Messages`.
+    * **User (CRUD via `UserManager` in Frontend, interacts with `data_manager.ts` in Backend)**
+        * **Create:** `createUser(name: string, initialPreferences: UserPreferencesDTO)`
+            * **Validation:** `name` not empty, `initialPreferences` valid.
+            * **Required Fields:** `name`, `gdpr_ccpa_consent`, `emotion_recording_consent`, `memory_recording_consent`.
+            * **Flow:** Onboarding UI collects data -> `UserManager.createUser` calls `IPCService` -> `data_manager.ts` receives request -> `data_manager.ts` uses `sqlite_vec_addon` to insert into `Users` table.
+        * **Read:** `getUser(id: string)`, `getPrivacySettings(userId: string)`
+            * **Filtering:** By `id`.
+            * **Pagination/Sorting:** Not applicable for single user retrieval.
+            * **Flow:** Profile Settings UI requests user data -> `UserManager.getUser` calls `IPCService` -> `data_manager.ts` queries `Users` table.
+        * **Update:** `updateUser(id: string, updates: UserUpdateDTO)`, `updatePrivacySettings(userId: string, settings: PrivacySettingsDTO)`
+            * **Partial Updates:** `UserUpdateDTO` allows updating specific fields (e.g., `preferred_tone_style`, `sync_enabled`).
+            * **Validation:** Ensure updates are valid (e.g., `sync_frequency` is a valid enum value).
+            * **Flow:** Profile Settings UI modifies data -> `UserManager.updateUser` calls `IPCService` -> `data_manager.ts` updates `Users` table.
+        * **Delete:** `deleteUser(id: string)`
+            * **Soft Delete:** Not applicable for primary user.
+            * **Hard Delete:** Full deletion of user and all associated data (conversations, memories, journals, etc.) from the local database.
+            * **Flow:** Privacy Dashboard UI initiates deletion (with confirmation) -> `UserManager.deleteUser` calls `IPCService` -> `data_manager.ts` deletes from `Users` table and cascades deletes.
+    * **Conversation (CRUD via `ConversationManager` in Frontend, interacts with `data_manager.ts` in Backend)**
+        * **Create:** `startConversation(userId: string, personalityId: string)`
+            * **Validation:** `userId` and `personalityId` must exist.
+            * **Required Fields:** `user_id`, `start_time`, `personality_profile_id`.
+            * **Flow:** User initiates new conversation -> `ConversationManager.startConversation` calls `IPCService` -> `data_manager.ts` inserts into `Conversations`.
+        * **Read:** `getConversation(id: string)`, `getConversations(userId: string, pagination: PaginationDTO)`
+            * **Filtering:** By `id` or `user_id`.
+            * **Pagination:** `offset`, `limit` for conversation list.
+            * **Sorting:** By `start_time` (descending).
+            * **Flow:** Conversation History UI loads list -> `ConversationManager.getConversations` calls `IPCService` -> `data_manager.ts` queries `Conversations`.
+        * **Update:** `updateConversationTitle(id: string, title: string)`, `endConversation(id: string)`
+            * **Partial Updates:** Update title, set `end_time`.
+            * **Validation:** `title` not empty.
+            * **Flow:** User edits title or ends conversation -> `ConversationManager.updateConversationTitle`/`endConversation` calls `IPCService` -> `data_manager.ts` updates `Conversations`.
+        * **Delete:** `deleteConversation(id: string)`
+            * **Soft Delete:** Not applicable.
+            * **Hard Delete:** Deletes conversation and cascades to `Messages` associated.
+            * **Flow:** User deletes conversation from history -> `ConversationManager.deleteConversation` calls `IPCService` -> `data_manager.ts` deletes from `Conversations`.
+    * **Message (CRUD via `MessageManager` in Frontend, interacts with `data_manager.ts` in Backend)**
+        * **Create:** `addMessage(conversationId: string, sender: SenderType, content: string, audioPath?: string, emotions?: EmotionDataDTO)`
+            * **Validation:** `conversationId` exists, `content` not empty.
+            * **Required Fields:** `conversation_id`, `sender_type`, `content`, `timestamp`.
+            * **Flow:** User speaks/types or AI responds -> `MessageManager.addMessage` calls `IPCService` -> `data_manager.ts` inserts into `Messages`.
+        * **Read:** `getMessages(conversationId: string, pagination: PaginationDTO)`
+            * **Filtering:** By `conversationId`.
+            * **Pagination:** `offset`, `limit` for message history.
+            * **Sorting:** By `timestamp` (ascending).
+            * **Flow:** Conversation Screen loads messages -> `MessageManager.getMessages` calls `IPCService` -> `data_manager.ts` queries `Messages`.
+        * **Update:** `updateMessage(id: string, content: string)`
+            * **Partial Updates:** Only `content` can be updated.
+            * **Validation:** `content` not empty.
+            * **Flow:** User edits their message (e.g., typo correction) -> `MessageManager.updateMessage` calls `IPCService` -> `data_manager.ts` updates `Messages`.
+        * **Delete:** `deleteMessage(id: string)`
+            * **Soft Delete:** Not applicable.
+            * **Hard Delete:** Deletes specific message.
+            * **Flow:** User deletes a specific message... from history -> `MessageManager.deleteMessage` calls `IPCService` -> `data_manager.ts` deletes from `Messages`.
 
     *   **Memory (CRUD via `MemoryManager` in Frontend, interacts with `data_manager.ts` and `ai_inference_server.ts` in Backend)**
         *   **Create:** `createMemory(userId: string, type: MemoryType, content: string, sourceId?: string, sourceType?: SourceType)`
