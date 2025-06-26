@@ -57,12 +57,12 @@ See [docs/architecture.md](architecture.md) for a detailed breakdown.
 
 ## 4. Coding Standards
 
-- **JavaScript/TypeScript:** Use Prettier and ESLint.  
+- **JavaScript/TypeScript:** Use Prettier and ESLint.
   ```bash
   npm run lint
   npm run format
   ```
-- **Python:** Follow PEP8. Use Black and Flake8.  
+- **Python:** Follow PEP8. Use Black and Flake8.
   ```bash
   black .
   flake8 .
@@ -74,18 +74,20 @@ See [docs/architecture.md](architecture.md) for a detailed breakdown.
 
 ## 5. Running & Testing
 
-- **Start development server:**  
+- **Start development server:**
+
   ```bash
   npm run dev
   ```
 
-- **Run tests:**  
+- **Run tests:**
+
   ```bash
   npm run test     # JS/TS
   pytest           # Python
   ```
 
-- **Coverage reports:**  
+- **Coverage reports:**
   - JS/TS: `npm run test:coverage`
   - Python: `pytest --cov`
 
@@ -102,7 +104,7 @@ See [docs/architecture.md](architecture.md) for a detailed breakdown.
 
 ## 7. Submitting Changes
 
-- Follow the [CONTRIBUTING.md](../CONTRIBUTING.md) guidelines for branching, commits, and PRs.
+- Follow the [CONTRIBUTING.md](contribution.md) guidelines for branching, commits, and PRs.
 - Ensure all tests and linting pass before submitting a PR.
 - Reference related issues in your PR description.
 

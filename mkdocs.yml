@@ -16,7 +16,7 @@ nav:
   - API Reference: api/README.md
   - Development Guide: development.md
   - Deployment: deployment.md
-  - Contributing: ../CONTRIBUTING.md
+  - Contributing: contribution.md
   - Changelog: changelog.md
 markdown_extensions:
   - admonition
