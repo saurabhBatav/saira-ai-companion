@@ -1,10 +1,13 @@
 # Saira AI Companion – Architecture Documentation
 
 ## Overview
+
 Saira is an empathetic, intelligent AI companion that understands user emotions, remembers conversations, and adapts to different personalities across devices. Saira focuses on privacy-first processing, with all emotion detection and conversation data stored and processed locally.
 
 ## High-Level System Diagram
+
 _Include or update the following diagram as your architecture evolves:_
+
 ```
 saira-ai-companion/
 ├── src/
@@ -20,19 +23,20 @@ saira-ai-companion/
 ├── scripts/            # Development and deployment scripts
 └── config/            # Environment configurations
 ```
+
 _Consider replacing or extending this with a graphical diagram (e.g., system-diagram.png) if available._
 
 ## Main Components
 
-| Component         | Description                                                         | Interfaces/APIs            |
-|-------------------|---------------------------------------------------------------------|----------------------------|
-| Core AI           | Handles business logic, orchestrates emotion detection, memory, etc | Internal classes/services  |
-| Voice             | Speech-to-text, text-to-speech, wake-word detection                | Microphone/Audio APIs      |
-| Emotion           | Detects, analyzes, and provides feedback on user emotions           | Internal, UI feedback      |
-| Memory            | Vector embeddings, context management, long-term memory             | Vector DB APIs             |
-| UI                | User interface for all platforms                                   | React (Web), iOS (Swift)   |
-| Mobile            | iOS companion app                                                   | Apple APIs, REST, BLE      |
-| Speaker           | Smart speaker interface                                             | Device SDK, Audio APIs     |
+| Component | Description                                                         | Interfaces/APIs           |
+| --------- | ------------------------------------------------------------------- | ------------------------- |
+| Core AI   | Handles business logic, orchestrates emotion detection, memory, etc | Internal classes/services |
+| Voice     | Speech-to-text, text-to-speech, wake-word detection                 | Microphone/Audio APIs     |
+| Emotion   | Detects, analyzes, and provides feedback on user emotions           | Internal, UI feedback     |
+| Memory    | Vector embeddings, context management, long-term memory             | Vector DB APIs            |
+| UI        | User interface for all platforms                                    | React (Web), iOS (Swift)  |
+| Mobile    | iOS companion app                                                   | Apple APIs, REST, BLE     |
+| Speaker   | Smart speaker interface                                             | Device SDK, Audio APIs    |
 
 ## Data Flow
 
@@ -57,11 +61,11 @@ _Consider replacing or extending this with a graphical diagram (e.g., system-dia
 
 ## Deployment Environments
 
-| Environment   | Purpose                                      | Notes                       |
-|---------------|----------------------------------------------|-----------------------------|
-| Development   | Local dev, feature testing                    | macOS, iOS, emulators       |
-| Staging       | Pre-release, integration testing              | (Planned)                   |
-| Production    | End-user deployment                          | Mac app, iOS app, Speakers  |
+| Environment | Purpose                          | Notes                      |
+| ----------- | -------------------------------- | -------------------------- |
+| Development | Local dev, feature testing       | macOS, iOS, emulators      |
+| Staging     | Pre-release, integration testing | (Planned)                  |
+| Production  | End-user deployment              | Mac app, iOS app, Speakers |
 
 ## Key Design Decisions
 
@@ -84,10 +88,13 @@ _Consider replacing or extending this with a graphical diagram (e.g., system-dia
 
 ## References
 
-- [Project README](../README.md)
-- [Contributing Guide](../CONTRIBUTING.md)
-- [Privacy Policy](../PRIVACY.md)
-- [System Diagrams](system-diagram.png) _(add/update as needed)_
+- [Project README](README.md)
+- [Tech Stack](tech-stack.md)
+- [UI Implementation](ui-implementation.md)
+- [Low Fidelity Prototype](low-fidelity-prototype.md)
+- [Contributing Guide](contribution.md)
+<!-- - [Privacy Policy](../PRIVACY.md) -->
+- [System Diagrams](highlevel_component_diagram.png) _(add/update as needed)_
 
 ---
 

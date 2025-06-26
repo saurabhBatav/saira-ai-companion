@@ -6,6 +6,7 @@ Welcome to the official documentation for Saira AI Companion, the emotion-aware 
 - [API Reference](api/README.md)
 - [Development Guide](development.md)
 - [Deployment](deployment.md)
-- [Contributing](../CONTRIBUTING.md)
+- [Contributing](contribution.md)
+- [Changelog](changelog.md)
 
 For questions or support, open an [issue](https://github.com/saurabhBatav/saira-ai-companion/issues) or email support@saira-ai.com.
