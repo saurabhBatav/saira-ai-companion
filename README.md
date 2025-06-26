@@ -55,34 +55,118 @@ See our [Project Board](https://github.com/saurabhBatav/saira-ai-companion/proje
 ## 🏗️ Architecture
 
 ```
-saira-ai-companion/
-├── src/
-│   ├── core/           # Core AI and business logic
-│   │   ├── models/     # Data models and schemas
-│   │   ├── services/   # Business logic services
-│   │   └── utils/      # Utility functions
-│   ├── voice/          # Speech processing
-│   │   ├── stt/        # Speech-to-text
-│   │   ├── tts/        # Text-to-speech
-│   │   └── wake-word/  # Wake word detection
-│   ├── emotion/        # Emotion analysis
-│   │   ├── detection/  # Voice emotion detection
-│   │   ├── analysis/   # Emotion processing
-│   │   └── feedback/   # Emotional feedback loops
-│   ├── memory/         # Memory management
-│   │   ├── vector-db/  # Vector database
-│   │   ├── embeddings/ # Text embeddings
-│   │   └── context/    # Context management
-│   ├── ui/             # User interface
-│   │   ├── components/ # Reusable components
-│   │   ├── screens/    # Screen layouts
-│   │   └── themes/     # Emotion-based themes
-│   ├── mobile/         # iOS companion app
-│   └── speaker/        # Smart speaker interface
-├── docs/               # Documentation
-├── tests/              # Comprehensive test suites
-├── scripts/            # Development and deployment scripts
-└── config/            # Environment configurations
+saira-app/
+├── .git/                                    # Git repository
+├── .github/                                 # GitHub specific configurations
+│   └── workflows/
+│       └── ci.yml                           # GitHub Actions CI/CD pipeline for macOS and iOS builds [1, 2]
+├── README.md                                # Project README
+├── LICENSE                                  # Project license
+├── docs/                                    # Project documentation
+│   ├── architecture/
+│   │   ├── system_diagram.md                # High-level system architecture diagrams
+│   │   ├── api_spec.md                      # Comprehensive API specifications
+│   │   ├── db_schema.md                     # Database schema definitions
+│   │   └── security_model.md                # Detailed security considerations
+│   └── features/
+│       ├── onboarding.md
+│       ├── voice_interaction.md
+│       ├── long_term_memory.md
+│       ├── data_sync.md
+│       ├── personality_modes.md
+│       ├── journaling.md
+│       └── nudges.md
+│
+├── SairaReactNativeApp/                     # Main macOS/iOS application (React Native + TypeScript)
+│   ├── package.json                         # Node.js dependencies for React Native [3]
+│   ├── tsconfig.json                        # TypeScript configuration [4, 5]
+│   ├── index.js                             # Entry point for React Native app [6]
+│   ├── App.tsx                              # Root React Native component
+│   ├── src/
+│   │   ├── components/                      # Reusable UI components (TypeScript/TSX)
+│   │   │   ├── Button.tsx
+│   │   │   ├── TextInput.tsx
+│   │   │   └──...
+│   │   ├── screens/                         # Main application screens (TypeScript/TSX)
+│   │   │   ├── OnboardingScreen.tsx
+│   │   │   ├── ConversationScreen.tsx
+│   │   │   ├── JournalingScreen.tsx
+│   │   │   ├── ProfileSettingsScreen.tsx
+│   │   │   └── DeepTalkScreen.tsx
+│   │   ├── navigation/                      # React Navigation setup [3]
+│   │   │   └── AppNavigator.tsx
+│   │   ├── services/                        # JavaScript/TypeScript services for app logic
+│   │   │   ├── AppStateManager.ts           # Manages overall app state and lifecycle
+│   │   │   ├── DataStoreService.ts          # High-level interface for SQLite operations
+│   │   │   ├── IPCService.ts                # Manages communication with Node.js/Python backend processes
+│   │   │   ├── NotificationService.ts       # Handles macOS notifications
+│   │   │   ├── SyncService.ts               # Manages cloud synchronization logic
+│   │   │   └── TaskManagerClient.ts         # NEW: Client for communicating with TaskManager
+│   │   ├── models/                          # TypeScript data models (interfaces, types)
+│   │   │   ├── AppModels.ts                 # User, Message, Memory, Goal, etc.
+│   │   │   ├── DTOs.ts                      # Data Transfer Objects for IPC
+│   │   │   └── TaskModels.ts                # NEW: Models for Task and TaskStatus
+│   │   └── utils/                           # Utility functions and helpers
+│   │       ├── Constants.ts
+│   │       ├── Logger.ts                    # Structured logging utility
+│   │       └── Permissions.ts               # Handles system permissions
+│   ├── ios/                                 # iOS native project (Objective-C/Swift)
+│   │   ├── SairaReactNativeApp.xcodeproj/
+│   │   ├── SairaReactNativeApp/
+│   │   │   ├── AppDelegate.mm               # Objective-C++ for native module bridging [7, 8, 9]
+│   │   │   └── Info.plist
+│   │   └── Podfile                          # CocoaPods for iOS dependencies [1]
+│   ├── macos/                               # macOS native project (Objective-C/Swift)
+│   │   ├── SairaReactNativeApp.xcodeproj/
+│   │   ├── SairaReactNativeApp/
+│   │   │   ├── AppDelegate.mm               # Objective-C++ for native module bridging [7, 8, 9]
+│   │   │   └── Info.plist
+│   │   └── Podfile                          # CocoaPods for macOS dependencies [1]
+│   ├── __tests__/                           # Jest tests for React Native components [3]
+│   └── e2e/                                 # End-to-end tests (e.g., Detox) [3]
+│
+├── SairaBackendServices/                    # Node.js and Python backend services
+│   ├── package.json                         # Node.js dependencies for backend services
+│   ├── tsconfig.json                        # TypeScript configuration for Node.js services
+│   ├── node_modules/
+│   ├── src/
+│   │   ├── node_services/                   # Node.js services (TypeScript/JavaScript)
+│   │   │   ├── main.ts                      # Entry point for Node.js backend process
+│   │   │   ├── ai_inference_server.ts       # Local HTTP/WebSocket server for AI models
+│   │   │   ├── audio_processor.ts           # Handles audio I/O via native addons
+│   │   │   ├── data_manager.ts              # Handles SQLite operations
+│   │   │   ├── model_manager.ts             # Manages AI model loading and updates
+│   │   │   ├── ipc_handler.ts               # Handles IPC messages from frontend
+│   │   │   └── task_manager.ts              # NEW: TaskManager service responsible for queuing and executing tasks
+│   │   ├── python_services/                 # Python scripts
+│   │   │   ├── rag_ingestion.py             # For RAG document processing (chunking, embedding)
+│   │   │   ├── model_downloader.py          # For AI model downloads
+│   │   │   └── ser_feature_extractor.py     # For openSMILE feature extraction (if Python wrapper used)
+│   │   ├── native_addons/                   # C++ Node.js native addons (N-API)
+│   │   │   ├── audio_io_addon/              # Wrapper for Core Audio (PortAudio)
+│   │   │   │   ├── binding.gyp
+│   │   │   │   └── src/audio_io.cpp
+│   │   │   ├── ai_inference_addon/          # Wrapper for llama.cpp, whisper.cpp, Piper, Porcupine, openSMILE/SenseVoice
+│   │   │   │   ├── binding.gyp
+│   │   │   │   └── src/ai_inference.cpp
+│   │   │   └── sqlite_vec_addon/            # Wrapper for sqlite-vec]
+│   │   │       ├── binding.gyp
+│   │   │       └── src/sqlite_vec.cpp
+│   │   └── models/                          # Pre-trained AI models (downloaded by app)
+│   │       ├── llm/
+│   │       ├── asr/
+│   │       ├── tts/
+│   │       ├── ser/
+│   │       └── embeddings/
+│   ├── tests/                               # Jest tests for Node.js services, Pytest for Python scripts
+│   └── Dockerfile                           # For local development environment setup [10, 11]
+│
+├── Tools/                                   # Development and utility scripts
+│   └── dev_scripts/                         # Miscellaneous development scripts
+│
+├── .gitignore                               # Git ignore file
+├── .prettierrc                              # Prettier configuration [1]
+└── .eslintrc.js                             # ESLint configuration [1]
 ```
 
 ## 🎭 Personality Modes

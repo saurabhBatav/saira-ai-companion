@@ -1,15 +1,15 @@
-# Granular insights and step-by-step implementation guidance for each feature :-
+# Granular insights and step-by-step implementation guidance for each feature
 
 ---
 
-## File System
+### File System
 
 The project will adopt a monorepo structure to manage the React Native for macOS frontend application and the Node.js/Python backend services, facilitating integration and streamlined dependency management.
 
 ```
 saira-app/
-├──.git/                                    # Git repository
-├──.github/                                 # GitHub specific configurations
+├── .git/                                    # Git repository
+├── .github/                                 # GitHub specific configurations
 │   └── workflows/
 │       └── ci.yml                           # GitHub Actions CI/CD pipeline for macOS and iOS builds [1, 2]
 ├── README.md                                # Project README
@@ -52,10 +52,12 @@ saira-app/
 │   │   │   ├── DataStoreService.ts          # High-level interface for SQLite operations
 │   │   │   ├── IPCService.ts                # Manages communication with Node.js/Python backend processes
 │   │   │   ├── NotificationService.ts       # Handles macOS notifications
-│   │   │   └── SyncService.ts               # Manages cloud synchronization logic
+│   │   │   ├── SyncService.ts               # Manages cloud synchronization logic
+│   │   │   └── TaskManagerClient.ts         # NEW: Client for communicating with TaskManager
 │   │   ├── models/                          # TypeScript data models (interfaces, types)
 │   │   │   ├── AppModels.ts                 # User, Message, Memory, Goal, etc.
-│   │   │   └── DTOs.ts                      # Data Transfer Objects for IPC
+│   │   │   ├── DTOs.ts                      # Data Transfer Objects for IPC
+│   │   │   └── TaskModels.ts                # NEW: Models for Task and TaskStatus
 │   │   └── utils/                           # Utility functions and helpers
 │   │       ├── Constants.ts
 │   │       ├── Logger.ts                    # Structured logging utility
@@ -86,7 +88,8 @@ saira-app/
 │   │   │   ├── audio_processor.ts           # Handles audio I/O via native addons
 │   │   │   ├── data_manager.ts              # Handles SQLite operations
 │   │   │   ├── model_manager.ts             # Manages AI model loading and updates
-│   │   │   └── ipc_handler.ts               # Handles IPC messages from frontend
+│   │   │   ├── ipc_handler.ts               # Handles IPC messages from frontend
+│   │   │   └── task_manager.ts              # NEW: TaskManager service responsible for queuing and executing tasks
 │   │   ├── python_services/                 # Python scripts
 │   │   │   ├── rag_ingestion.py             # For RAG document processing (chunking, embedding)
 │   │   │   ├── model_downloader.py          # For AI model downloads
@@ -113,432 +116,594 @@ saira-app/
 ├── Tools/                                   # Development and utility scripts
 │   └── dev_scripts/                         # Miscellaneous development scripts
 │
-├──.gitignore                               # Git ignore file
-├──.prettierrc                               # Prettier configuration [1]
-└──.eslintrc.js                             # ESLint configuration [1]
+├── .gitignore                               # Git ignore file
+├── .prettierrc                              # Prettier configuration [1]
+└── .eslintrc.js                             # ESLint configuration [1]
 ```
 
-## Feature Specifications
+---
 
-### Feature: Core Application Framework (UI & App Logic)
+### Feature Specifications
 
-**Feature Goal**
-To provide the foundational native-like macOS user interface and the core application logic that orchestrates interactions between the UI, local data storage, and the underlying Node.js/Python backend services. This feature encompasses the initial user onboarding, general navigation, and the display of core application data.
+**Feature: Core Application Framework (UI & App Logic)**
 
-**Any API Relationships**
-This feature serves as the central hub, interacting with almost all other features:
-*   **Real-time Voice Interaction:** Initiates and receives data from ASR, TTS, Wake Word, and SER services via `IPCService` (communicating with `ai_inference_server.ts` and `audio_processor.ts`).
-*   **Local Long-Term Memory (RAG):** Manages CRUD operations for memories and goals through `DataStoreService`, which interacts with `data_manager.ts` (Node.js) and potentially `rag_ingestion.py` (Python).
-*   **Offline-First Data Sync:** Triggers and monitors synchronization processes via `SyncService`.
-*   **Personality Modes & Customization:** Loads and applies personality profiles and user settings, influencing LLM behavior via `IPCService`.
-*   **Daily Check-ins & Journaling:** Provides UI for creating, viewing, and managing journal entries and mood summaries, interacting with `DataStoreService`.
-*   **Proactive Nudges & Notifications:** Configures and displays notifications via `NotificationService`.
+**Feature Goal:** To provide the foundational native-like macOS user interface and the core application logic that orchestrates interactions between the UI, local data storage, and the underlying Node.js/Python backend services. This feature encompasses the initial user onboarding, general navigation, and the display of core application data.
 
-**Detailed Feature Requirements**
+**Any API Relationships:** This feature serves as the central hub, interacting with almost all other features:
 
-1.  **User Onboarding Flow:**
-    *   **Initial Setup:** Guide new users through personality preferences, initial goals, and desired tone style.
-    *   **Data Collection:** Securely collect initial user data (e.g., name, preferred AI personality, initial goals).
-    *   **Consent Management:** Clearly present privacy policy and obtain explicit consent for data collection (e.g., emotion/memory recording) and optional cloud sync, adhering to GDPR and CCPA.
-    *   **Progress Tracking:** Visually indicate onboarding progress.
-2.  **Main Application Navigation:**
-    *   **Tab-based Navigation:** Implement a clear tab bar for primary sections: Conversation, Daily Check-ins/Journal, Deep Talk, and Profile Settings.
-    *   **Responsive Layout:** Ensure the UI adapts gracefully to various macOS window sizes and future iOS screen sizes.
-3.  **Conversation View (MVP - Voice Interaction Only):**
-    *   **Voice Input Indicator:** Display a visual indicator (e.g., waveform, microphone icon) when the app is actively listening or processing voice input.
-    *   **Real-time Transcription Display:** Show transcribed text as the user speaks.
-    *   **AI Response Display:** Present AI's spoken responses as text in a chat-like interface.
-    *   **Basic Chat History:** Display a scrollable history of the current conversation session.
-4.  **Daily Check-ins & Journaling Tab:**
-    *   **Mood Summary Display:** Show a daily summary of detected moods and emotional patterns.
-    *   **Emotional Check-in Interface:** Allow users to manually log their emotional state.
-    *   **Journal Entry Creation/Viewing:** Provide an interface for creating, viewing, and editing journal entries.
-5.  **Deep Talk Tab:**
-    *   **Dedicated Conversation Mode:** Offer a specialized conversational mode for deeper exploration of life events, emotional patterns, or relationship issues. This mode will leverage the RAG system more heavily.
-6.  **Profile Settings Tab:**
-    *   **Personality Preferences:** Allow users to configure AI personality styles (e.g., "Mom," "Coach," "Best Friend").
-    *   **Memory Visibility:** Provide controls for users to review and manage what memories the AI retains.
-    *   **Privacy Settings:** Centralized dashboard for managing data consent, deletion rights, and audit logs.
-    *   **Emotional Tone Preferences:** Allow users to fine-tune how the AI perceives and responds to their emotional tone.
-    *   **Offline Sync Configuration:** Settings for enabling/disabling cloud sync, frequency, and conflict resolution preferences.
-    *   **Model Management:** Display currently loaded AI models and provide options for in-app updates.
-7.  **Proactive Nudges & Notifications:**
-    *   **Notification Display:** Receive and display proactive nudges (reminders, positive reinforcement, wellness suggestions) via macOS Notification Center.
-    *   **Configuration:** Allow users to enable/disable and customize types/frequency of nudges in settings.
+* **Real-time Voice Interaction:** Initiates and receives data from ASR, TTS, Wake Word, and SER services via `IPCService` (communicating with `ai_inference_server.ts` and `audio_processor.ts`).
+* **Local Long-Term Memory (RAG):** Manages CRUD operations for memories and goals through `DataStoreService`, which interacts with `data_manager.ts` (Node.js) and potentially `rag_ingestion.py` (Python).
+* **Offline-First Data Sync:** Triggers and monitors synchronization processes via `SyncService`.
+* **Personality Modes & Customization:** Loads and applies personality profiles and user settings, influencing LLM behavior via `IPCService`.
+* **Daily Check-ins & Journaling:** Provides UI for creating, viewing, and managing journal entries and mood summaries, **now primarily interacting with `TaskManagerClient.ts` to initiate background tasks**.
+* **Proactive Nudges & Notifications:** Configures and displays notifications via `NotificationService`.
 
-**Detailed Implementation Guide**
+**Detailed Feature Requirements:**
 
-1.  **System Architecture Overview**
-    *   **High-level Architecture:** The application will consist of a React Native for macOS frontend (`SairaReactNativeApp/`) and a Node.js/Python backend (`SairaBackendServices/`). The frontend handles the UI and high-level application logic. The backend handles all performance-critical AI inference, low-level audio I/O, and local data management. Communication between the frontend and backend will primarily occur via Inter-Process Communication (IPC) using local HTTP/WebSocket servers or Node.js `child_process` module.
-    *   **Technology Stack:**
-        *   **Frontend UI:** React Native for macOS (with TypeScript). Justification: Allows for JavaScript/React-based UI development, enabling code reuse for future iOS expansion. TypeScript enhances code quality and maintainability for large projects. React Native renders native components for a near-native experience.
-        *   **Backend Services (Orchestration):** Node.js (with TypeScript). Justification: Node.js is well-suited for I/O-intensive tasks and building scalable APIs. It can manage concurrent requests efficiently due to its event-driven, non-blocking architecture. It also has a large package ecosystem (npm).
-        *   **Backend Services (AI Inference & Low-Level Operations):** Python and C++ native addons for Node.js. Justification: While Node.js and Python can wrap C++ libraries, the underlying AI models (`llama.cpp`, `whisper.cpp`, Piper, Porcupine, `openSMILE`, SenseVoice) are highly optimized C/C++ implementations.
-            *   **C++ Native Addons (N-API):** For direct, low-latency interaction with macOS Core Audio and for wrapping performance-critical AI libraries. This is crucial to mitigate the performance overhead of pure JavaScript/Python for real-time AI inference. N-API allows C++ code to be exposed to Node.js.[9]
-            *   **Python:** For tasks like RAG document ingestion (chunking, embedding generation) where its rich ecosystem of ML libraries is beneficial. Python can also be used for specific AI model inference if a robust Node.js binding is unavailable or less performant, exposed via a local HTTP server. Python is generally slower for CPU-intensive tasks than C++.
-        *   **Local Data Storage:** SQLite with `sqlite-vec` extension. Justification: Embedded, serverless, and cross-platform, ideal for local data persistence and vector search. Node.js has bindings for SQLite and `sqlite-vec`]. `op-sqlite` for React Native also supports `sqlite-vec`].
-    *   **Deployment Architecture:** The React Native application will be bundled as a standard macOS `.app` package. The Node.js backend services will run as a separate process, potentially launched as a child process by the React Native app or as a background service. C++ native addons will be compiled and bundled with the Node.js services. Python scripts will be bundled and executed by the Node.js process.
-    *   **Integration Points:**
-        *   **macOS Core Audio:** Via C++ native addon (PortAudio wrapper or direct Core Audio calls) for Node.js.
-        *   **macOS Notification Center:** React Native modules for native notifications.
-        *   **Local File System:** For RAG document ingestion and AI model storage.
-        *   **Cloud Sync Service (Future):** Custom E2EE protocol for optional data synchronization].
+* **User Onboarding Flow:**
+    * Initial Setup: Guide new users through personality preferences, initial goals, and desired tone style.
+    * Data Collection: Securely collect initial user data (e.g., name, preferred AI personality, initial goals).
+    * Consent Management: Clearly present privacy policy and obtain explicit consent for data collection (e.g., emotion/memory recording) and optional cloud sync, adhering to GDPR and CCPA.
+    * Progress Tracking: Visually indicate onboarding progress.
+* **Main Application Navigation:**
+    * Tab-based Navigation: Implement a clear tab bar for primary sections: Conversation, Daily Check-ins/Journal, Deep Talk, and Profile Settings.
+    * Responsive Layout: Ensure the UI adapts gracefully to various macOS window sizes and future iOS screen sizes.
+* **Conversation View (MVP - Voice Interaction Only):**
+    * Voice Input Indicator: Display a visual indicator (e.g., waveform, microphone icon) when the app is actively listening or processing voice input.
+    * Real-time Transcription Display: Show transcribed text as the user speaks.
+    * AI Response Display: Present AI's spoken responses as text in a chat-like interface.
+    * Basic Chat History: Display a scrollable history of the current conversation session.
+* **Daily Check-ins & Journaling Tab:**
+    * Mood Summary Display: Show a daily summary of detected moods and emotional patterns.
+    * Emotional Check-in Interface: Allow users to manually log their emotional state.
+    * Journal Entry Creation/Viewing: Provide an interface for creating, viewing, and editing journal entries. **Journal entry creation will initiate a task via `TaskManagerClient` and display a "Working on it..." message, followed by confirmation via WebSocket.**
+* **Deep Talk Tab:**
+    * Dedicated Conversation Mode: Offer a specialized conversational mode for deeper exploration of life events, emotional patterns, or relationship issues. This mode will leverage the RAG system more heavily.
+* **Profile Settings Tab:**
+    * Personality Preferences: Allow users to configure AI personality styles (e.g., "Mom," "Coach," "Best Friend").
+    * Memory Visibility: Provide controls for users to review and manage what memories the AI retains.
+    * Privacy Settings: Centralized dashboard for managing data consent, deletion rights, and audit logs.
+    * Emotional Tone Preferences: Allow users to fine-tune how the AI perceives and responds to their emotional tone.
+    * Offline Sync Configuration: Settings for enabling/disabling cloud sync, frequency, and conflict resolution preferences.
+    * Model Management: Display currently loaded AI models and provide options for in-app updates.
+* **Proactive Nudges & Notifications:**
+    * Notification Display: Receive and display proactive nudges (reminders, positive reinforcement, wellness suggestions) via macOS Notification Center.
+    * Configuration: Allow users to enable/disable and customize types/frequency of nudges in settings.
 
-2.  **Database Schema Design**
-    The local database will be SQLite, encrypted with SQLCipher. All tables will include `id` (PRIMARY KEY), `created_at` (TIMESTAMP), `updated_at` (TIMESTAMP), and `user_id` (FOREIGN KEY to `Users` table) where applicable.
+---
 
-    *   **`Users` Table:**
-        *   `id` (TEXT, PRIMARY KEY, UUID)
-        *   `name` (TEXT, NOT NULL)
-        *   `onboarding_completed` (INTEGER, BOOLEAN, DEFAULT 0)
-        *   `current_personality_profile_id` (TEXT, FOREIGN KEY to `PersonalityProfiles.id`)
-        *   `last_active_at` (TIMESTAMP)
-        *   `created_at` (TIMESTAMP, NOT NULL, DEFAULT CURRENT_TIMESTAMP)
-        *   `updated_at` (TIMESTAMP, NOT NULL, DEFAULT CURRENT_TIMESTAMP)
-        *   `sync_enabled` (INTEGER, BOOLEAN, DEFAULT 0)
-        *   `last_synced_at` (TIMESTAMP, NULLABLE)
-        *   `sync_frequency` (TEXT, ENUM: 'daily', 'weekly', 'manual', DEFAULT 'manual')
-        *   `encryption_key_hash` (TEXT, NOT NULL) - Hash of user-derived key for SQLCipher.
-        *   `privacy_consent_version` (TEXT, NOT NULL) - Tracks accepted privacy policy version.
-        *   `gdpr_ccpa_consent` (INTEGER, BOOLEAN, NOT NULL) - Explicit consent for data processing.
-        *   `audit_logging_enabled` (INTEGER, BOOLEAN, DEFAULT 1) - User preference for audit logs.
-        *   `data_portability_token` (TEXT, NULLABLE) - Token for data export.
-        *   `data_deletion_requested_at` (TIMESTAMP, NULLABLE) - Timestamp if deletion requested.
-        *   `profile_image_path` (TEXT, NULLABLE)
-        *   `preferred_tone_style` (TEXT, ENUM: 'formal', 'casual', 'empathetic', etc., DEFAULT 'empathetic')
-        *   `wake_word_enabled` (INTEGER, BOOLEAN, DEFAULT 1)
-        *   `proactive_nudges_enabled` (INTEGER, BOOLEAN, DEFAULT 1)
-        *   `deep_talk_mode_enabled` (INTEGER, BOOLEAN, DEFAULT 1)
-        *   `emotion_recording_consent` (INTEGER, BOOLEAN, NOT NULL) - Consent for emotion data recording.
-        *   `memory_recording_consent` (INTEGER, BOOLEAN, NOT NULL) - Consent for memory recording.
-        *   `journaling_enabled` (INTEGER, BOOLEAN, DEFAULT 1)
+### Detailed Implementation Guide
 
-    *   **`Conversations` Table:**
-        *   `id` (TEXT, PRIMARY KEY, UUID)
-        *   `user_id` (TEXT, FOREIGN KEY to `Users.id`, NOT NULL)
-        *   `start_time` (TIMESTAMP, NOT NULL)
-        *   `end_time` (TIMESTAMP, NULLABLE)
-        *   `title` (TEXT, NULLABLE) - Auto-generated or user-edited summary.
-        *   `personality_profile_id` (TEXT, FOREIGN KEY to `PersonalityProfiles.id`) - Personality used during conversation.
-        *   `created_at` (TIMESTAMP, NOT NULL, DEFAULT CURRENT_TIMESTAMP)
-        *   `updated_at` (TIMESTAMP, NOT NULL, DEFAULT CURRENT_TIMESTAMP)
+**System Architecture Overview**
 
-    *   **`Messages` Table:**
-        *   `id` (TEXT, PRIMARY KEY, UUID)
-        *   `conversation_id` (TEXT, FOREIGN KEY to `Conversations.id`, NOT NULL)
-        *   `sender_type` (TEXT, ENUM: 'user', 'ai', NOT NULL)
-        *   `content` (TEXT, NOT NULL)
-        *   `timestamp` (TIMESTAMP, NOT NULL)
-        *   `audio_path` (TEXT, NULLABLE) - Local path to raw audio (if stored, with consent).
-        *   `emotion_arousal` (REAL, NULLABLE) - Detected arousal (0-1).
-        *   `emotion_valence` (REAL, NULLABLE) - Detected valence (-1 to 1).
-        *   `emotion_category` (TEXT, NULLABLE) - Categorical emotion (e.g., 'happy', 'sad').
-        *   `is_proactive_nudge` (INTEGER, BOOLEAN, DEFAULT 0) - If message is a nudge.
-        *   `created_at` (TIMESTAMP, NOT NULL, DEFAULT CURRENT_TIMESTAMP)
-        *   `updated_at` (TIMESTAMP, NOT NULL, DEFAULT CURRENT_TIMESTAMP)
+High-level Architecture: The application will consist of a React Native for macOS frontend (`SairaReactNativeApp/`) and a Node.js/Python backend (`SairaBackendServices/`). The frontend handles the UI and high-level application logic. The backend handles all performance-critical AI inference, low-level audio I/O, and local data management. Communication between the frontend and backend will primarily occur via Inter-Process Communication (IPC) using local HTTP/WebSocket servers or Node.js `child_process` module.
 
-    *   **`Memories` Table:** (Semantic, Episodic, Procedural)
-        *   `id` (TEXT, PRIMARY KEY, UUID)
-        *   `user_id` (TEXT, FOREIGN KEY to `Users.id`, NOT NULL)
-        *   `type` (TEXT, ENUM: 'semantic', 'episodic', 'procedural', NOT NULL)
-        *   `content` (TEXT, NOT NULL) - The actual memory text.
-        *   `embedding` (BLOB, NOT NULL) - Vector embedding of the content.
-        *   `source_id` (TEXT, NULLABLE) - ID of related conversation/journal entry/document.
-        *   `source_type` (TEXT, ENUM: 'conversation', 'journal', 'document', 'user_input', NULLABLE)
-        *   `timestamp` (TIMESTAMP, NOT NULL) - When the memory was formed/updated.
-        *   `relevance_score` (REAL, DEFAULT 0.0) - For RAG prioritization.
-        *   `is_active` (INTEGER, BOOLEAN, DEFAULT 1) - Can be toggled by user for visibility.
-        *   `created_at` (TIMESTAMP, NOT NULL, DEFAULT CURRENT_TIMESTAMP)
-        *   `updated_at` (TIMESTAMP, NOT NULL, DEFAULT CURRENT_TIMESTAMP)
+**Technology Stack:**
 
-    *   **`Goals` Table:**
-        *   `id` (TEXT, PRIMARY KEY, UUID)
-        *   `user_id` (TEXT, FOREIGN KEY to `Users.id`, NOT NULL)
-        *   `title` (TEXT, NOT NULL)
-        *   `description` (TEXT, NULLABLE)
-        *   `status` (TEXT, ENUM: 'active', 'completed', 'archived', NOT NULL)
-        *   `due_date` (TIMESTAMP, NULLABLE)
-        *   `progress` (REAL, DEFAULT 0.0) - 0.0 to 1.0.
-        *   `created_at` (TIMESTAMP, NOT NULL, DEFAULT CURRENT_TIMESTAMP)
-        *   `updated_at` (TIMESTAMP, NOT NULL, DEFAULT CURRENT_TIMESTAMP)
+* **Frontend UI:** React Native for macOS (with TypeScript). Justification: Allows for JavaScript/React-based UI development, enabling code reuse for future iOS expansion. TypeScript enhances code quality and maintainability for large projects. React Native renders native components for a near-native experience.
+* **Backend Services (Orchestration):** Node.js (with TypeScript). Justification: Node.js is well-suited for I/O-intensive tasks and building scalable APIs. It can manage concurrent requests efficiently due to its event-driven, non-blocking architecture. It also has a large package ecosystem (npm).
+* **Backend Services (AI Inference & Low-Level Operations):** Python and C++ native addons for Node.js. Justification: While Node.js and Python can wrap C++ libraries, the underlying AI models (`llama.cpp`, `whisper.cpp`, Piper, Porcupine, `openSMILE`, SenseVoice) are highly optimized C/C++ implementations.
+    * **C++ Native Addons (N-API):** For direct, low-latency interaction with macOS Core Audio and for wrapping performance-critical AI libraries. This is crucial to mitigate the performance overhead of pure JavaScript/Python for real-time AI inference. N-API allows C++ code to be exposed to Node.js.[9]
+    * **Python:** For tasks like RAG document ingestion (chunking, embedding generation) where its rich ecosystem of ML libraries is beneficial. Python can also be used for specific AI model inference if a robust Node.js binding is unavailable or less performant, exposed via a local HTTP server. Python is generally slower for CPU-intensive tasks than C++.
+* **Local Data Storage:** SQLite with `sqlite-vec` extension. Justification: Embedded, serverless, and cross-platform, ideal for local data persistence and vector search. Node.js has bindings for SQLite and `sqlite-vec`]. `op-sqlite` for React Native also supports `sqlite-vec`].
+* **Deployment Architecture:** The React Native application will be bundled as a standard macOS .app package. The Node.js backend services will run as a separate process, potentially launched as a child process by the React Native app or as a background service. C++ native addons will be compiled and bundled with the Node.js services. Python scripts will be bundled and executed by the Node.js process.
+* **Integration Points:**
+    * macOS Core Audio: Via C++ native addon (PortAudio wrapper or direct Core Audio calls) for Node.js.
+    * macOS Notification Center: React Native modules for native notifications.
+    * Local File System: For RAG document ingestion and AI model storage.
+    * Cloud Sync Service (Future): Custom E2EE protocol for optional data synchronization].
 
-    *   **`JournalEntries` Table:**
-        *   `id` (TEXT, PRIMARY KEY, UUID)
-        *   `user_id` (TEXT, FOREIGN KEY to `Users.id`, NOT NULL)
-        *   `timestamp` (TIMESTAMP, NOT NULL)
-        *   `content` (TEXT, NOT NULL)
-        *   `detected_emotions` (TEXT, NULLABLE) - JSON array of detected emotions (e.g., `[{"arousal": 0.8, "valence": 0.7, "category": "happy"}]`).
-        *   `associated_memories` (TEXT, NULLABLE) - JSON array of `Memory.id`s.
-        *   `created_at` (TIMESTAMP, NOT NULL, DEFAULT CURRENT_TIMESTAMP)
-        *   `updated_at` (TIMESTAMP, NOT NULL, DEFAULT CURRENT_TIMESTAMP)
+---
 
-    *   **`MoodSummaries` Table:**
-        *   `id` (TEXT, PRIMARY KEY, UUID)
-        *   `user_id` (TEXT, FOREIGN KEY to `Users.id`, NOT NULL)
-        *   `date` (DATE, NOT NULL, UNIQUE)
-        *   `summary_text` (TEXT, NULLABLE) - AI-generated summary of daily mood.
-        *   `aggregated_emotions` (TEXT, NULLABLE) - JSON object of aggregated emotion data for the day.
-        *   `created_at` (TIMESTAMP, NOT NULL, DEFAULT CURRENT_TIMESTAMP)
-        *   `updated_at` (TIMESTAMP, NOT NULL, DEFAULT CURRENT_TIMESTAMP)
+### Database Schema Design
 
-    *   **`PersonalityProfiles` Table:**
-        *   `id` (TEXT, PRIMARY KEY, UUID)
-        *   `user_id` (TEXT, FOREIGN KEY to `Users.id`, NULLABLE) - NULL for system-defined profiles.
-        *   `name` (TEXT, NOT NULL)
-        *   `description` (TEXT, NULLABLE)
-        *   `llm_prompt_template` (TEXT, NOT NULL) - Core prompt for LLM to adopt personality.
-        *   `tone_preferences` (TEXT, NULLABLE) - JSON object for specific tone adjustments.
-        *   `memory_visibility_rules` (TEXT, NULLABLE) - JSON object for rules on what memories are accessible.
-        *   `is_custom` (INTEGER, BOOLEAN, DEFAULT 0) - Indicates if user-created.
-        *   `created_at` (TIMESTAMP, NOT NULL, DEFAULT CURRENT_TIMESTAMP)
-        *   `updated_at` (TIMESTAMP, NOT NULL, DEFAULT CURRENT_TIMESTAMP)
+The local database will be SQLite, encrypted with SQLCipher. All tables will include `id` (PRIMARY KEY), `created_at` (TIMESTAMP), `updated_at` (TIMESTAMP), and `user_id` (FOREIGN KEY to Users table) where applicable.
 
-    *   **`NudgePreferences` Table:**
-        *   `id` (TEXT, PRIMARY KEY, UUID)
-        *   `user_id` (TEXT, FOREIGN KEY to `Users.id`, NOT NULL)
-        *   `type` (TEXT, ENUM: 'reminder', 'positive_reinforcement', 'wellness_suggestion', NOT NULL)
-        *   `frequency` (TEXT, ENUM: 'daily', 'weekly', 'monthly', 'event_based', NOT NULL)
-        *   `time_of_day` (TEXT, NULLABLE) - e.g., "09:00", "18:30".
-        *   `content_template` (TEXT, NOT NULL) - Template for nudge message.
-        *   `enabled` (INTEGER, BOOLEAN, DEFAULT 1)
-        *   `created_at` (TIMESTAMP, NOT NULL, DEFAULT CURRENT_TIMESTAMP)
-        *   `updated_at` (TIMESTAMP, NOT NULL, DEFAULT CURRENT_TIMESTAMP)
+* **Users Table:**
+    * `id` (TEXT, PRIMARY KEY, UUID)
+    * `name` (TEXT, NOT NULL)
+    * `onboarding_completed` (INTEGER, BOOLEAN, DEFAULT 0)
+    * `current_personality_profile_id` (TEXT, FOREIGN KEY to PersonalityProfiles.id)
+    * `last_active_at` (TIMESTAMP)
+    * `created_at` (TIMESTAMP, NOT NULL, DEFAULT CURRENT_TIMESTAMP)
+    * `updated_at` (TIMESTAMP, NOT NULL, DEFAULT CURRENT_TIMESTAMP)
+    * `sync_enabled` (INTEGER, BOOLEAN, DEFAULT 0)
+    * `last_synced_at` (TIMESTAMP, NULLABLE)
+    * `sync_frequency` (TEXT, ENUM: 'daily', 'weekly', 'manual', DEFAULT 'manual')
+    * `encryption_key_hash` (TEXT, NOT NULL) - Hash of user-derived key for SQLCipher.
+    * `privacy_consent_version` (TEXT, NOT NULL) - Tracks accepted privacy policy version.
+    * `gdpr_ccpa_consent` (INTEGER, BOOLEAN, NOT NULL) - Explicit consent for data processing.
+    * `audit_logging_enabled` (INTEGER, BOOLEAN, DEFAULT 1) - User preference for audit logs.
+    * `data_portability_token` (TEXT, NULLABLE) - Token for data export.
+    * `data_deletion_requested_at` (TIMESTAMP, NULLABLE) - Timestamp if deletion requested.
+    * `profile_image_path` (TEXT, NULLABLE)
+    * `preferred_tone_style` (TEXT, ENUM: 'formal', 'casual', 'empathetic', etc., DEFAULT 'empathetic')
+    * `wake_word_enabled` (INTEGER, BOOLEAN, DEFAULT 1)
+    * `proactive_nudges_enabled` (INTEGER, BOOLEAN, DEFAULT 1)
+    * `deep_talk_mode_enabled` (INTEGER, BOOLEAN, DEFAULT 1)
+    * `emotion_recording_consent` (INTEGER, BOOLEAN, NOT NULL) - Consent for emotion data recording.
+    * `memory_recording_consent` (INTEGER, BOOLEAN, NOT NULL) - Consent for memory recording.
+    * `journaling_enabled` (INTEGER, BOOLEAN, DEFAULT 1)
+    * `last_active_status` (TEXT, NULLABLE) - e.g., 'online', 'offline', 'typing'
+    * `last_active_device` (TEXT, NULLABLE) - Identifier for the last active device
+    * `analytics_opt_in` (INTEGER, BOOLEAN, DEFAULT 0) - User consent for privacy-respecting analytics
 
-    *   **`NudgeHistory` Table:**
-        *   `id` (TEXT, PRIMARY KEY, UUID)
-        *   `user_id` (TEXT, FOREIGN KEY to `Users.id`, NOT NULL)
-        *   `nudge_preference_id` (TEXT, FOREIGN KEY to `NudgePreferences.id`, NOT NULL)
-        *   `timestamp` (TIMESTAMP, NOT NULL) - When the nudge was delivered.
-        *   `message_content` (TEXT, NOT NULL) - Actual message sent.
-        *   `delivered` (INTEGER, BOOLEAN, DEFAULT 1)
-        *   `interacted` (INTEGER, BOOLEAN, DEFAULT 0) - User interacted with notification.
-        *   `created_at` (TIMESTAMP, NOT NULL, DEFAULT CURRENT_TIMESTAMP)
+* **Conversations Table:**
+    * `id` (TEXT, PRIMARY KEY, UUID)
+    * `user_id` (TEXT, FOREIGN KEY to Users.id, NOT NULL)
+    * `start_time` (TIMESTAMP, NOT NULL)
+    * `end_time` (TIMESTAMP, NULLABLE)
+    * `title` (TEXT, NULLABLE) - Auto-generated or user-edited summary.
+    * `personality_profile_id` (TEXT, FOREIGN KEY to PersonalityProfiles.id) - Personality used during conversation.
+    * `created_at` (TIMESTAMP, NOT NULL, DEFAULT CURRENT_TIMESTAMP)
+    * `updated_at` (TIMESTAMP, NOT NULL, DEFAULT CURRENT_TIMESTAMP)
+* **Messages Table:**
+    * `id` (TEXT, PRIMARY KEY, UUID)
+    * `conversation_id` (TEXT, FOREIGN KEY to Conversations.id, NOT NULL)
+    * `sender_type` (TEXT, ENUM: 'user', 'ai', NOT NULL)
+    * `content` (TEXT, NOT NULL)
+    * `timestamp` (TIMESTAMP, NOT NULL)
+    * `audio_path` (TEXT, NULLABLE) - Local path to raw audio (if stored, with consent).
+    * `emotion_arousal` (REAL, NULLABLE) - Detected arousal (0-1).
+    * `emotion_valence` (REAL, NULLABLE) - Detected valence (-1 to 1).
+    * `emotion_category` (TEXT, NULLABLE) - Categorical emotion (e.g., 'happy', 'sad').
+    * `is_proactive_nudge` (INTEGER, BOOLEAN, DEFAULT 0) - If message is a nudge.
+    * `created_at` (TIMESTAMP, NOT NULL, DEFAULT CURRENT_TIMESTAMP)
+    * `updated_at` (TIMESTAMP, NOT NULL, DEFAULT CURRENT_TIMESTAMP)
+* **Memories Table:** (Semantic, Episodic, Procedural)
+    * `id` (TEXT, PRIMARY KEY, UUID)
+    * `user_id` (TEXT, FOREIGN KEY to Users.id, NOT NULL)
+    * `type` (TEXT, ENUM: 'semantic', 'episodic', 'procedural', NOT NULL)
+    * `content` (TEXT, NOT NULL) - The actual memory text.
+    * `embedding` (BLOB, NOT NULL) - Vector embedding of the content.
+    * `source_id` (TEXT, NULLABLE) - ID of related conversation/journal entry/document.
+    * `source_type` (TEXT, ENUM: 'conversation', 'journal', 'document', 'user_input', NULLABLE)
+    * `timestamp` (TIMESTAMP, NOT NULL) - When the memory was formed/updated.
+    * `relevance_score` (REAL, DEFAULT 0.0) - For RAG prioritization.
+    * `is_active` (INTEGER, BOOLEAN, DEFAULT 1) - Can be toggled by user for visibility.
+    * `created_at` (TIMESTAMP, NOT NULL, DEFAULT CURRENT_TIMESTAMP)
+    * `updated_at` (TIMESTAMP, NOT NULL, DEFAULT CURRENT_TIMESTAMP)
+* **Goals Table:**
+    * `id` (TEXT, PRIMARY KEY, UUID)
+    * `user_id` (TEXT, FOREIGN KEY to Users.id, NOT NULL)
+    * `title` (TEXT, NOT NULL)
+    * `description` (TEXT, NULLABLE)
+    * `status` (TEXT, ENUM: 'active', 'completed', 'archived', NOT NULL)
+    * `due_date` (TIMESTAMP, NULLABLE)
+    * `progress` (REAL, DEFAULT 0.0) - 0.0 to 1.0.
+    * `created_at` (TIMESTAMP, NOT NULL, DEFAULT CURRENT_TIMESTAMP)
+    * `updated_at` (TIMESTAMP, NOT NULL, DEFAULT CURRENT_TIMESTAMP)
+* **JournalEntries Table:**
+    * `id` (TEXT, PRIMARY KEY, UUID)
+    * `user_id` (TEXT, FOREIGN KEY to Users.id, NOT NULL)
+    * `timestamp` (TIMESTAMP, NOT NULL)
+    * `content` (TEXT, NOT NULL)
+    * `detected_emotions` (TEXT, NULLABLE) - JSON array of detected emotions (e.g., `[{"arousal": 0.8, "valence": 0.7, "category": "happy"}]`).
+    * `associated_memories` (TEXT, NULLABLE) - JSON array of Memory.ids.
+    * `created_at` (TIMESTAMP, NOT NULL, DEFAULT CURRENT_TIMESTAMP)
+    * `updated_at` (TIMESTAMP, NOT NULL, DEFAULT CURRENT_TIMESTAMP)
+* **MoodSummaries Table:**
+    * `id` (TEXT, PRIMARY KEY, UUID)
+    * `user_id` (TEXT, FOREIGN KEY to Users.id, NOT NULL)
+    * `date` (DATE, NOT NULL, UNIQUE)
+    * `summary_text` (TEXT, NULLABLE) - AI-generated summary of daily mood.
+    * `aggregated_emotions` (TEXT, NULLABLE) - JSON object of aggregated emotion data for the day.
+    * `created_at` (TIMESTAMP, NOT NULL, DEFAULT CURRENT_TIMESTAMP)
+    * `updated_at` (TIMESTAMP, NOT NULL, DEFAULT CURRENT_TIMESTAMP)
+* **PersonalityProfiles Table:**
+    * `id` (TEXT, PRIMARY KEY, UUID)
+    * `user_id` (TEXT, FOREIGN KEY to Users.id, NULLABLE) - NULL for system-defined profiles.
+    * `name` (TEXT, NOT NULL)
+    * `description` (TEXT, NULLABLE)
+        `llm_prompt_template` (TEXT, NOT NULL) - Core prompt for LLM to adopt personality.
+    * `tone_preferences` (TEXT, NULLABLE) - JSON object for specific tone adjustments.
+    * `memory_visibility_rules` (TEXT, NULLABLE) - JSON object for rules on what memories are accessible.
+    * `is_custom` (INTEGER, BOOLEAN, DEFAULT 0) - Indicates if user-created.
+    * `created_at` (TIMESTAMP, NOT NULL, DEFAULT CURRENT_TIMESTAMP)
+    * `updated_at` (TIMESTAMP, NOT NULL, DEFAULT CURRENT_TIMESTAMP)
+* **NudgePreferences Table:**
+    * `id` (TEXT, PRIMARY KEY, UUID)
+    * `user_id` (TEXT, FOREIGN KEY to Users.id, NOT NULL)
+    * `type` (TEXT, ENUM: 'reminder', 'positive_reinforcement', 'wellness_suggestion', NOT NULL)
+    * `frequency` (TEXT, ENUM: 'daily', 'weekly', 'monthly', 'event_based', NOT NULL)
+    * `time_of_day` (TEXT, NULLABLE) - e.g., "09:00", "18:30".
+    * `content_template` (TEXT, NOT NULL) - Template for nudge message.
+    * `enabled` (INTEGER, BOOLEAN, DEFAULT 1)
+    * `created_at` (TIMESTAMP, NOT NULL, DEFAULT CURRENT_TIMESTAMP)
+    * `updated_at` (TIMESTAMP, NOT NULL, DEFAULT CURRENT_TIMESTAMP)
+* **NudgeHistory Table:**
+    * `id` (TEXT, PRIMARY KEY, UUID)
+    * `user_id` (TEXT, FOREIGN KEY to Users.id, NOT NULL)
+    * `nudge_preference_id` (TEXT, FOREIGN KEY to NudgePreferences.id, NOT NULL)
+    * `timestamp` (TIMESTAMP, NOT NULL) - When the nudge was delivered.
+    * `message_content` (TEXT, NOT NULL) - Actual message sent.
+    * `delivered` (INTEGER, BOOLEAN, DEFAULT 1)
+    * `interacted` (INTEGER, BOOLEAN, DEFAULT 0) - User interacted with notification.
+    * `created_at` (TIMESTAMP, NOT NULL, DEFAULT CURRENT_TIMESTAMP)
+* **Tasks Table (NEW):**
+    * `id` (TEXT, PRIMARY KEY, UUID)
+    * `user_id` (TEXT, FOREIGN KEY to Users.id, NOT NULL)
+    * `task_type` (TEXT, NOT NULL) - e.g., 'createJournalEntry', 'setReminder'.
+    * `status` (TEXT, ENUM: 'pending', 'in-progress', 'completed', 'failed', NOT NULL)
+    * `input_data` (TEXT, NULLABLE) - JSON string of input data for the task.
+    * `result_data` (TEXT, NULLABLE) - JSON string of output data/result of the task.
+    * `error_message` (TEXT, NULLABLE) - Error details if task failed.
+    * `created_at` (TIMESTAMP, NOT NULL, DEFAULT CURRENT_TIMESTAMP)
+    * `updated_at` (TIMESTAMP, NOT NULL, DEFAULT CURRENT_TIMESTAMP)
+    * `completed_at` (TIMESTAMP, NULLABLE)
+* **Feedback Table (NEW):**
+    * `feedback_id` (INTEGER, PRIMARY KEY)
+    * `user_id` (TEXT, FOREIGN KEY to `Users.id`, NOT NULL)
+    * `message_id` (TEXT, FOREIGN KEY to `Messages.id`, NULLABLE) - For specific message feedback
+    * `feedback_type` (TEXT, NOT NULL) - e.g., 'emotion_correction', 'response_quality', 'general'
+    * `is_helpful` (INTEGER, BOOLEAN, NULLABLE) - true/false for thumbs up/down
+    * `corrected_emotion_category` (TEXT, NULLABLE) - e.g., 'happy' if Saira misidentified
+    * `user_comment` (TEXT, NULLABLE) - Detailed text feedback
+    * `created_at` (TIMESTAMP, NOT NULL, DEFAULT CURRENT_TIMESTAMP)
+* **UsageAnalyticsEvents Table (NEW):**
+    * `event_id` (INTEGER, PRIMARY KEY)
+    * `client_id` (TEXT, NOT NULL) - Anonymous unique client ID, not linked to `user_id`
+    * `event_name` (TEXT, NOT NULL) - e.g., 'feature_accessed', 'session_duration', 'performance_metric'
+    * `event_data` (TEXT, NULLABLE) - JSON string for event-specific metrics, e.g., `{"feature": "Journaling"}`
+    * `event_timestamp` (TIMESTAMP, NOT NULL, DEFAULT CURRENT_TIMESTAMP)
+    * `app_version` (TEXT, NULLABLE)
+    * `os_version` (TEXT, NULLABLE)
+    * `device_type` (TEXT, NULLABLE) - e.g., 'mac', 'iphone'
 
-    *   **Indexing Strategy:**
-        *   Indexes on foreign keys (`user_id`, `conversation_id`, `personality_profile_id`, `nudge_preference_id`).
-        *   Indexes on `timestamp` for time-series data (Conversations, Messages, JournalEntries, NudgeHistory).
-        *   Unique index on `MoodSummaries.date` per `user_id`.
-        *   `sqlite-vec` virtual table for `Memories.embedding` for efficient vector search [[16, 17], S_R147, S_R153].
-        *   Indexes on `name` for `PersonalityProfiles` for quick lookup.
-    *   **Foreign Key Relationships:** Enforce `ON DELETE CASCADE` for `Messages` to `Conversations`, `Goals`, `JournalEntries`, `MoodSummaries`, `NudgePreferences`, `NudgeHistory` to `Users`.
-    *   **Database Migration/Versioning:** Use a lightweight schema migration tool (e.g., a custom Node.js script) to manage database schema changes. Each migration will be versioned and applied sequentially on app launch.
+**Indexing Strategy:**
 
-3.  **Comprehensive API Design**
-    The primary API will be internal, facilitating communication between the React Native frontend and the Node.js backend services. This will likely involve a local HTTP server or WebSocket server running within the Node.js backend process.
+* Indexes on foreign keys (`user_id`, `conversation_id`, `personality_profile_id`, `nudge_preference_id`).
+* Indexes on `timestamp` for time-series data (Conversations, Messages, JournalEntries, NudgeHistory, Tasks, Feedback, UsageAnalyticsEvents).
+* Unique index on `MoodSummaries.date` per `user_id`.
+* `sqlite-vec` virtual table for `Memories.embedding` for efficient vector search [[16, 17], S\_R147, S\_R153].
+* Indexes on `name` for PersonalityProfiles for quick lookup.
+* Index on `Tasks.user_id` and `Tasks.status` for efficient task retrieval.
+* Index on `Feedback.user_id` and `Feedback.message_id`.
+* Index on `UsageAnalyticsEvents.client_id` and `UsageAnalyticsEvents.event_name`.
 
-    *   **React Native Frontend APIs (Internal to `SairaReactNativeApp/src/services/`):** These are TypeScript interfaces and classes that define the communication contracts between the React Native UI and the backend services. They will use `fetch` for HTTP requests and `WebSocket` for real-time streaming to the local Node.js backend.
-        *   **`UserManager` (TypeScript Class):**
-            *   `createUser(name: string, initialPreferences: UserPreferencesDTO) => Promise<User>` (C)
-            *   `getUser(id: string) => Promise<User | null>` (R)
-            *   `updateUser(id: string, updates: UserUpdateDTO) => Promise<User>` (U)
-            *   `deleteUser(id: string) => Promise<void>` (D)
-            *   `getPrivacySettings(userId: string) => Promise<PrivacySettingsDTO>` (R)
-            *   `updatePrivacySettings(userId: string, settings: PrivacySettingsDTO) => Promise<void>` (U)
-        *   **`ConversationManager` (TypeScript Class):**
-            *   `startConversation(userId: string, personalityId: string) => Promise<Conversation>` (C)
-            *   `getConversation(id: string) => Promise<Conversation | null>` (R)
-            *   `getConversations(userId: string, pagination: PaginationDTO) => Promise<Conversation>` (R)
-            *   `updateConversationTitle(id: string, title: string) => Promise<Conversation>` (U)
-            *   `endConversation(id: string) => Promise<Conversation>` (U)
-            *   `deleteConversation(id: string) => Promise<void>` (D)
-        *   **`MessageManager` (TypeScript Class):**
-            *   `addMessage(conversationId: string, sender: SenderType, content: string, audioPath?: string, emotions?: EmotionDataDTO) => Promise<Message>` (C)
-            *   `getMessages(conversationId: string, pagination: PaginationDTO) => Promise<Message>` (R)
-            *   `updateMessage(id: string, content: string) => Promise<Message>` (U)
-            *   `deleteMessage(id: string) => Promise<void>` (D)
-        *   **`JournalManager` (TypeScript Class):**
-            *   `createJournalEntry(userId: string, content: string, emotions?: EmotionDataDTO) => Promise<JournalEntry>` (C)
-            *   `getJournalEntry(id: string) => Promise<JournalEntry | null>` (R)
-            *   `getJournalEntries(userId: string, dateRange: DateRangeDTO, pagination: PaginationDTO) => Promise<JournalEntry>` (R)
-            *   `updateJournalEntry(id: string, content: string) => Promise<JournalEntry>` (U)
-            *   `deleteJournalEntry(id: string) => Promise<void>` (D)
-            *   `generateMoodSummary(userId: string, date: Date) => Promise<MoodSummary>` (C)
-            *   `getMoodSummaries(userId: string, dateRange: DateRangeDTO) => Promise<MoodSummary>` (R)
-        *   **`PersonalityManager` (TypeScript Class):**
-            *   `getPersonalityProfiles(userId?: string) => Promise<PersonalityProfile>` (R)
-            *   `createCustomPersonality(userId: string, profile: PersonalityProfileDTO) => Promise<PersonalityProfile>` (C)
-            *   `updatePersonalityProfile(id: string, updates: PersonalityProfileUpdateDTO) => Promise<PersonalityProfile>` (U)
-            *   `deleteCustomPersonality(id: string) => Promise<void>` (D)
-            *   `activatePersonalityProfile(userId: string, profileId: string) => Promise<void>` (U)
-        *   **`NudgeManager` (TypeScript Class):**
-            *   `createNudgePreference(userId: string, preference: NudgePreferenceDTO) => Promise<NudgePreference>` (C)
-            *   `getNudgePreferences(userId: string) => Promise<NudgePreference>` (R)
-            *   `updateNudgePreference(id: string, updates: NudgePreferenceUpdateDTO) => Promise<NudgePreference>` (U)
-            *   `deleteNudgePreference(id: string) => Promise<void>` (D)
-            *   `getNudgeHistory(userId: string, pagination: PaginationDTO) => Promise<NudgeHistory>` (R)
-            *   `markNudgeInteracted(nudgeHistoryId: string) => Promise<void>` (U)
+**Foreign Key Relationships:** Enforce ON DELETE CASCADE for Messages to Conversations, Goals, JournalEntries, MoodSummaries, NudgePreferences, NudgeHistory, Tasks, Feedback to Users.
 
-    *   **Node.js Backend APIs (Local HTTP/WebSocket Server in `SairaBackendServices/src/node_services/ai_inference_server.ts`):**
-        *   **HTTP Endpoints (REST-like):** These endpoints will be exposed via a local HTTP server (e.g., Express.js) running within the Node.js backend process.
-            *   `POST /ai/llm/generate`: Request LLM response.
-                *   Request: `{ prompt: string, context: string, memories: string, personalityId: string, emotionData: EmotionDataDTO }`
-                *   Response: `{ text: string }`
-            *   `POST /ai/asr/transcribe_file`: Transcribe a full audio file.
-                *   Request: `{ filePath: string }`
-                *   Response: `{ text: string }`
-            *   `POST /ai/tts/synthesize_text`: Synthesize speech from text.
-                *   Request: `{ text: string }`
-                *   Response: `{ audioData: string (base64 encoded PCM) }`
-            *   `POST /ai/ser/detect_file`: Detect emotion from an audio file.
-                *   Request: `{ filePath: string }`
-                *   Response: `{ arousal: number, valence: number, category: string }`
-            *   `POST /ai/embeddings/generate`: Generate text embedding.
-                *   Request: `{ text: string }`
-                *   Response: `{ embedding: number }`
-            *   `POST /data/query`: Execute database query.
-                *   Request: `{ sql: string, params: any }`
-                *   Response: `{ rows: any }`
-            *   `POST /data/mutate`: Execute database mutation.
-                *   Request: `{ sql: string, params: any }`
-                *   Response: `{ changes: number, lastInsertRowId: number }`
-            *   `POST /data/search_vectors`: Perform vector search.
-                *   Request: `{ embedding: number, tableName: string, limit: number }`
-                *   Response: `{ results: { id: string, score: number } }`
-            *   `POST /models/load`: Load AI model.
-                *   Request: `{ modelType: string, modelPath: string }`
-                *   Response: `{ success: boolean }`
-            *   `POST /sync/initiate`: Initiate cloud sync.
-                *   Request: `{ userId: string, lastSyncTimestamp: string }`
-                *   Response: `{ status: string }`
-            *   `POST /sync/upload`: Upload data for sync.
-                *   Request: `{ userId: string, data: any, type: string }`
-                *   Response: `{ success: boolean }`
-            *   `POST /sync/download`: Download data for sync.
-                *   Request: `{ userId: string, type: string, lastSyncTimestamp: string }`
-                *   Response: `{ data: any }`
-            *   `POST /sync/resolve_conflict`: Resolve sync conflict.
-                *   Request: `{ conflictId: string, resolution: string }`
-                *   Response: `{ success: boolean }`
-            *   `POST /rag/ingest_document`: Initiates document ingestion.
-                *   Request: `{ userId: string, filePath: string, autoIngest: boolean }`
-                *   Response: `{ success: boolean, documentId: string }`
-        *   **WebSocket Endpoints (for real-time streaming on `ai_inference_server.ts`):**
-            *   `/ws/audio_stream`: Bidirectional audio streaming for ASR, SER, and TTS.
-                *   Client sends raw audio chunks (e.g., PCM `ArrayBuffer`).
-                *   Server sends back real-time transcription updates, emotion data, and TTS audio chunks.
-            *   `/ws/wake_word`: For continuous wake word detection.
-                *   Client streams raw audio.
-                *   Server sends `wakeWordDetected` event.
+**Database Migration/Versioning:** Use a lightweight schema migration tool (e.g., a custom Node.js script) to manage database schema changes. Each migration will be versioned and applied sequentially on app launch.
 
-    *   **Node.js Backend (Internal APIs using C++ Native Addons and Python `child_process`):**
-        *   **`audio_io_addon` (N-API):** Wraps PortAudio or direct Core Audio calls for low-latency audio input/output.
-            *   `startCapture(sampleRate: number, channels: number, callback: (buffer: ArrayBuffer) => void)`
-            *   `stopCapture()`
-            *   `playAudio(buffer: ArrayBuffer, sampleRate: number, channels: number)`
-            *   `getDevices(): { input: AudioDevice, output: AudioDevice }`
-        *   **`ai_inference_addon` (N-API):** Wraps C++ AI libraries.
-            *   `loadModel(type: 'llm' | 'asr' | 'tts' | 'ser' | 'wake_word' | 'embedding', modelPath: string, config?: object)`
-            *   `llmGenerate(prompt: string, context: string, memories: string, personalityPrompt: string, emotionData: EmotionDataDTO): string`
-            *   `asrTranscribe(audioBuffer: ArrayBuffer): string`
-            *   `ttsSynthesize(text: string): ArrayBuffer`
-            *   `serDetect(audioBuffer: ArrayBuffer): EmotionDataDTO`
-            *   `wakeWordProcess(audioBuffer: ArrayBuffer): boolean` (returns true if detected)
-            *   `embeddingGenerate(text: string): ArrayBuffer`
-        *   **`sqlite_vec_addon` (N-API):** Wraps `sqlite-vec` for vector operations.
-            *   `openDatabase(path: string, encryptionKey: string)`
-            *   `closeDatabase()`
-            *   `executeSQL(query: string, params: any): any`
-            *   `searchVectors(embedding: ArrayBuffer, tableName: string, limit: number): { id: string, score: number }`
-            *   `insertVector(tableName: string, id: string, embedding: ArrayBuffer): boolean`
-            *   `updateVector(tableName: string, id: string, embedding: ArrayBuffer): boolean`
-            *   `deleteVector(tableName: string, id: string): boolean`
-            *   `runMigrations()`
-        *   **Python Scripts (spawned via Node.js `child_process`):**
-            *   `rag_ingestion.py`: For document parsing, chunking, and potentially calling embedding models if Python bindings are preferred.
-            *   `model_downloader.py`: For managing AI model downloads.
-            *   `ser_feature_extractor.py`: If `openSMILE` Python bindings are used for feature extraction before a custom Python-based SER classifier.
+---
 
-    *   **Authentication & Authorization:**
-        *   **Local User Authentication:** User authentication is local, based on a user-derived key (e.g., passphrase or biometric unlock) used to decrypt the SQLite database (SQLCipher). No external authentication provider for MVP.
-        *   **Authorization:** All data is user-specific. Access control is implicit based on the currently authenticated local user. Fine-grained permissions for memory visibility and data recording are managed via user settings in the `Users` table. Communication between frontend and backend is assumed to be secure due to local IPC (e.g., `localhost` connections, `child_process` pipes).
-    *   **Error Handling:** Standard JavaScript `Error` objects for Node.js services. HTTP endpoints will use appropriate status codes (e.g., 400 for bad requests, 500 for internal errors). WebSocket errors will be communicated via specific error messages. C++ native addons will return error codes or throw exceptions that are caught and translated into Node.js `Error` objects.
-    *   **Rate Limiting/Caching:** Not applicable for local-first, single-user desktop application. Caching will be handled at the UI layer for performance (e.g., in-memory caches for frequently accessed data).
+### Comprehensive API Design
+
+The primary API will be internal, facilitating communication between the React Native frontend and the Node.js backend services. This will likely involve a local HTTP server or WebSocket server running within the Node.js backend process.
+
+#### React Native Frontend APIs (Internal to `SairaReactNativeApp/src/services/`):
+
+These are TypeScript interfaces and classes that define the communication contracts between the React Native UI and the backend services. They will use `fetch` for HTTP requests and WebSocket for real-time streaming to the local Node.js backend.
+
+* **UserManager** (TypeScript Class):
+    * `createUser(name: string, initialPreferences: UserPreferencesDTO) => Promise<User>` (C)
+    * `getUser(id: string) => Promise<User | null>` (R)
+    * `updateUser(id: string, updates: UserUpdateDTO) => Promise<User>` (U)
+    * `deleteUser(id: string) => Promise<void>` (D)
+    * `getPrivacySettings(userId: string) => Promise<PrivacySettingsDTO>` (R)
+    * `updatePrivacySettings(userId: string, settings: PrivacySettingsDTO) => Promise<void>` (U)
+* **ConversationManager** (TypeScript Class):
+    * `startConversation(userId: string, personalityId: string) => Promise<Conversation>` (C)
+    * `getConversation(id: string) => Promise<Conversation | null>` (R)
+    * `getConversations(userId: string, pagination: PaginationDTO) => Promise<Conversation[]>` (R)
+    * `updateConversationTitle(id: string, title: string) => Promise<Conversation>` (U)
+    * `endConversation(id: string) => Promise<Conversation>` (U)
+    * `deleteConversation(id: string) => Promise<void>` (D)
+* **MessageManager** (TypeScript Class):
+    * `addMessage(conversationId: string, sender: SenderType, content: string, audioPath?: string, emotions?: EmotionDataDTO) => Promise<Message>` (C)
+    * `getMessages(conversationId: string, pagination: PaginationDTO) => Promise<Message[]>` (R)
+    * `updateMessage(id: string, content: string) => Promise<Message>` (U)
+    * `deleteMessage(id: string) => Promise<void>` (D)
+* **JournalManager** (TypeScript Class) - **Note: Direct calls mostly replaced by TaskManagerClient for background processing**:
+    * `getJournalEntry(id: string) => Promise<JournalEntry | null>` (R)
+    * `getJournalEntries(userId: string, dateRange: DateRangeDTO, pagination: PaginationDTO) => Promise<JournalEntry[]>` (R)
+    * `updateJournalEntry(id: string, content: string) => Promise<JournalEntry>` (U)
+    * `deleteJournalEntry(id: string) => Promise<void>` (D)
+    * `generateMoodSummary(userId: string, date: Date) => Promise<MoodSummary>` (C)
+    * `getMoodSummaries(userId: string, dateRange: DateRangeDTO) => Promise<MoodSummary[]>` (R)
+* **PersonalityManager** (TypeScript Class):
+    * `getPersonalityProfiles(userId?: string) => Promise<PersonalityProfile[]>` (R)
+    * `createCustomPersonality(userId: string, profile: PersonalityProfileDTO) => Promise<PersonalityProfile>` (C)
+    * `updatePersonalityProfile(id: string, updates: PersonalityProfileUpdateDTO) => Promise<PersonalityProfile>` (U)
+    * `deleteCustomPersonality(id: string) => Promise<void>` (D)
+    * `activatePersonalityProfile(userId: string, profileId: string) => Promise<void>` (U)
+* **NudgeManager** (TypeScript Class) - **Note: Direct calls for setting nudges might be replaced by TaskManagerClient**:
+    * `getNudgePreferences(userId: string) => Promise<NudgePreference[]>` (R)
+    * `updateNudgePreference(id: string, updates: NudgePreferenceUpdateDTO) => Promise<NudgePreference>` (U)
+    * `deleteNudgePreference(id: string) => Promise<void>` (D)
+    * `getNudgeHistory(userId: string, pagination: PaginationDTO) => Promise<NudgeHistory[]>` (R)
+    * `markNudgeInteracted(nudgeHistoryId: string) => Promise<void>` (U)
+* **TaskManagerClient (NEW - TypeScript Class in `SairaReactNativeApp/src/services/`):**
+    * `createTask(userId: string, taskType: TaskType, taskData: any): Promise<Task>`
+        * **Purpose:** Initiates a background task (e.g., `createJournalEntry`, `setReminder`). Returns a `Task` object immediately with `pending` status.
+    * `getTaskStatus(taskId: string): Promise<TaskStatus>`
+        * **Purpose:** Polls for the current status of a given task.
+    * `onTaskUpdate(callback: (update: TaskUpdateEvent) => void): () => void`
+        * **Purpose:** Subscribes to WebSocket updates for task status changes (`/ws/task_updates`). Returns an unsubscribe function.
+    * `getTaskResult(taskId: string): Promise<any>`
+        * **Purpose:** Optional API to fetch the final result of a completed task if not fully provided via WebSocket.
+
+#### Node.js Backend APIs (Local HTTP/WebSocket Server in `SairaBackendServices/src/node_services/ai_inference_server.ts` and `task_manager.ts`):
+
+* **HTTP Endpoints (REST-like):** These endpoints will be exposed via a local HTTP server (e.g., Express.js) running within the Node.js backend process.
+
+    * `POST /ai/llm/generate`: Request LLM response.
+        * Request: `{ prompt: string, context: string, memories: string, personalityId: string, emotionData: EmotionDataDTO }`
+        * Response: `{ text: string }`
+    * `POST /ai/asr/transcribe_file`: Transcribe a full audio file.
+        * Request: `{ filePath: string }`
+        * Response: `{ text: string }`
+    * `POST /ai/tts/synthesize_text`: Synthesize speech from text.
+        * Request: `{ text: string }`
+        * Response: `{ audioData: string (base64 encoded PCM) }`
+    * `POST /ai/ser/detect_file`: Detect emotion from an audio file.
+        * Request: `{ filePath: string }`
+        * Response: `{ arousal: number, valence: number, category: string }`
+    * `GET /ai/ser/mood_summary` (NEW): Provides an aggregated emotional mood summary over a configurable time window (e.g., last 5 minutes) based on recent `Messages` entries.
+        * Endpoint:** `GET /ai/ser/mood_summary?minutes=5` (default 5 minutes)
+        * Parameters:** `minutes` (optional, integer): Duration in minutes for aggregation.
+        * Response:**
+            ```json
+            {
+                "overall_mood": "sad", // Dominant emotion category over the period
+                "mood_intensity": 0.7, // Average arousal/valence intensity
+                "mood_breakdown": {
+                    "happy": 0.2,
+                    "sad": 0.5,
+                    "neutral": 0.2,
+                    "angry": 0.1
+                }, // Distribution of emotion categories
+                "start_timestamp": "ISO_DATE_STRING",
+                "end_timestamp": "ISO_DATE_STRING"
+            }
+            ```
+        * Backend Logic: Query `Messages Table`, filter by timestamp, aggregate `emotion_category`, `emotion_arousal`, `emotion_valence` to derive `overall_mood` and `mood_intensity`.
+    * `POST /ai/embeddings/generate`: Generate text embedding.
+        * Request: `{ text: string }`
+        * Response: `{ embedding: number[] }`
+    * `POST /data/query`: Execute database query.
+        * Request: `{ sql: string, params: any[] }`
+        * Response: `{ rows: any[] }`
+    * `POST /data/mutate`: Execute database mutation.
+        * Request: `{ sql: string, params: any[] }`
+        * Response: `{ changes: number, lastInsertRowId: number }`
+    * `POST /data/search_vectors`: Perform vector search.
+        * Request: `{ embedding: number[], tableName: string, limit: number }`
+        * Response: `{ results: { id: string, score: number }[] }`
+    * `POST /models/load`: Load AI model.
+        * Request: `{ modelType: string, modelPath: string }`
+        * Response: `{ success: boolean }`
+    * `POST /sync/initiate`: Initiate cloud sync.
+        * Request: `{ userId: string, lastSyncTimestamp: string }`
+        * Response: `{ status: string }`
+    * `POST /sync/upload`: Upload data for sync.
+        * Request: `{ userId: string, data: any, type: string }`
+        * Response: `{ success: boolean }`
+    * `POST /sync/download`: Download data for sync.
+        * Request: `{ userId: string, type: string, lastSyncTimestamp: string }`
+        * Response: `{ data: any }`
+    * `POST /sync/resolve_conflict`: Resolve sync conflict.
+        * Request: `{ conflictId: string, resolution: string }`
+        * Response: `{ success: boolean }`
+    * `POST /rag/ingest_document`: Initiates document ingestion.
+        * Request: `{ userId: string, filePath: string, autoIngest: boolean }`
+        * Response: `{ success: boolean, documentId: string }`
+    * `POST /tasks/create` (NEW - Handled by `task_manager.ts`):
+        * Request: `{ userId: string, taskType: TaskType, taskData: any }`
+        * Response: `{ taskId: string, status: 'pending' }` (Immediate response)
+    * `GET /tasks/:taskId/status` (NEW - Handled by `task_manager.ts`):
+        * Request: `None`
+        * Response: `{ status: TaskStatus, result?: any, error?: string }`
+    * `GET /tasks/:taskId/result` (NEW - Optional, Handled by `task_manager.ts`):
+        * Request: `None`
+        * Response: `{ result: any }`
+    * `POST /feedback/submit` (NEW): Allows users to submit feedback on Saira's performance, particularly for emotional accuracy or response quality.
+        * Endpoint: `POST /feedback/submit`
+        * Request Body:
+            ```json
+            {
+                "message_id": "msg_123", // Optional: The ID of the message being reviewed
+                "feedback_type": "emotion_correction",
+                "is_helpful": false, // Optional: true/false for thumbs up/down
+                "corrected_emotion_category": "sad", // Optional: User's correction for emotion
+                "user_comment": "Saira thought I was angry, but I was just frustrated." // Optional: User's text comment
+            }
+            ```
+        * Response: `200 OK` or `400 Bad Request` with error details.
+        * Backend Logic: Validate input, insert data into `Feedback Table`.
+    * `POST /analytics/log_event` (NEW):Receives anonymized usage events from the client, only if the user has opted in.
+        * Endpoint: `POST /analytics/log_event`
+        * Request Body:
+            ```json
+            {
+                "event_name": "DeepTalk_Session_Ended",
+                "event_data": {
+                    "duration_seconds": 360,
+                    "message_count": 25,
+                    "emotion_shift_score": 0.7
+                },
+                "client_id": "anon_client_12345", // Anonymous, non-PII ID
+                "app_version": "1.0.0",
+                "os_version": "macOS_14.5",
+                "device_type": "mac"
+            }
+            ```
+        * Response: `200 OK` (no content).
+        * Backend Logic: Check `analytics_opt_in` status for the `client_id` (if identifiable, otherwise rely on client-side opt-in check). Sanitize `event_data` to ensure no PII is included. Insert into `UsageAnalyticsEvents Table`. This endpoint must be distinct and isolated from the main data sync and user data pathways.
+
+* **WebSocket Endpoints (for real-time streaming on `ai_inference_server.ts` and `task_manager.ts`):**
+
+    * `/ws/audio_stream`: Bidirectional audio streaming for ASR, SER, and TTS.
+        * Client sends raw audio chunks (e.g., PCM ArrayBuffer).
+        * Server sends back real-time transcription updates, emotion data, and TTS audio chunks.
+        * Example extended payload from Server to Client:
+            ```json
+            {
+                "type": "audio_analysis",
+                "timestamp": "ISO_DATE_STRING",
+                "transcript_partial": "...",
+                "emotion_arousal": 0.8,
+                "emotion_valence": -0.3,
+                "emotion_category": "angry"
+            }
+            ```
+    * `/ws/wake_word`: For continuous wake word detection.
+        * Client streams raw audio.
+        * Server sends `wakeWordDetected` event.
+    * `/ws/task_updates (NEW - Handled by `task_manager.ts`):
+        * Purpose:** Provides real-time updates on task status.
+        * Server sends:
+            * `{ taskId: string, status: 'created', timestamp: number }`
+            * `{ taskId: string, status: 'in-progress', timestamp: number, progress?: number }`
+            * `{ taskId: string, status: 'completed', timestamp: number, result: any }`
+            * `{ taskId: string, status: 'failed', timestamp: number, error: string }`
+    * **`/ws/device_context (NEW):`**
+        * **Description:** A persistent WebSocket connection for real-time exchange of critical, transient device context data (e.g., current active conversation ID, user's real-time emotional state, active personality mode, "typing" status).
+        * **Client (Device A) to Server Messages:**
+            ```json
+            // When user starts interacting
+            { "type": "status_update", "status": "active", "conversation_id": "conv_abc", "device_type": "mac" }
+            // When emotion changes significantly
+            { "type": "emotion_update", "emotion_category": "happy", "arousal": 0.7, "valence": 0.6 }
+            // When user is typing/speaking
+            { "type": "typing_status", "is_typing": true, "conversation_id": "conv_xyz" }
+            ```
+        * **Server to Client (Device B) Messages:**
+            * Server broadcasts relevant updates to other active devices of the same user.
+            * Example message:
+                ```json
+                {
+                    "type": "context_sync",
+                    "source_device_id": "device_abc",
+                    "data": {
+                        "active_conversation_id": "conv_abc",
+                        "current_mood": "happy",
+                        "active_personality_id": "mom_personality",
+                        "last_spoken_text_snippet": "Hey Saira, how are you?"
+                    }
+                }
+                ```
+        * **Backend Logic:** Maintain a map of active user connections and their device IDs. On receiving a context update from one device, update the user's ephemeral state and broadcast to other connected devices of that user.
+
+#### Node.js Backend (Internal APIs using C++ Native Addons and Python `child_process`):
+
+* **audio_io_addon** (N-API): Wraps PortAudio or direct Core Audio calls for low-latency audio input/output.
+    * `startCapture(sampleRate: number, channels: number, callback: (buffer: ArrayBuffer) => void)`
+    * `stopCapture()`
+    * `playAudio(buffer: ArrayBuffer, sampleRate: number, channels: number)`
+    * `getDevices(): { input: AudioDevice, output: AudioDevice }`
+* **ai_inference_addon** (N-API): Wraps C++ AI libraries.
+    * `loadModel(type: 'llm' | 'asr' | 'tts' | 'ser' | 'wake_word' | 'embedding', modelPath: string, config?: object)`
+    * `llmGenerate(prompt: string, context: string, memories: string, personalityPrompt: string, emotionData: EmotionDataDTO): string`
+    * `asrTranscribe(audioBuffer: ArrayBuffer): string`
+    * `ttsSynthesize(text: string): ArrayBuffer`
+    * `serDetect(audioBuffer: ArrayBuffer): EmotionDataDTO`
+    * `wakeWordProcess(audioBuffer: ArrayBuffer): boolean` (returns true if detected)
+    * `embeddingGenerate(text: string): ArrayBuffer`
+* **sqlite_vec_addon** (N-API): Wraps `sqlite-vec` for vector operations.
+    * `openDatabase(path: string, encryptionKey: string)`
+    * `closeDatabase()`
+    * `executeSQL(query: string, params: any[]): any`
+    * `searchVectors(embedding: ArrayBuffer, tableName: string, limit: number): { id: string, score: number }[]`
+    * `insertVector(tableName: string, id: string, embedding: ArrayBuffer): boolean`
+    * `updateVector(tableName: string, id: string, embedding: ArrayBuffer): boolean`
+    * `deleteVector(tableName: string, id: string): boolean`
+    * `runMigrations()`
+* **Python Scripts** (spawned via Node.js `child_process`):
+    * `rag_ingestion.py`: For document parsing, chunking, and potentially calling embedding models if Python bindings are preferred.
+    * `model_downloader.py`: For managing AI model downloads.
+    * `ser_feature_extractor.py`: If openSMILE Python bindings are used for feature extraction before a custom Python-based SER classifier.
+
+**Authentication & Authorization:**
+
+* **Local User Authentication:** User authentication is local, based on a user-derived key (e.g., passphrase or biometric unlock) used to decrypt the SQLite database (SQLCipher). No external authentication provider for MVP.
+* **Authorization:** All data is user-specific. Access control is implicit based on the currently authenticated local user. Fine-grained permissions for memory visibility and data recording are managed via user settings in the Users table. Communication between frontend and backend is assumed to be secure due to local IPC (e.g., localhost connections, `child_process` pipes).
+
+**Error Handling:** Standard JavaScript Error objects for Node.js services. HTTP endpoints will use appropriate status codes (e.g., 400 for bad requests, 500 for internal errors). WebSocket errors will be communicated via specific error messages. C++ native addon errors will be propagated as JavaScript errors. The `TaskManager` will also record `error_message` in the `Tasks` table for failed tasks and communicate them via WebSocket.
 
 4.  **Frontend Architecture (React Native for macOS with TypeScript)**
-    *   **Component Hierarchy:**
-        *   `App.tsx` (Root Component)
-            *   `OnboardingScreen.tsx` (Conditional on `onboarding_completed` flag)
-            *   `AppNavigator.tsx` (Handles main tab navigation)
-                *   `ConversationScreen.tsx` (Chat interface)
-                    *   `MessageBubble.tsx`
-                    *   `VoiceInputIndicator.tsx`
-                *   `JournalingScreen.tsx` (Daily Check-ins, Journal Entries)
-                    *   `MoodSummaryCard.tsx`
-                    *   `JournalEntryList.tsx`
-                    *   `JournalEntryDetailView.tsx`
-                *   `DeepTalkScreen.tsx` (Specialized conversation mode)
-                *   `ProfileSettingsScreen.tsx` (User settings, privacy, personality)
-                    *   `PersonalitySelectionView.tsx`
-                    *   `PrivacyDashboardView.tsx`
-                    *   `ModelManagementView.tsx`
-                *   `SharedComponents/` (e.g., `CustomButton.tsx`, `LoadingIndicator.tsx`, `AlertView.tsx`)
-    *   **Reusable Component Library:** Develop a consistent set of React Native components (Views, Text, Buttons, etc.) to ensure a cohesive UI/UX. Use TypeScript for strict type checking and better developer experience.
-    *   **State Management:**
-        *   `useState` and `useEffect` hooks for local component state.
-        *   `useContext` or a library like `Zustand`/`Jotai` for global application state (e.g., user profile, active conversation, AI service status) to avoid prop drilling.
-        *   `React Query` or `SWR` for data fetching and caching from the local Node.js backend.
-    *   **Routing and Navigation:**
-        *   `React Navigation` library for tab-based navigation and stack navigation within tabs.[3]
-        *   Programmatic navigation for onboarding flow and specific actions (e.g., opening Deep Talk from a nudge).
-    *   **Responsive Design:** Utilize React Native's `Flexbox` for layout and `Dimensions` API for adapting to screen size changes. Consider `Platform.OS === 'macos'` for macOS-specific UI adjustments.
+    * **Component Hierarchy:**
+        * `App.tsx` (Root Component)
+            * `OnboardingScreen.tsx` (Conditional on `onboarding_completed` flag)
+            * `AppNavigator.tsx` (Handles main tab navigation)
+                * `ConversationScreen.tsx` (Chat interface)
+                    * `MessageBubble.tsx`
+                    * `VoiceInputIndicator.tsx`
+                * `JournalingScreen.tsx` (Daily Check-ins, Journal Entries)
+                    * `MoodSummaryCard.tsx`
+                    * `JournalEntryList.tsx`
+                    * `JournalEntryDetailView.tsx`
+                * `DeepTalkScreen.tsx` (Specialized conversation mode)
+                * `ProfileSettingsScreen.tsx` (User settings, privacy, personality)
+                    * `PersonalitySelectionView.tsx`
+                    * `PrivacyDashboardView.tsx`
+                    * `ModelManagementView.tsx`
+                * `SharedComponents/` (e.g., `CustomButton.tsx`, `LoadingIndicator.tsx`, `AlertView.tsx`)
+    * **Reusable Component Library:** Develop a consistent set of React Native components (Views, Text, Buttons, etc.) to ensure a cohesive UI/UX. Use TypeScript for strict type checking and better developer experience.
+    * **State Management:**
+        * `useState` and `useEffect` hooks for local component state.
+        * `useContext` or a library like `Zustand`/`Jotai` for global application state (e.g., user profile, active conversation, AI service status) to avoid prop drilling.
+        * `React Query` or `SWR` for data fetching and caching from the local Node.js backend.
+    * **Routing and Navigation:**
+        * `React Navigation` library for tab-based navigation and stack navigation within tabs.[3]
+        * Programmatic navigation for onboarding flow and specific actions (e.g., opening Deep Talk from a nudge).
+    * **Responsive Design:** Utilize React Native's `Flexbox` for layout and `Dimensions` API for adapting to screen size changes. Consider `Platform.OS === 'macos'` for macOS-specific UI adjustments.
 
 5.  **Detailed CRUD Operations**
 
-    *   **User (CRUD via `UserManager` in Frontend, interacts with `data_manager.ts` in Backend)**
-        *   **Create:** `createUser(name: string, initialPreferences: UserPreferencesDTO)`
-            *   **Validation:** `name` not empty, `initialPreferences` valid.
-            *   **Required Fields:** `name`, `gdpr_ccpa_consent`, `emotion_recording_consent`, `memory_recording_consent`.
-            *   **Flow:** Onboarding UI collects data -> `UserManager.createUser` calls `IPCService` -> `data_manager.ts` receives request -> `data_manager.ts` uses `sqlite_vec_addon` to insert into `Users` table.
-        *   **Read:** `getUser(id: string)`, `getPrivacySettings(userId: string)`
-            *   **Filtering:** By `id`.
-            *   **Pagination/Sorting:** Not applicable for single user retrieval.
-            *   **Flow:** Profile Settings UI requests user data -> `UserManager.getUser` calls `IPCService` -> `data_manager.ts` queries `Users` table.
-        *   **Update:** `updateUser(id: string, updates: UserUpdateDTO)`, `updatePrivacySettings(userId: string, settings: PrivacySettingsDTO)`
-            *   **Partial Updates:** `UserUpdateDTO` allows updating specific fields (e.g., `preferred_tone_style`, `sync_enabled`).
-            *   **Validation:** Ensure updates are valid (e.g., `sync_frequency` is a valid enum value).
-            *   **Flow:** Profile Settings UI modifies data -> `UserManager.updateUser` calls `IPCService` -> `data_manager.ts` updates `Users` table.
-        *   **Delete:** `deleteUser(id: string)`
-            *   **Soft Delete:** Not applicable for primary user.
-            *   **Hard Delete:** Full deletion of user and all associated data (conversations, memories, journals, etc.) from the local database.
-            *   **Flow:** Privacy Dashboard UI initiates deletion (with confirmation) -> `UserManager.deleteUser` calls `IPCService` -> `data_manager.ts` deletes from `Users` table and cascades deletes.
-
-    *   **Conversation (CRUD via `ConversationManager` in Frontend, interacts with `data_manager.ts` in Backend)**
-        *   **Create:** `startConversation(userId: string, personalityId: string)`
-            *   **Validation:** `userId` and `personalityId` must exist.
-            *   **Required Fields:** `user_id`, `start_time`, `personality_profile_id`.
-            *   **Flow:** User initiates new conversation -> `ConversationManager.startConversation` calls `IPCService` -> `data_manager.ts` inserts into `Conversations`.
-        *   **Read:** `getConversation(id: string)`, `getConversations(userId: string, pagination: PaginationDTO)`
-            *   **Filtering:** By `id` or `user_id`.
-            *   **Pagination:** `offset`, `limit` for conversation list.
-            *   **Sorting:** By `start_time` (descending).
-            *   **Flow:** Conversation History UI loads list -> `ConversationManager.getConversations` calls `IPCService` -> `data_manager.ts` queries `Conversations`.
-        *   **Update:** `updateConversationTitle(id: string, title: string)`, `endConversation(id: string)`
-            *   **Partial Updates:** Update title, set `end_time`.
-            *   **Validation:** `title` not empty.
-            *   **Flow:** User edits title or ends conversation -> `ConversationManager.updateConversationTitle`/`endConversation` calls `IPCService` -> `data_manager.ts` updates `Conversations`.
-        *   **Delete:** `deleteConversation(id: string)`
-            *   **Soft Delete:** Not applicable.
-            *   **Hard Delete:** Deletes conversation and cascades to `Messages` associated.
-            *   **Flow:** User deletes conversation from history -> `ConversationManager.deleteConversation` calls `IPCService` -> `data_manager.ts` deletes from `Conversations`.
-
-    *   **Message (CRUD via `MessageManager` in Frontend, interacts with `data_manager.ts` in Backend)**
-        *   **Create:** `addMessage(conversationId: string, sender: SenderType, content: string, audioPath?: string, emotions?: EmotionDataDTO)`
-            *   **Validation:** `conversationId` exists, `content` not empty.
-            *   **Required Fields:** `conversation_id`, `sender_type`, `content`, `timestamp`.
-            *   **Flow:** User speaks/types or AI responds -> `MessageManager.addMessage` calls `IPCService` -> `data_manager.ts` inserts into `Messages`.
-        *   **Read:** `getMessages(conversationId: string, pagination: PaginationDTO)`
-            *   **Filtering:** By `conversationId`.
-            *   **Pagination:** `offset`, `limit` for message history.
-            *   **Sorting:** By `timestamp` (ascending).
-            *   **Flow:** Conversation Screen loads messages -> `MessageManager.getMessages` calls `IPCService` -> `data_manager.ts` queries `Messages`.
-        *   **Update:** `updateMessage(id: string, content: string)`
-            *   **Partial Updates:** Only `content` can be updated.
-            *   **Validation:** `content` not empty.
-            *   **Flow:** User edits their message (e.g., typo correction) -> `MessageManager.updateMessage` calls `IPCService` -> `data_manager.ts` updates `Messages`.
-        *   **Delete:** `deleteMessage(id: string)`
-            *   **Soft Delete:** Not applicable.
-            *   **Hard Delete:** Deletes specific message.
-            *   **Flow:** User deletes a specific message from history -> `MessageManager.deleteMessage` calls `IPCService` -> `data_manager.ts` deletes from `Messages`.
+    * **User (CRUD via `UserManager` in Frontend, interacts with `data_manager.ts` in Backend)**
+        * **Create:** `createUser(name: string, initialPreferences: UserPreferencesDTO)`
+            * **Validation:** `name` not empty, `initialPreferences` valid.
+            * **Required Fields:** `name`, `gdpr_ccpa_consent`, `emotion_recording_consent`, `memory_recording_consent`.
+            * **Flow:** Onboarding UI collects data -> `UserManager.createUser` calls `IPCService` -> `data_manager.ts` receives request -> `data_manager.ts` uses `sqlite_vec_addon` to insert into `Users` table.
+        * **Read:** `getUser(id: string)`, `getPrivacySettings(userId: string)`
+            * **Filtering:** By `id`.
+            * **Pagination/Sorting:** Not applicable for single user retrieval.
+            * **Flow:** Profile Settings UI requests user data -> `UserManager.getUser` calls `IPCService` -> `data_manager.ts` queries `Users` table.
+        * **Update:** `updateUser(id: string, updates: UserUpdateDTO)`, `updatePrivacySettings(userId: string, settings: PrivacySettingsDTO)`
+            * **Partial Updates:** `UserUpdateDTO` allows updating specific fields (e.g., `preferred_tone_style`, `sync_enabled`).
+            * **Validation:** Ensure updates are valid (e.g., `sync_frequency` is a valid enum value).
+            * **Flow:** Profile Settings UI modifies data -> `UserManager.updateUser` calls `IPCService` -> `data_manager.ts` updates `Users` table.
+        * **Delete:** `deleteUser(id: string)`
+            * **Soft Delete:** Not applicable for primary user.
+            * **Hard Delete:** Full deletion of user and all associated data (conversations, memories, journals, etc.) from the local database.
+            * **Flow:** Privacy Dashboard UI initiates deletion (with confirmation) -> `UserManager.deleteUser` calls `IPCService` -> `data_manager.ts` deletes from `Users` table and cascades deletes.
+    * **Conversation (CRUD via `ConversationManager` in Frontend, interacts with `data_manager.ts` in Backend)**
+        * **Create:** `startConversation(userId: string, personalityId: string)`
+            * **Validation:** `userId` and `personalityId` must exist.
+            * **Required Fields:** `user_id`, `start_time`, `personality_profile_id`.
+            * **Flow:** User initiates new conversation -> `ConversationManager.startConversation` calls `IPCService` -> `data_manager.ts` inserts into `Conversations`.
+        * **Read:** `getConversation(id: string)`, `getConversations(userId: string, pagination: PaginationDTO)`
+            * **Filtering:** By `id` or `user_id`.
+            * **Pagination:** `offset`, `limit` for conversation list.
+            * **Sorting:** By `start_time` (descending).
+            * **Flow:** Conversation History UI loads list -> `ConversationManager.getConversations` calls `IPCService` -> `data_manager.ts` queries `Conversations`.
+        * **Update:** `updateConversationTitle(id: string, title: string)`, `endConversation(id: string)`
+            * **Partial Updates:** Update title, set `end_time`.
+            * **Validation:** `title` not empty.
+            * **Flow:** User edits title or ends conversation -> `ConversationManager.updateConversationTitle`/`endConversation` calls `IPCService` -> `data_manager.ts` updates `Conversations`.
+        * **Delete:** `deleteConversation(id: string)`
+            * **Soft Delete:** Not applicable.
+            * **Hard Delete:** Deletes conversation and cascades to `Messages` associated.
+            * **Flow:** User deletes conversation from history -> `ConversationManager.deleteConversation` calls `IPCService` -> `data_manager.ts` deletes from `Conversations`.
+    * **Message (CRUD via `MessageManager` in Frontend, interacts with `data_manager.ts` in Backend)**
+        * **Create:** `addMessage(conversationId: string, sender: SenderType, content: string, audioPath?: string, emotions?: EmotionDataDTO)`
+            * **Validation:** `conversationId` exists, `content` not empty.
+            * **Required Fields:** `conversation_id`, `sender_type`, `content`, `timestamp`.
+            * **Flow:** User speaks/types or AI responds -> `MessageManager.addMessage` calls `IPCService` -> `data_manager.ts` inserts into `Messages`.
+        * **Read:** `getMessages(conversationId: string, pagination: PaginationDTO)`
+            * **Filtering:** By `conversationId`.
+            * **Pagination:** `offset`, `limit` for message history.
+            * **Sorting:** By `timestamp` (ascending).
+            * **Flow:** Conversation Screen loads messages -> `MessageManager.getMessages` calls `IPCService` -> `data_manager.ts` queries `Messages`.
+        * **Update:** `updateMessage(id: string, content: string)`
+            * **Partial Updates:** Only `content` can be updated.
+            * **Validation:** `content` not empty.
+            * **Flow:** User edits their message (e.g., typo correction) -> `MessageManager.updateMessage` calls `IPCService` -> `data_manager.ts` updates `Messages`.
+        * **Delete:** `deleteMessage(id: string)`
+            * **Soft Delete:** Not applicable.
+            * **Hard Delete:** Deletes specific message.
+            * **Flow:** User deletes a specific message... from history -> `MessageManager.deleteMessage` calls `IPCService` -> `data_manager.ts` deletes from `Messages`.
 
     *   **Memory (CRUD via `MemoryManager` in Frontend, interacts with `data_manager.ts` and `ai_inference_server.ts` in Backend)**
         *   **Create:** `createMemory(userId: string, type: MemoryType, content: string, sourceId?: string, sourceType?: SourceType)`
