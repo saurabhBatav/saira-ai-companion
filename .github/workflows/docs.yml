@@ -1,4 +1,6 @@
-name: Docs
+# .github/workflows/docs.yml
+
+name: 🚀 Docs CI/CD
 
 on:
   push:
@@ -7,25 +9,55 @@ on:
     branches: [main]
 
 jobs:
-  build-and-deploy:
+  build-docs:
+    name: Build MkDocs Site
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout repository
+      - name: 🔄 Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Set up Python
+      - name: 🐍 Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      - name: Install dependencies
+      - name: 📦 Cache pip dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('docs/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: 📥 Install Python dependencies
         run: pip install -r docs/requirements.txt
 
-      - name: Build MkDocs site
+      - name: 🛠️ Build MkDocs site
         run: mkdocs build --strict
 
-      - name: Deploy to GitHub Pages
-        if: github.ref == 'refs/heads/main'
+  deploy-docs:
+    name: Deploy MkDocs to GitHub Pages
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    needs: build-docs
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🔄 Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: 🐍 Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 📥 Install dependencies
+        run: pip install -r docs/requirements.txt
+
+      - name: 🛠️ Build MkDocs site
+        run: mkdocs build --strict
+
+      - name: 🚀 Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
