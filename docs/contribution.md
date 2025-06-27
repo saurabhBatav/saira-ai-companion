@@ -281,10 +281,10 @@ Instead, email security@saira-ai.com with:
 
 ### Resources
 
-- [Project Documentation](docs/)
-- [API Reference](docs/api/)
-- [Architecture Guide](docs/architecture/)
-- [Development Setup](docs/development.md)
+- [Project Documentation](./)
+- [API Reference](api/)
+- [Architecture Guide](architecture.md)
+- [Development Setup](development.md)
 
 ## 🏆 Recognition
 
