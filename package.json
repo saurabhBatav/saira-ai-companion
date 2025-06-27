@@ -1,0 +1,20 @@
+{
+    "private": true,
+    "workspaces": [
+        "Saira",
+        "SairaBackendServices"
+    ],
+    "scripts": {
+        "build": "npm run build --workspace=Saira && npm run build --workspace=SairaBackendServices",
+        "test": "npm run test --workspace=Saira && npm run test --workspace=SairaBackendServices",
+        "lint": "npm run lint --workspace=Saira && npm run lint --workspace=SairaBackendServices",
+        "format": "prettier --write ."
+    },
+    "devDependencies": {
+        "@types/jest": "^30.0.0",
+        "eslint": "^9.29.0",
+        "jest": "^30.0.3",
+        "prettier": "^3.0.0",
+        "ts-jest": "^29.4.0"
+    }
+}

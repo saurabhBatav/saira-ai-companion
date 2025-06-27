@@ -7,18 +7,28 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start:dev": "ts-node-dev --respawn src/node_services/main.ts"
+    "start:dev": "ts-node-dev --respawn src/node_services/main.ts",
+    "build": "tsc",
+    "test": "jest --config=jest.config.js",
+    "lint": "eslint src || true"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
   "devDependencies": {
+    "@eslint/js": "^8.57.1",
     "@types/express": "^5.0.3",
+    "@types/jest": "^30.0.0",
     "@types/node": "^24.0.4",
+    "eslint": "^9.29.0",
+    "globals": "^13.24.0",
+    "jest": "^29.7.0",
+    "prettier": "2.8.8",
+    "ts-jest": "^29.4.0",
     "ts-node-dev": "^2.0.0",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.35.0"
   },
   "dependencies": {
     "dotenv": "^16.5.0",
