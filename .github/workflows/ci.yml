@@ -16,6 +16,9 @@ jobs:
     steps:
       - name: 🔄 Checkout Repository
         uses: actions/checkout@v3
+        
+      - name: 📂 Show Current Directory Structure
+        run: ls -R
 
       - name: 🟢 Set up Node.js
         uses: actions/setup-node@v3
@@ -33,8 +36,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
 
-      # - name: 📦 Install Root Dependencies
-      #   run: npm install
+      - name: 📦 Install Root Dependencies
+        run: npm install
 
       - name: 📦 Install Frontend Dependencies
         working-directory: ./Saira
