@@ -53,37 +53,31 @@ jobs:
           npm install
 
       - name: 🧹 Lint Frontend (React Native)
-        working-directory: ./Saira
         run: |
           echo "Running in: $(pwd)"
           npm run lint
 
       - name: 🧹 Lint Backend (Node.js Services)
-        working-directory: ./SairaBackendServices
         run: |
           echo "Running in: $(pwd)"
           npm run lint
 
       - name: 🧪 Test Frontend (React Native)
-        working-directory: ./Saira
         run: |
           echo "Running in: $(pwd)"
           npm run test
 
       - name: 🧪 Test Backend (Node.js Services)
-        working-directory: ./SairaBackendServices
         run: |
           echo "Running in: $(pwd)"
           npm run test
       
       - name: 🧾 TypeScript Check – Frontend
-        working-directory: ./Saira
         run: |
           echo "Running in: $(pwd)"
           npm run tsc --noEmit
 
       - name: 🧾 TypeScript Check – Backend
-        working-directory: ./SairaBackendServices
         run: |
           echo "Running in: $(pwd)"
           npm run tsc --noEmit
