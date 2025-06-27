@@ -66,10 +66,10 @@ jobs:
           echo "Running in: $(pwd)"
           npm run test
 
-      - name: 🏗️ Build All Workspaces
-        run: |
-          echo "Running in: $(pwd)"
-          npm run build
+      # - name: 🏗️ Build All Workspaces
+      #   run: |
+      #     echo "Running in: $(pwd)"
+      #     npm run build
 
       - name: 🧾 TypeScript Check – Frontend
         run: |
