@@ -1,13 +1,13 @@
 {
     "private": true,
     "workspaces": [
-        "Saira",
-        "SairaBackendServices"
+        "saira",
+        "sairaBackendServices"
     ],
     "scripts": {
-        "build": "npm run build --workspace=Saira && npm run build --workspace=SairaBackendServices",
-        "test": "npm run test --workspace=Saira && npm run test --workspace=SairaBackendServices",
-        "lint": "npm run lint --workspace=Saira && npm run lint --workspace=SairaBackendServices",
+        "build": "npm run build --workspace=saira && npm run build --workspace=sairaBackendServices",
+        "test": "npm run test --workspace=saira && npm run test --workspace=sairaBackendServices",
+        "lint": "npm run lint --workspace=saira && npm run lint --workspace=sairaBackendServices",
         "format": "prettier --write ."
     },
     "devDependencies": {
