@@ -588,9 +588,9 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#react-native-frontend-apis-internal-to-sairareactnativeappsrcservices" class="md-nav__link">
+  <a href="#react-native-frontend-apis-internal-to-sairasrcservices" class="md-nav__link">
     <span class="md-ellipsis">
-      React Native Frontend APIs (Internal to SairaReactNativeApp/src/services/):
+      React Native Frontend APIs (Internal to Saira/src/services/):
     </span>
   </a>
   
@@ -705,7 +705,7 @@
 <span class="err">│</span><span class="w">       </span><span class="err">├──</span><span class="w"> </span><span class="n">journaling</span><span class="o">.</span><span class="n">md</span>
 <span class="err">│</span><span class="w">       </span><span class="err">└──</span><span class="w"> </span><span class="n">nudges</span><span class="o">.</span><span class="n">md</span>
 <span class="err">│</span>
-<span class="err">├──</span><span class="w"> </span><span class="n">SairaReactNativeApp</span><span class="o">/</span><span class="w">                     </span><span class="c1"># Main macOS/iOS application (React Native + TypeScript)</span>
+<span class="err">├──</span><span class="w"> </span><span class="n">Saira</span><span class="o">/</span><span class="w">                     </span><span class="c1"># Main macOS/iOS application (React Native + TypeScript)</span>
 <span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="n">package</span><span class="o">.</span><span class="n">json</span><span class="w">                         </span><span class="c1"># Node.js dependencies for React Native [3]</span>
 <span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="n">tsconfig</span><span class="o">.</span><span class="n">json</span><span class="w">                        </span><span class="c1"># TypeScript configuration [4, 5]</span>
 <span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="n">index</span><span class="o">.</span><span class="n">js</span><span class="w">                             </span><span class="c1"># Entry point for React Native app [6]</span>
@@ -739,14 +739,14 @@
 <span class="err">│</span><span class="w">   </span><span class="err">│</span><span class="w">       </span><span class="err">├──</span><span class="w"> </span><span class="n">Logger</span><span class="o">.</span><span class="n">ts</span><span class="w">                    </span><span class="c1"># Structured logging utility</span>
 <span class="err">│</span><span class="w">   </span><span class="err">│</span><span class="w">       </span><span class="err">└──</span><span class="w"> </span><span class="n">Permissions</span><span class="o">.</span><span class="n">ts</span><span class="w">               </span><span class="c1"># Handles system permissions</span>
 <span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="n">ios</span><span class="o">/</span><span class="w">                                 </span><span class="c1"># iOS native project (Objective-C/Swift)</span>
-<span class="err">│</span><span class="w">   </span><span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="n">SairaReactNativeApp</span><span class="o">.</span><span class="n">xcodeproj</span><span class="o">/</span>
-<span class="err">│</span><span class="w">   </span><span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="n">SairaReactNativeApp</span><span class="o">/</span>
+<span class="err">│</span><span class="w">   </span><span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="n">Saira</span><span class="o">.</span><span class="n">xcodeproj</span><span class="o">/</span>
+<span class="err">│</span><span class="w">   </span><span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="n">Saira</span><span class="o">/</span>
 <span class="err">│</span><span class="w">   </span><span class="err">│</span><span class="w">   </span><span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="n">AppDelegate</span><span class="o">.</span><span class="n">mm</span><span class="w">               </span><span class="c1"># Objective-C++ for native module bridging [7, 8, 9]</span>
 <span class="err">│</span><span class="w">   </span><span class="err">│</span><span class="w">   </span><span class="err">│</span><span class="w">   </span><span class="err">└──</span><span class="w"> </span><span class="n">Info</span><span class="o">.</span><span class="n">plist</span>
 <span class="err">│</span><span class="w">   </span><span class="err">│</span><span class="w">   </span><span class="err">└──</span><span class="w"> </span><span class="n">Podfile</span><span class="w">                          </span><span class="c1"># CocoaPods for iOS dependencies [1]</span>
 <span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="n">macos</span><span class="o">/</span><span class="w">                               </span><span class="c1"># macOS native project (Objective-C/Swift)</span>
-<span class="err">│</span><span class="w">   </span><span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="n">SairaReactNativeApp</span><span class="o">.</span><span class="n">xcodeproj</span><span class="o">/</span>
-<span class="err">│</span><span class="w">   </span><span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="n">SairaReactNativeApp</span><span class="o">/</span>
+<span class="err">│</span><span class="w">   </span><span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="n">Saira</span><span class="o">.</span><span class="n">xcodeproj</span><span class="o">/</span>
+<span class="err">│</span><span class="w">   </span><span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="n">Saira</span><span class="o">/</span>
 <span class="err">│</span><span class="w">   </span><span class="err">│</span><span class="w">   </span><span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="n">AppDelegate</span><span class="o">.</span><span class="n">mm</span><span class="w">               </span><span class="c1"># Objective-C++ for native module bridging [7, 8, 9]</span>
 <span class="err">│</span><span class="w">   </span><span class="err">│</span><span class="w">   </span><span class="err">│</span><span class="w">   </span><span class="err">└──</span><span class="w"> </span><span class="n">Info</span><span class="o">.</span><span class="n">plist</span>
 <span class="err">│</span><span class="w">   </span><span class="err">│</span><span class="w">   </span><span class="err">└──</span><span class="w"> </span><span class="n">Podfile</span><span class="w">                          </span><span class="c1"># CocoaPods for macOS dependencies [1]</span>
@@ -859,7 +859,7 @@
 <hr />
 <h3 id="detailed-implementation-guide">Detailed Implementation Guide<a class="headerlink" href="#detailed-implementation-guide" title="Permanent link">&para;</a></h3>
 <p><strong>System Architecture Overview</strong></p>
-<p>High-level Architecture: The application will consist of a React Native for macOS frontend (<code>SairaReactNativeApp/</code>) and a Node.js/Python backend (<code>SairaBackendServices/</code>). The frontend handles the UI and high-level application logic. The backend handles all performance-critical AI inference, low-level audio I/O, and local data management. Communication between the frontend and backend will primarily occur via Inter-Process Communication (IPC) using local HTTP/WebSocket servers or Node.js <code>child_process</code> module.</p>
+<p>High-level Architecture: The application will consist of a React Native for macOS frontend (<code>Saira/</code>) and a Node.js/Python backend (<code>SairaBackendServices/</code>). The frontend handles the UI and high-level application logic. The backend handles all performance-critical AI inference, low-level audio I/O, and local data management. Communication between the frontend and backend will primarily occur via Inter-Process Communication (IPC) using local HTTP/WebSocket servers or Node.js <code>child_process</code> module.</p>
 <p><strong>Technology Stack:</strong></p>
 <ul>
 <li><strong>Frontend UI:</strong> React Native for macOS (with TypeScript). Justification: Allows for JavaScript/React-based UI development, enabling code reuse for future iOS expansion. TypeScript enhances code quality and maintainability for large projects. React Native renders native components for a near-native experience.</li>
@@ -1079,7 +1079,7 @@
 <hr />
 <h3 id="comprehensive-api-design">Comprehensive API Design<a class="headerlink" href="#comprehensive-api-design" title="Permanent link">&para;</a></h3>
 <p>The primary API will be internal, facilitating communication between the React Native frontend and the Node.js backend services. This will likely involve a local HTTP server or WebSocket server running within the Node.js backend process.</p>
-<h4 id="react-native-frontend-apis-internal-to-sairareactnativeappsrcservices">React Native Frontend APIs (Internal to <code>SairaReactNativeApp/src/services/</code>):<a class="headerlink" href="#react-native-frontend-apis-internal-to-sairareactnativeappsrcservices" title="Permanent link">&para;</a></h4>
+<h4 id="react-native-frontend-apis-internal-to-sairasrcservices">React Native Frontend APIs (Internal to <code>Saira/src/services/</code>):<a class="headerlink" href="#react-native-frontend-apis-internal-to-sairasrcservices" title="Permanent link">&para;</a></h4>
 <p>These are TypeScript interfaces and classes that define the communication contracts between the React Native UI and the backend services. They will use <code>fetch</code> for HTTP requests and WebSocket for real-time streaming to the local Node.js backend.</p>
 <ul>
 <li><strong>UserManager</strong> (TypeScript Class):<ul>
@@ -1132,7 +1132,7 @@
 <li><code>markNudgeInteracted(nudgeHistoryId: string) =&gt; Promise&lt;void&gt;</code> (U)</li>
 </ul>
 </li>
-<li><strong>TaskManagerClient (NEW - TypeScript Class in <code>SairaReactNativeApp/src/services/</code>):</strong><ul>
+<li><strong>TaskManagerClient (NEW - TypeScript Class in <code>Saira/src/services/</code>):</strong><ul>
 <li><code>createTask(userId: string, taskType: TaskType, taskData: any): Promise&lt;Task&gt;</code><ul>
 <li><strong>Purpose:</strong> Initiates a background task (e.g., <code>createJournalEntry</code>, <code>setReminder</code>). Returns a <code>Task</code> object immediately with <code>pending</code> status.</li>
 </ul>
@@ -1611,7 +1611,7 @@
 <p><strong>User Experience Flow</strong></p>
 <ul>
 <li><strong>Onboarding Flow:</strong><ol>
-<li><strong>App Launch (First Time):</strong> <code>SairaReactNativeApp</code> detects no existing user profile.</li>
+<li><strong>App Launch (First Time):</strong> <code>Saira</code> detects no existing user profile.</li>
 <li><strong>Welcome Screen:</strong> Displays Saira's purpose and privacy commitment.</li>
 <li><strong>Consent Screen:</strong> Presents GDPR/CCPA, emotion recording, and memory recording consents. User must explicitly accept.</li>
 <li><strong>Personality Selection:</strong> User chooses an initial personality mode (e.g., "Best Friend", "Coach") from pre-defined options.</li>
@@ -1697,7 +1697,7 @@
 <p><strong>Testing Strategy</strong></p>
 <ul>
 <li><strong>Unit Test Requirements:</strong><ul>
-<li><strong>React Native (<code>SairaReactNativeApp/__tests__</code>):</strong> Jest for all React/TypeScript components, hooks, and services. Mock backend IPC calls.</li>
+<li><strong>React Native (<code>Saira/__tests__</code>):</strong> Jest for all React/TypeScript components, hooks, and services. Mock backend IPC calls.</li>
 <li><strong>Node.js (<code>SairaBackendServices/tests</code>):</strong> Jest/Mocha for Node.js services (AI inference server, data manager, model manager). Mock C++ native addon calls.</li>
 <li><strong>Python (<code>SairaBackendServices/tests</code>):</strong> Pytest for Python scripts (RAG ingestion, model downloader).</li>
 <li><strong>C++ Native Addons (<code>SairaBackendServices/native_addons/</code>):</strong> Google Test/Catch2 for C++ code within native addons.</li>
@@ -1845,7 +1845,7 @@ To enable natural, real-time conversational interaction with Saira through voice
 <li>
 <p><strong>System Architecture Overview</strong></p>
 <ul>
-<li><strong>High-level Architecture:</strong> This feature is primarily handled by the <code>SairaBackendServices</code> (Node.js/Python/C++ addons) due to its performance-critical nature. The <code>SairaReactNativeApp</code> (React Native) acts as the client, sending audio input and receiving text/audio output via a local WebSocket server.</li>
+<li><strong>High-level Architecture:</strong> This feature is primarily handled by the <code>SairaBackendServices</code> (Node.js/Python/C++ addons) due to its performance-critical nature. The <code>Saira</code> (React Native) acts as the client, sending audio input and receiving text/audio output via a local WebSocket server.</li>
 <li><strong>Technology Stack:</strong><ul>
 <li><strong>Frontend (UI):</strong> React Native for macOS (TypeScript) for microphone access (via native module), displaying real-time transcription, and playing back audio.</li>
 <li><strong>Backend (Orchestration &amp; IPC):</strong> Node.js (<code>ai_inference_server.ts</code>, <code>audio_processor.ts</code>). Node.js will manage the audio streams, orchestrate calls to AI models, and handle WebSocket communication with the frontend. Node.js is generally faster than Python for I/O-bound tasks and concurrent API requests.</li>
