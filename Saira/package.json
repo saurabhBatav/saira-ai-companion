@@ -8,7 +8,8 @@
     "lint": "eslint src || true",
     "start": "react-native start",
     "build": "react-native bundle --platform=macos --entry-file=index.js --bundle-output=build/main.jsbundle --dev=false",
-    "test": "jest --config=jest.config.js"
+    "test": "jest --config=jest.config.js",
+    "tsc": "tsc"
   },
   "dependencies": {
     "@react-native/new-app-screen": "0.80.0",
