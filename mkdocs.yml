@@ -12,6 +12,7 @@ theme:
     - search.highlight
 nav:
   - Home: index.md
+  - Overview: https://github.com/saurabhBatav/saira-ai-companion/blob/main/README.md
   - Architecture: architecture.md
   - API Reference: api/README.md
   - Development Guide: development.md
