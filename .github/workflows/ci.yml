@@ -23,6 +23,16 @@ jobs:
           node-version: 20
           cache: 'npm'
 
+      - name: 🗂️ Cache node_modules
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.npm
+            **/node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
       - name: 📦 Install Root Dependencies
         run: npm install
 
@@ -49,3 +59,11 @@ jobs:
       - name: 🧪 Test Backend (Node.js Services)
         working-directory: SairaBackendServices
         run: npm run test
+      
+      - name: 🧾 TypeScript Check – Frontend
+        working-directory: Saira
+        run: npx tsc --noEmit
+
+      - name: 🧾 TypeScript Check – Backend
+        working-directory: SairaBackendServices
+        run: npx tsc --noEmit
