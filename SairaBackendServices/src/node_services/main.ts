@@ -2,7 +2,6 @@ import express from 'express';
 import dotenv from 'dotenv';
 import healthRoutes from './routes/health.route';
 import { errorHandler } from './middleware/error.middleware';
-import logger from './utils/logger';
 
 dotenv.config();
 

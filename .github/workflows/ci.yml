@@ -1,0 +1,35 @@
+# .github/workflows/ci.yml
+
+name: 🚀 CI – Lint, Test, and Build
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  build:
+    name: 🧪 Lint & Test (Monorepo)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🔄 Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: 🟢 Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: 📦 Install Root Dependencies
+        run: npm install
+
+      - name: 📦 Install Frontend Dependencies
+        working-directory: ./SairaReactNativeApp
+        run: npm install
+
+      - name: 📦 Install Backend Dependencies
+        working-directory: ./SairaBackendServices
+        run: npm install
