@@ -45,25 +45,25 @@ jobs:
         run: npm install
 
       - name: 🧹 Lint Frontend (React Native)
-        working-directory: Saira
+        working-directory: ./Saira
         run: npm run lint
 
       - name: 🧹 Lint Backend (Node.js Services)
-        working-directory: SairaBackendServices
+        working-directory: ./SairaBackendServices
         run: npm run lint
 
       - name: 🧪 Test Frontend (React Native)
-        working-directory: Saira
+        working-directory: ./Saira
         run: npm run test
 
       - name: 🧪 Test Backend (Node.js Services)
-        working-directory: SairaBackendServices
+        working-directory: ./SairaBackendServices
         run: npm run test
       
       - name: 🧾 TypeScript Check – Frontend
-        working-directory: Saira
+        working-directory: ./Saira
         run: npx tsc --noEmit
 
       - name: 🧾 TypeScript Check – Backend
-        working-directory: SairaBackendServices
+        working-directory: ./SairaBackendServices
         run: npx tsc --noEmit
