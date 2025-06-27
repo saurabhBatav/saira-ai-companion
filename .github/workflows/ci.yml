@@ -16,9 +16,7 @@ jobs:
     steps:
       - name: 🔄 Checkout Repository
         uses: actions/checkout@v3
-        
-      - name: 📂 Show Current Directory Structure
-        run: ls -R
+        path: .
 
       - name: 🟢 Set up Node.js
         uses: actions/setup-node@v3
