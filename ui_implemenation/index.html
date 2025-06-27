@@ -1,0 +1,2855 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://saurabhbatav.github.io/saira-ai-companion/ui_implemenation/">
+      
+      
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.13">
+    
+    
+      
+        <title>Ui implemenation - Saira AI Companion Docs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.7e359304.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#feature-specifications-ui-focused" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Saira AI Companion Docs" class="md-header__button md-logo" aria-label="Saira AI Companion Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Saira AI Companion Docs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Ui implemenation
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/saurabhBatav/saira-ai-companion" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    saurabhBatav/saira-ai-companion
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="https://github.com/saurabhBatav/saira-ai-companion/blob/main/README.md" class="md-tabs__link">
+        
+  
+    
+  
+  Overview
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../architecture/" class="md-tabs__link">
+        
+  
+    
+  
+  Architecture
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../api/" class="md-tabs__link">
+        
+  
+    
+  
+  API Reference
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../development/" class="md-tabs__link">
+        
+  
+    
+  
+  Development Guide
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../deployment/" class="md-tabs__link">
+        
+  
+    
+  
+  Deployment
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../contribution/" class="md-tabs__link">
+        
+  
+    
+  
+  Contributing
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../changelog/" class="md-tabs__link">
+        
+  
+    
+  
+  Changelog
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Saira AI Companion Docs" class="md-nav__button md-logo" aria-label="Saira AI Companion Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    Saira AI Companion Docs
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/saurabhBatav/saira-ai-companion" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    saurabhBatav/saira-ai-companion
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://github.com/saurabhBatav/saira-ai-companion/blob/main/README.md" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Overview
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Architecture
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    API Reference
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../development/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Development Guide
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deployment/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Deployment
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../contribution/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Contributing
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../changelog/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Changelog
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#feature-specifications-ui-focused" class="md-nav__link">
+    <span class="md-ellipsis">
+      Feature Specifications (UI-Focused)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Feature Specifications (UI-Focused)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#feature-onboarding-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      Feature: Onboarding Flow
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#feature-main-application-navigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Feature: Main Application Navigation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#feature-conversation-screen" class="md-nav__link">
+    <span class="md-ellipsis">
+      Feature: Conversation Screen
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#feature-daily-check-ins-journaling-screen" class="md-nav__link">
+    <span class="md-ellipsis">
+      Feature: Daily Check-ins &amp; Journaling Screen
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#feature-deep-talk-screen" class="md-nav__link">
+    <span class="md-ellipsis">
+      Feature: Deep Talk Screen
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#feature-profile-settings-screen" class="md-nav__link">
+    <span class="md-ellipsis">
+      Feature: Profile Settings Screen
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#feature-proactive-nudges-notifications" class="md-nav__link">
+    <span class="md-ellipsis">
+      Feature: Proactive Nudges &amp; Notifications
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#feature-onboarding-flow_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Feature: Onboarding Flow
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#feature-main-application-navigation_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Feature: Main Application Navigation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#feature-conversation-screen_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Feature: Conversation Screen
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#feature-daily-check-ins-journaling-screen_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Feature: Daily Check-ins &amp; Journaling Screen
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#feature-deep-talk-screen_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Feature: Deep Talk Screen
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#feature-profile-settings-screen_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Feature: Profile Settings Screen
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#feature-proactive-nudges-notifications_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Feature: Proactive Nudges &amp; Notifications
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+  <h1>Ui implemenation</h1>
+
+<h2 id="feature-specifications-ui-focused">Feature Specifications (UI-Focused)<a class="headerlink" href="#feature-specifications-ui-focused" title="Permanent link">&para;</a></h2>
+<h3 id="feature-onboarding-flow">Feature: Onboarding Flow<a class="headerlink" href="#feature-onboarding-flow" title="Permanent link">&para;</a></h3>
+<p><strong>Feature Goal (UI-specific)</strong>
+To guide new users through an intuitive, multi-step setup process, collecting essential preferences and obtaining necessary consents to personalize their Saira experience from the first interaction.</p>
+<p><strong>Any API Relationships (UI-specific)</strong></p>
+<ul>
+<li><strong><code>UserManager</code> (Frontend Service):</strong> Calls <code>createUser</code> with collected preferences and consent data.</li>
+<li><strong><code>PersonalityManager</code> (Frontend Service):</strong> Fetches pre-defined personality profiles for selection.</li>
+<li><strong><code>DataStoreService</code> (Frontend Service):</strong> Persists initial user data locally.</li>
+</ul>
+<p><strong>Detailed Feature Requirements (UI-specific)</strong></p>
+<ol>
+<li>
+<p><strong>Welcome Screen (<code>OnboardingScreen.tsx</code> - Step 1):</strong></p>
+<ul>
+<li><strong>Visuals:</strong> Full-screen splash with Saira logo, a welcoming tagline (e.g., "Your Emotion-Aware Life Companion"), and a brief, compelling description of Saira's purpose.</li>
+<li><strong>Elements:</strong><ul>
+<li>Large, centered Saira logo/icon.</li>
+<li>Headline text: "Welcome to Saira."</li>
+<li>Body text: "An AI that understands your emotions, grows with you, and helps you manage your mental, emotional, and personal life through intelligent, natural conversations."</li>
+<li>Primary Call-to-Action (CTA) button: "Get Started" (or "Begin Your Journey").</li>
+</ul>
+</li>
+<li><strong>Interactions:</strong> Tapping "Get Started" navigates to the Consent Screen.</li>
+<li><strong>States:</strong> Initial load state.</li>
+</ul>
+</li>
+<li>
+<p><strong>Consent Screen (<code>OnboardingScreen.tsx</code> - Step 2):</strong></p>
+<ul>
+<li><strong>Visuals:</strong> A clear, concise screen presenting privacy commitments and requiring explicit user consent for sensitive data processing.</li>
+<li><strong>Elements:</strong><ul>
+<li>Headline: "Your Privacy, Our Priority."</li>
+<li>Body text explaining Saira's privacy-first approach (local processing, E2EE sync).</li>
+<li>Checkbox: "I agree to Saira's Privacy Policy and Terms of Service." (Link to full policy).</li>
+<li>Checkbox: "Allow Saira to record and analyze my emotional tone from voice for personalized support." (Optional, with clear explanation).</li>
+<li>Checkbox: "Allow Saira to record and store memories from our conversations to build long-term context." (Optional, with clear explanation).</li>
+<li>Primary CTA button: "Continue" (disabled until mandatory consents are checked).</li>
+<li>Secondary button: "Learn More About Privacy" (opens external link or in-app modal).</li>
+</ul>
+</li>
+<li><strong>Interactions:</strong><ul>
+<li>Tapping checkboxes toggles their state.</li>
+<li>"Continue" button enables only when "Privacy Policy" checkbox is checked.</li>
+<li>Tapping "Continue" navigates to Personality Selection.</li>
+</ul>
+</li>
+<li><strong>States:</strong> Button disabled/enabled states.</li>
+</ul>
+</li>
+<li>
+<p><strong>Personality Selection Screen (<code>OnboardingScreen.tsx</code> - Step 3):</strong></p>
+<ul>
+<li><strong>Visuals:</strong> A grid or carousel of pre-defined personality profiles with brief descriptions.</li>
+<li><strong>Elements:</strong><ul>
+<li>Headline: "Choose Saira's Initial Personality."</li>
+<li>Description: "You can change this anytime in settings."</li>
+<li>List/Grid of <code>PersonalityProfileCard</code> components:<ul>
+<li>Each card displays: Personality Name (e.g., "The Coach," "The Best Friend," "The Mom").</li>
+<li>Short description of personality traits and interaction style.</li>
+<li>Visual indicator for selection (e.g., border, checkmark).</li>
+</ul>
+</li>
+<li>Primary CTA button: "Next".</li>
+</ul>
+</li>
+<li><strong>Interactions:</strong><ul>
+<li>Tapping a <code>PersonalityProfileCard</code> selects it. Only one can be active.</li>
+<li>"Next" button navigates to Goal Setting.</li>
+</ul>
+</li>
+<li><strong>States:</strong> Selected/unselected card states.</li>
+</ul>
+</li>
+<li>
+<p><strong>Goal Setting Screen (<code>OnboardingScreen.tsx</code> - Step 4):</strong></p>
+<ul>
+<li><strong>Visuals:</strong> A screen for users to define initial personal goals.</li>
+<li><strong>Elements:</strong><ul>
+<li>Headline: "What are your initial goals with Saira?"</li>
+<li>Description: "Saira can help you track and achieve personal goals. You can add more later."</li>
+<li><code>TextInput</code> field: "Add a new goal..." (e.g., "Improve sleep," "Reduce stress," "Learn a new skill").</li>
+<li>Button: "Add Goal" (adds text from input to a list).</li>
+<li><code>FlatList</code> or <code>ScrollView</code> displaying added goals:<ul>
+<li>Each goal item: Text of the goal, small "x" button to remove.</li>
+</ul>
+</li>
+<li>Primary CTA button: "Next".</li>
+<li>Secondary button: "Skip for now".</li>
+</ul>
+</li>
+<li><strong>Interactions:</strong><ul>
+<li>Typing in <code>TextInput</code> updates its value.</li>
+<li>Tapping "Add Goal" adds the goal to the list.</li>
+<li>Tapping "x" removes a goal.</li>
+<li>"Next" navigates to Tone Style Preference.</li>
+<li>"Skip for now" navigates to Tone Style Preference.</li>
+</ul>
+</li>
+<li><strong>States:</strong> Empty input, populated list.</li>
+</ul>
+</li>
+<li>
+<p><strong>Tone Style Preference Screen (<code>OnboardingScreen.tsx</code> - Step 5):</strong></p>
+<ul>
+<li><strong>Visuals:</strong> A screen for users to select Saira's preferred response tone.</li>
+<li><strong>Elements:</strong><ul>
+<li>Headline: "How should Saira speak to you?"</li>
+<li>Description: "Choose a general tone style for Saira's responses."</li>
+<li>Radio buttons or segmented control for tone options: "Empathetic," "Direct," "Neutral," "Playful."</li>
+<li>Short example text for each tone option.</li>
+<li>Primary CTA button: "Finish Setup".</li>
+</ul>
+</li>
+<li><strong>Interactions:</strong> Tapping a radio button selects the tone. "Finish Setup" button navigates to the Main Application.</li>
+<li><strong>States:</strong> Selected/unselected tone options.</li>
+</ul>
+</li>
+<li>
+<p><strong>Onboarding Complete Screen (<code>OnboardingScreen.tsx</code> - Final Step):</strong></p>
+<ul>
+<li><strong>Visuals:</strong> A celebratory screen confirming setup completion.</li>
+<li><strong>Elements:</strong><ul>
+<li>Large success icon/animation.</li>
+<li>Headline: "You're All Set!"</li>
+<li>Body text: "Saira is ready to begin your journey together."</li>
+<li>Primary CTA button: "Start Talking to Saira".</li>
+</ul>
+</li>
+<li><strong>Interactions:</strong> Tapping "Start Talking to Saira" dismisses the onboarding flow and navigates to the <code>ConversationScreen</code>.</li>
+<li><strong>States:</strong> Success animation.</li>
+</ul>
+</li>
+</ol>
+<p><strong>Detailed Implementation Guide (UI-specific)</strong></p>
+<ol>
+<li>
+<p><strong>Frontend Architecture:</strong></p>
+<ul>
+<li><strong>Component Hierarchy:</strong> <code>OnboardingScreen.tsx</code> will be a single React Native component that manages the state for which step of the onboarding the user is on. It will conditionally render sub-components for each step (e.g., <code>WelcomeStep</code>, <code>ConsentStep</code>, <code>PersonalityStep</code>, <code>GoalStep</code>, <code>ToneStep</code>, <code>CompletionStep</code>).</li>
+<li><strong>Reusable Component Library:</strong> Utilize <code>Button</code>, <code>TextInput</code>, <code>Checkbox</code>, <code>RadioGroup</code>, <code>Card</code> components from a shared library.</li>
+<li><strong>State Management:</strong><ul>
+<li><code>useState</code> hook within <code>OnboardingScreen.tsx</code> to manage the <code>currentStep</code> (integer).</li>
+<li><code>useState</code> for form inputs (e.g., <code>userName</code>, <code>selectedPersonalityId</code>, <code>goalsList</code>, <code>selectedTone</code>).</li>
+<li><code>useState</code> for consent checkbox states.</li>
+<li><code>useEffect</code> to enable/disable "Continue" buttons based on validation.</li>
+<li>Global state (e.g., <code>Zustand</code> store) to persist onboarding data temporarily before final submission.</li>
+</ul>
+</li>
+<li><strong>Routing:</strong><ul>
+<li><code>AppNavigator.tsx</code> will check an <code>onboarding_completed</code> flag (from <code>UserManager</code>) on app launch. If <code>false</code>, it navigates to <code>OnboardingScreen</code>.</li>
+<li>Internal navigation within <code>OnboardingScreen</code> will update <code>currentStep</code> state.</li>
+<li>Upon "Finish Setup," <code>AppNavigator</code> will replace the onboarding stack with the <code>MainTabView</code> stack.</li>
+</ul>
+</li>
+<li><strong>Responsive Design:</strong> Use <code>Flexbox</code> for layout. Ensure content scrolls on smaller window sizes if necessary. Text sizes should scale appropriately.</li>
+</ul>
+</li>
+<li>
+<p><strong>CRUD Operations (UI Perspective):</strong></p>
+<ul>
+<li><strong>Create User:</strong> The entire onboarding flow is a "Create" operation for the <code>User</code> entity. Data is collected across multiple screens and submitted once on "Finish Setup."<ul>
+<li><strong>Validation:</strong> Frontend validation for required fields (e.g., name not empty, consent checked).</li>
+<li><strong>Flow:</strong><ol>
+<li>User inputs data in each step.</li>
+<li>On "Finish Setup," <code>OnboardingScreen</code> collects all <code>useState</code> data.</li>
+<li>Calls <code>UserManager.createUser(collectedData)</code>.</li>
+<li><code>UserManager</code> sends this data via <code>IPCService</code> to the Node.js <code>data_manager.ts</code> to insert into the <code>Users</code> table.</li>
+<li><code>UserManager</code> updates the <code>onboarding_completed</code> flag in local storage.</li>
+</ol>
+</li>
+</ul>
+</li>
+<li><strong>Read Personality Profiles:</strong> <code>PersonalitySelectionScreen</code> performs a "Read" operation to fetch available <code>PersonalityProfiles</code> from <code>PersonalityManager</code>.<ul>
+<li><strong>Flow:</strong> <code>PersonalitySelectionScreen</code> <code>useEffect</code> calls <code>PersonalityManager.getPersonalityProfiles()</code> -&gt; <code>IPCService</code> to <code>data_manager.ts</code> to query <code>PersonalityProfiles</code> table.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>User Experience Flow (UI Perspective):</strong></p>
+<ul>
+<li><strong>Visual Progress:</strong> A simple progress indicator (e.g., "Step X of Y" or a progress bar) at the top of each onboarding screen.</li>
+<li><strong>Clear Instructions:</strong> Concise headings and body text to guide the user.</li>
+<li><strong>Feedback:</strong> Immediate visual feedback on button presses (e.g., loading spinner on "Finish Setup").</li>
+<li><strong>Error Handling:</strong> If <code>UserManager.createUser</code> fails (e.g., database error), display a user-friendly error message (e.g., "Setup failed. Please try again.") and allow retries.</li>
+</ul>
+</li>
+<li>
+<p><strong>Security Considerations (UI Perspective):</strong></p>
+<ul>
+<li><strong>Consent Display:</strong> Clearly present privacy policy and consent checkboxes. Ensure they are prominent and require explicit interaction.</li>
+<li><strong>Input Masking:</strong> If any sensitive input (e.g., future password for sync) is added, ensure it's masked.</li>
+<li><strong>No Sensitive Data in UI State:</strong> Avoid storing sensitive user data directly in easily inspectable UI state. Pass it to backend services immediately.</li>
+</ul>
+</li>
+<li>
+<p><strong>Testing Strategy (UI Perspective):</strong></p>
+<ul>
+<li><strong>Unit Tests:</strong> Test individual <code>OnboardingScreen</code> sub-components for rendering, state updates, and button interactions.</li>
+<li><strong>Integration Tests:</strong> Test the full multi-step flow, ensuring data is correctly collected and passed between steps. Mock <code>UserManager</code> calls.</li>
+<li><strong>End-to-End Tests:</strong> Simulate a full user onboarding from app launch to <code>MainTabView</code> display, verifying all UI elements and interactions.</li>
+</ul>
+</li>
+<li>
+<p><strong>Error Handling &amp; Logging (UI Perspective):</strong></p>
+<ul>
+<li><strong>Frontend Validation Errors:</strong> Display inline error messages for invalid inputs (e.g., "Name cannot be empty").</li>
+<li><strong>Backend Errors:</strong> If <code>createUser</code> API call fails, display a generic error message (e.g., "Failed to save preferences. Please try again.") in a toast or alert. Log detailed error to <code>Logger.ts</code>.</li>
+</ul>
+</li>
+</ol>
+<hr />
+<h3 id="feature-main-application-navigation">Feature: Main Application Navigation<a class="headerlink" href="#feature-main-application-navigation" title="Permanent link">&para;</a></h3>
+<p><strong>Feature Goal (UI-specific)</strong>
+To provide a clear, intuitive, and persistent navigation structure that allows users to easily switch between the primary sections of the Saira application.</p>
+<p><strong>Any API Relationships (UI-specific)</strong></p>
+<ul>
+<li><strong><code>AppStateManager</code> (Frontend Service):</strong> May update global state based on active tab (e.g., to pause/resume background processes).</li>
+</ul>
+<p><strong>Detailed Feature Requirements (UI-specific)</strong></p>
+<ol>
+<li>
+<p><strong>Tab Bar Display:</strong></p>
+<ul>
+<li><strong>Visuals:</strong> A persistent tab bar at the bottom (or left sidebar for macOS desktop feel) of the main application window.</li>
+<li><strong>Elements:</strong><ul>
+<li>Icons and text labels for each primary section: "Conversation," "Journal," "Deep Talk," "Profile."</li>
+<li>Visual indication of the currently active tab.</li>
+</ul>
+</li>
+<li><strong>Interactions:</strong> Tapping a tab icon/label switches to the corresponding screen.</li>
+<li><strong>States:</strong> Active/inactive tab states.</li>
+</ul>
+</li>
+<li>
+<p><strong>Screen Switching:</strong></p>
+<ul>
+<li><strong>Visuals:</strong> Smooth transitions between screens when switching tabs.</li>
+<li><strong>Behavior:</strong> Each tab maintains its own navigation stack (e.g., navigating deep within "Journal" and then switching to "Conversation" and back, returns to the deep state in "Journal").</li>
+</ul>
+</li>
+</ol>
+<p><strong>Detailed Implementation Guide (UI-specific)</strong></p>
+<ol>
+<li>
+<p><strong>Frontend Architecture:</strong></p>
+<ul>
+<li><strong>Component Hierarchy:</strong> <code>App.tsx</code> (root) renders <code>AppNavigator.tsx</code>. <code>AppNavigator.tsx</code> uses <code>React Navigation</code>'s <code>createBottomTabNavigator</code> (for mobile) or <code>createMaterialTopTabNavigator</code> (can be styled for desktop sidebar) to define the main tab structure. Each tab will render its own root screen component (e.g., <code>ConversationScreen</code>, <code>JournalingScreen</code>).</li>
+<li><strong>Reusable Component Library:</strong> Standard React Native <code>Tab.Navigator</code> and <code>Tab.Screen</code> components. Custom icons for tabs.</li>
+<li><strong>State Management:</strong> <code>React Navigation</code> handles internal state for active tab and navigation stacks.</li>
+<li><strong>Routing:</strong> <code>React Navigation</code>'s declarative API defines the tab routes.</li>
+</ul>
+</li>
+<li>
+<p><strong>CRUD Operations (UI Perspective):</strong></p>
+<ul>
+<li>This feature is purely navigational and does not directly involve CRUD operations on data entities. It facilitates access to other features that perform CRUD.</li>
+</ul>
+</li>
+<li>
+<p><strong>User Experience Flow (UI Perspective):</strong></p>
+<ul>
+<li><strong>Immediate Feedback:</strong> Tapping a tab should instantly switch the view.</li>
+<li><strong>Consistency:</strong> Tab bar remains visible and in the same position across all main screens.</li>
+</ul>
+</li>
+<li>
+<p><strong>Security Considerations (UI Perspective):</strong></p>
+<ul>
+<li>No direct security implications for the navigation component itself. Access to sensitive tabs (e.g., Profile Settings) is implicitly protected by the overall app's local authentication.</li>
+</ul>
+</li>
+<li>
+<p><strong>Testing Strategy (UI Perspective):</strong></p>
+<ul>
+<li><strong>Unit Tests:</strong> Test <code>AppNavigator</code> component for correct tab rendering and initial route.</li>
+<li><strong>Integration Tests:</strong> Verify that tapping tabs correctly switches screens and that navigation stacks are maintained.</li>
+<li><strong>End-to-End Tests:</strong> Simulate user navigating between all main tabs.</li>
+</ul>
+</li>
+<li>
+<p><strong>Error Handling &amp; Logging (UI Perspective):</strong></p>
+<ul>
+<li>No specific error handling for navigation itself, beyond standard React Native error boundaries.</li>
+</ul>
+</li>
+</ol>
+<hr />
+<h3 id="feature-conversation-screen">Feature: Conversation Screen<a class="headerlink" href="#feature-conversation-screen" title="Permanent link">&para;</a></h3>
+<p><strong>Feature Goal (UI-specific)</strong>
+To provide a dynamic and intuitive chat interface for real-time voice and text interaction with Saira, displaying conversational history, real-time transcription, and AI responses.</p>
+<p><strong>Any API Relationships (UI-specific)</strong></p>
+<ul>
+<li><strong><code>IPCService</code> (Frontend Service):</strong> Sends audio chunks, text input, and receives transcription updates, emotion data, LLM text, and TTS audio.</li>
+<li><strong><code>MessageManager</code> (Frontend Service):</strong> Adds new messages (user and AI) to the local database.</li>
+<li><strong><code>ConversationManager</code> (Frontend Service):</strong> Manages the current conversation session (e.g., starting a new one, updating title).</li>
+<li><strong><code>MemoryManager</code> (Frontend Service):</strong> Triggers memory formation based on conversation turns.</li>
+</ul>
+<p><strong>Detailed Feature Requirements (UI-specific)</strong></p>
+<ol>
+<li>
+<p><strong>Chat History Display:</strong></p>
+<ul>
+<li><strong>Visuals:</strong> A scrollable list of chat bubbles, visually distinguishing between user messages and AI responses.</li>
+<li><strong>Elements:</strong><ul>
+<li><code>FlatList</code> or <code>ScrollView</code> to display <code>MessageBubble</code> components.</li>
+<li>Each <code>MessageBubble</code> displays text content.</li>
+<li>User messages aligned right, AI messages aligned left.</li>
+<li>Timestamps for messages (optional, on hover or grouped).</li>
+</ul>
+</li>
+<li><strong>Interactions:</strong> Auto-scroll to bottom on new message. User can manually scroll up to view history.</li>
+<li><strong>States:</strong> Empty state (e.g., "Say 'Hey Saira' to begin!"), loading state for initial history.</li>
+</ul>
+</li>
+<li>
+<p><strong>Voice Input Indicator:</strong></p>
+<ul>
+<li><strong>Visuals:</strong> A prominent, dynamic indicator (e.g., a pulsing microphone icon, a waveform visualization) that changes based on the AI's listening/processing state.</li>
+<li><strong>Elements:</strong><ul>
+<li>Microphone icon.</li>
+<li>Optional: Simple waveform animation or pulsating circle.</li>
+<li>Text status: "Listening...", "Thinking...", "Speaking...", "Idle."</li>
+</ul>
+</li>
+<li><strong>Interactions:</strong> Tapping the microphone icon can manually toggle listening (if not using wake word).</li>
+<li><strong>States:</strong> Idle, Listening, Processing (AI thinking), Speaking (AI responding).</li>
+</ul>
+</li>
+<li>
+<p><strong>Real-time Transcription Display:</strong></p>
+<ul>
+<li><strong>Visuals:</strong> Text area above the input bar that updates as the user speaks.</li>
+<li><strong>Elements:</strong><ul>
+<li><code>Text</code> component displaying the current partial or final transcription.</li>
+<li>Text color/style might change to indicate finality.</li>
+</ul>
+</li>
+<li><strong>Interactions:</strong> Updates dynamically.</li>
+<li><strong>States:</strong> Empty, partial transcription, final transcription.</li>
+</ul>
+</li>
+<li>
+<p><strong>Input Bar:</strong></p>
+<ul>
+<li><strong>Visuals:</strong> A persistent input area at the bottom of the screen.</li>
+<li><strong>Elements:</strong><ul>
+<li><code>TextInput</code> for typing messages.</li>
+<li>Microphone button (to initiate voice input if wake word is off, or to manually stop/start recording).</li>
+<li>Send button (for text input).</li>
+</ul>
+</li>
+<li><strong>Interactions:</strong><ul>
+<li>Typing in <code>TextInput</code> updates its value.</li>
+<li>Tapping microphone button toggles voice input.</li>
+<li>Tapping send button sends text message.</li>
+</ul>
+</li>
+<li><strong>States:</strong> Empty, text entered, sending.</li>
+</ul>
+</li>
+<li>
+<p><strong>AI Response Playback:</strong></p>
+<ul>
+<li><strong>Behavior:</strong> Audio plays automatically as AI response text appears.</li>
+<li><strong>Visuals:</strong> No explicit UI for playback, but the <code>VoiceInputIndicator</code> should show "Speaking..." state.</li>
+</ul>
+</li>
+</ol>
+<p><strong>Detailed Implementation Guide (UI-specific)</strong></p>
+<ol>
+<li>
+<p><strong>Frontend Architecture:</strong></p>
+<ul>
+<li><strong>Component Hierarchy:</strong> <code>ConversationScreen.tsx</code> will be the main screen. It will contain <code>MessageList</code> (a <code>FlatList</code> of <code>MessageBubble</code> components), <code>VoiceInputIndicator</code>, and <code>InputBar</code>.</li>
+<li><strong>Reusable Component Library:</strong> <code>MessageBubble</code>, <code>VoiceInputIndicator</code>, <code>InputBar</code> components.</li>
+<li><strong>State Management:</strong><ul>
+<li><code>useState</code> for <code>currentTranscription</code>, <code>aiResponseText</code>, <code>inputMessageText</code>.</li>
+<li><code>useState</code> for <code>conversationState</code> (e.g., 'idle', 'listening', 'processing', 'speaking').</li>
+<li><code>useState</code> for <code>messages</code> array (local display cache).</li>
+<li><code>useEffect</code> to manage WebSocket connection to <code>ai_inference_server.ts</code>.</li>
+<li><code>useEffect</code> to auto-scroll <code>FlatList</code> when new messages arrive.</li>
+<li>Global state (e.g., <code>Zustand</code> store) for <code>currentConversationId</code>, <code>activePersonalityId</code>.</li>
+</ul>
+</li>
+<li><strong>Routing:</strong> <code>ConversationScreen</code> is the default tab in <code>MainTabView</code>.</li>
+</ul>
+</li>
+<li>
+<p><strong>CRUD Operations (UI Perspective):</strong></p>
+<ul>
+<li><strong>Read Messages:</strong> <code>ConversationScreen</code> performs a "Read" operation to fetch initial conversation history.<ul>
+<li><strong>Flow:</strong> On component mount, <code>ConversationScreen</code> calls <code>MessageManager.getMessages(currentConversationId, pagination)</code> -&gt; <code>IPCService</code> to <code>data_manager.ts</code> to query <code>Messages</code> table.</li>
+</ul>
+</li>
+<li><strong>Create Message (User):</strong><ul>
+<li><strong>Flow (Voice):</strong> <code>audio_processor.ts</code> streams audio to <code>ai_inference_server.ts</code> -&gt; <code>ai_inference_server.ts</code> sends <code>transcription_update</code> via WebSocket -&gt; <code>ConversationScreen</code> updates <code>currentTranscription</code>. When <code>isFinal</code> is true, <code>MessageManager.addMessage</code> is called.</li>
+<li><strong>Flow (Text):</strong> User types and presses send -&gt; <code>MessageManager.addMessage</code> is called.</li>
+<li><code>MessageManager</code> sends message data via <code>IPCService</code> to <code>data_manager.ts</code> to insert into <code>Messages</code> table.</li>
+</ul>
+</li>
+<li><strong>Create Message (AI):</strong><ul>
+<li><strong>Flow:</strong> <code>ai_inference_server.ts</code> sends <code>ai_response_text</code> via WebSocket -&gt; <code>ConversationScreen</code> updates UI. Once full response received, <code>MessageManager.addMessage</code> is called to store AI's message.</li>
+<li><code>MessageManager</code> sends message data via <code>IPCService</code> to <code>data_manager.ts</code> to insert into <code>Messages</code> table.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>User Experience Flow (UI Perspective):</strong></p>
+<ul>
+<li><strong>Real-time Feedback:</strong> Visual and textual indicators for AI's state (listening, thinking, speaking).</li>
+<li><strong>Smooth Scrolling:</strong> Ensure <code>FlatList</code> performs well with many messages.</li>
+<li><strong>Typing vs. Voice:</strong> Seamless switch between typing and voice input modes.</li>
+</ul>
+</li>
+<li>
+<p><strong>Security Considerations (UI Perspective):</strong></p>
+<ul>
+<li><strong>Microphone Permission:</strong> React Native will trigger the macOS system prompt for microphone access. The UI should guide the user if permission is denied.</li>
+<li><strong>No Raw Audio Display:</strong> Raw audio data is processed by the backend and never displayed in the UI.</li>
+<li><strong>Consent Adherence:</strong> If emotion/memory recording consent is denied, the UI should reflect this (e.g., disable related indicators or features).</li>
+</ul>
+</li>
+<li>
+<p><strong>Testing Strategy (UI Perspective):</strong></p>
+<ul>
+<li><strong>Unit Tests:</strong> Test <code>MessageBubble</code>, <code>VoiceInputIndicator</code>, <code>InputBar</code> components for rendering and basic interactions.</li>
+<li><strong>Integration Tests:</strong> Test WebSocket connection, real-time transcription updates, and message display. Mock backend responses.</li>
+<li><strong>End-to-End Tests:</strong> Simulate full voice conversations, verifying UI updates, message persistence, and AI response playback.</li>
+</ul>
+</li>
+<li>
+<p><strong>Error Handling &amp; Logging (UI Perspective):</strong></p>
+<ul>
+<li><strong>Connection Errors:</strong> If WebSocket connection to backend fails, display a prominent error message (e.g., "Saira's brain is offline. Please restart the app.") and disable voice input.</li>
+<li><strong>Transcription Errors:</strong> If ASR fails, display "Could not understand. Please try again."</li>
+<li><strong>LLM Errors:</strong> If LLM fails to generate a response, display "Saira is having trouble thinking. Please try again."</li>
+<li><strong>Audio Playback Errors:</strong> Log errors if TTS audio fails to play.</li>
+<li><strong>Logging:</strong> Detailed logs of audio stream events, AI processing steps, and message storage.</li>
+</ul>
+</li>
+</ol>
+<hr />
+<h3 id="feature-daily-check-ins-journaling-screen">Feature: Daily Check-ins &amp; Journaling Screen<a class="headerlink" href="#feature-daily-check-ins-journaling-screen" title="Permanent link">&para;</a></h3>
+<p><strong>Feature Goal (UI-specific)</strong>
+To provide a dedicated space for users to reflect on their emotional state, log daily moods, and create personal journal entries, with visual summaries of emotional patterns over time.</p>
+<p><strong>Any API Relationships (UI-specific)</strong></p>
+<ul>
+<li><strong><code>JournalManager</code> (Frontend Service):</strong> Creates, reads, updates, and deletes journal entries and mood summaries.</li>
+<li><strong><code>MessageManager</code> (Frontend Service):</strong> May retrieve emotion data from past messages for mood summaries.</li>
+<li><strong><code>MemoryManager</code> (Frontend Service):</strong> Journal entries can trigger memory formation.</li>
+</ul>
+<p><strong>Detailed Feature Requirements (UI-specific)</strong></p>
+<ol>
+<li>
+<p><strong>Daily Mood Summary (<code>JournalingScreen.tsx</code> - Main View):</strong></p>
+<ul>
+<li><strong>Visuals:</strong> A calendar-like view or a series of daily cards displaying aggregated mood data.</li>
+<li><strong>Elements:</strong><ul>
+<li>Date navigation (e.g., left/right arrows to change day/week/month).</li>
+<li>For each day:<ul>
+<li>Date display.</li>
+<li>Aggregated mood representation (e.g., a dominant emoji, a color gradient, or a simple text summary like "Mostly Neutral").</li>
+<li>Count of journal entries for that day.</li>
+<li>Link/button to view/add journal entry for that day.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>Interactions:</strong> Tapping a day navigates to its journal entry list/detail.</li>
+<li><strong>States:</strong> Loading state, empty state for days with no data.</li>
+</ul>
+</li>
+<li>
+<p><strong>Emotional Check-in Interface (<code>JournalingScreen.tsx</code> - Button/Modal):</strong></p>
+<ul>
+<li><strong>Visuals:</strong> A prominent button on the main journaling screen, or a modal that appears when triggered.</li>
+<li><strong>Elements:</strong><ul>
+<li>Button: "How are you feeling today?"</li>
+<li><strong>Modal/Screen:</strong><ul>
+<li>Headline: "Log Your Mood."</li>
+<li>Mood picker: A visual slider for Arousal (Calm to Excited) and Valence (Negative to Positive), or a selection of emotion emojis/categories (e.g., Happy, Sad, Angry, Neutral).</li>
+<li>Optional <code>TextInput</code>: "Add a note about your mood..."</li>
+<li>Button: "Save Mood".</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>Interactions:</strong> Tapping the button opens the modal. Interacting with sliders/pickers updates mood selection. Tapping "Save Mood" submits the data.</li>
+<li><strong>States:</strong> Default, selected mood, saving.</li>
+</ul>
+</li>
+<li>
+<p><strong>Journal Entry List (<code>JournalingScreen.tsx</code> - Sub-section/Screen):</strong></p>
+<ul>
+<li><strong>Visuals:</strong> A scrollable list of journal entries, ordered by date.</li>
+<li><strong>Elements:</strong><ul>
+<li><code>FlatList</code> displaying <code>JournalEntryCard</code> components.</li>
+<li>Each <code>JournalEntryCard</code> displays: Date, a snippet of the entry content, and a small mood indicator (if available).</li>
+<li>Button: "New Journal Entry" (floating action button or prominent header button).</li>
+</ul>
+</li>
+<li><strong>Interactions:</strong> Tapping a <code>JournalEntryCard</code> navigates to <code>JournalEntryDetailView</code>. Tapping "New Journal Entry" navigates to <code>JournalEntryCreationView</code>.</li>
+<li><strong>States:</strong> Loading, empty list.</li>
+</ul>
+</li>
+<li>
+<p><strong>Journal Entry Creation/Detail (<code>JournalEntryCreationView.tsx</code>/<code>JournalEntryDetailView.tsx</code>):</strong></p>
+<ul>
+<li><strong>Visuals:</strong> A dedicated screen for writing/editing a journal entry.</li>
+<li><strong>Elements:</strong><ul>
+<li>Date/Time display (auto-filled, editable).</li>
+<li>Large <code>TextInput</code> for journal content.</li>
+<li>Optional: Mood picker (similar to check-in) if not already set.</li>
+<li>Button: "Save Entry".</li>
+<li>For detail view: "Edit" button, "Delete" button.</li>
+</ul>
+</li>
+<li><strong>Interactions:</strong> Typing updates content. Tapping "Save Entry" persists. "Edit" makes content editable. "Delete" prompts confirmation then deletes.</li>
+<li><strong>States:</strong> Editing, viewing, saving, deleting.</li>
+</ul>
+</li>
+</ol>
+<p><strong>Detailed Implementation Guide (UI-specific)</strong></p>
+<ol>
+<li>
+<p><strong>Frontend Architecture:</strong></p>
+<ul>
+<li><strong>Component Hierarchy:</strong> <code>JournalingScreen.tsx</code> will be the main tab screen. It will contain <code>MoodSummaryCalendar</code> and <code>JournalEntryList</code> components. <code>JournalEntryCreationView.tsx</code> and <code>JournalEntryDetailView.tsx</code> will be separate screens navigated to from <code>JournalingScreen</code>.</li>
+<li><strong>Reusable Component Library:</strong> <code>MoodSummaryCard</code>, <code>JournalEntryCard</code>, <code>DatePicker</code>, <code>Slider</code>, <code>EmojiPicker</code> (custom).</li>
+<li><strong>State Management:</strong><ul>
+<li><code>useState</code> for <code>selectedDate</code>, <code>journalEntries</code> array, <code>moodSummaries</code> array.</li>
+<li><code>useState</code> for <code>currentJournalContent</code>, <code>selectedMood</code>.</li>
+<li><code>useEffect</code> to fetch data from <code>JournalManager</code> based on <code>selectedDate</code> or filters.</li>
+<li>Global state for <code>userId</code>.</li>
+</ul>
+</li>
+<li><strong>Routing:</strong> <code>JournalingScreen</code> is a tab in <code>MainTabView</code>. <code>JournalEntryCreationView</code> and <code>JournalEntryDetailView</code> are pushed onto the <code>JournalingScreen</code>'s navigation stack.</li>
+</ul>
+</li>
+<li>
+<p><strong>CRUD Operations (UI Perspective):</strong></p>
+<ul>
+<li><strong>Create Journal Entry:</strong><ul>
+<li><strong>Flow:</strong> User types in <code>JournalEntryCreationView</code> -&gt; taps "Save Entry" -&gt; <code>JournalManager.createJournalEntry</code> is called.</li>
+<li><code>JournalManager</code> sends data via <code>IPCService</code> to <code>data_manager.ts</code> to insert into <code>JournalEntries</code> table.</li>
+<li>Also triggers <code>JournalManager.generateMoodSummary</code> for the relevant date.</li>
+</ul>
+</li>
+<li><strong>Read Journal Entries:</strong><ul>
+<li><strong>Flow:</strong> <code>JournalingScreen</code> or <code>JournalEntryList</code> mounts -&gt; <code>JournalManager.getJournalEntries</code> is called (with date range/pagination) -&gt; <code>IPCService</code> to <code>data_manager.ts</code> to query <code>JournalEntries</code>.</li>
+<li><code>JournalManager.getMoodSummaries</code> is called for the calendar view.</li>
+</ul>
+</li>
+<li><strong>Update Journal Entry:</strong><ul>
+<li><strong>Flow:</strong> User edits in <code>JournalEntryDetailView</code> -&gt; taps "Save" -&gt; <code>JournalManager.updateJournalEntry</code> is called.</li>
+<li><code>JournalManager</code> sends data via <code>IPCService</code> to <code>data_manager.ts</code> to update <code>JournalEntries</code> table.</li>
+</ul>
+</li>
+<li><strong>Delete Journal Entry:</strong><ul>
+<li><strong>Flow:</strong> User taps "Delete" in <code>JournalEntryDetailView</code> -&gt; confirmation dialog -&gt; <code>JournalManager.deleteJournalEntry</code> is called.</li>
+<li><code>JournalManager</code> sends data via <code>IPCService</code> to <code>data_manager.ts</code> to delete from <code>JournalEntries</code> table.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>User Experience Flow (UI Perspective):</strong></p>
+<ul>
+<li><strong>Intuitive Logging:</strong> Easy access to mood check-in and new journal entry creation.</li>
+<li><strong>Visual Summaries:</strong> Mood calendar provides a quick overview of emotional trends.</li>
+<li><strong>Seamless Editing:</strong> Smooth transition from viewing to editing journal entries.</li>
+</ul>
+</li>
+<li>
+<p><strong>Security Considerations (UI Perspective):</strong></p>
+<ul>
+<li><strong>Data Privacy:</strong> Remind users about the privacy of their journal entries.</li>
+<li><strong>Consent Adherence:</strong> Ensure emotion data is only recorded/displayed if consent was given.</li>
+</ul>
+</li>
+<li>
+<p><strong>Testing Strategy (UI Perspective):</strong></p>
+<ul>
+<li><strong>Unit Tests:</strong> Test <code>MoodSummaryCard</code>, <code>JournalEntryCard</code>, <code>MoodPicker</code> components.</li>
+<li><strong>Integration Tests:</strong> Test the full flow of creating, viewing, editing, and deleting journal entries. Verify mood summary generation.</li>
+<li><strong>End-to-End Tests:</strong> Simulate a user logging moods and creating multiple journal entries over several days.</li>
+</ul>
+</li>
+<li>
+<p><strong>Error Handling &amp; Logging (UI Perspective):</strong></p>
+<ul>
+<li><strong>Save Errors:</strong> If saving a journal entry fails, display "Failed to save entry. Please try again."</li>
+<li><strong>Load Errors:</strong> If journal entries fail to load, display "Could not load journal entries."</li>
+<li><strong>Logging:</strong> Log all CRUD operations on journal entries and mood summaries.</li>
+</ul>
+</li>
+</ol>
+<hr />
+<h3 id="feature-deep-talk-screen">Feature: Deep Talk Screen<a class="headerlink" href="#feature-deep-talk-screen" title="Permanent link">&para;</a></h3>
+<p><strong>Feature Goal (UI-specific)</strong>
+To provide a specialized conversational mode that encourages deeper exploration of complex personal topics, leveraging Saira's long-term memory (RAG) to provide more insightful and context-rich responses.</p>
+<p><strong>Any API Relationships (UI-specific)</strong></p>
+<ul>
+<li><strong><code>IPCService</code> (Frontend Service):</strong> Sends audio/text input, receives AI responses, specifically optimized for RAG queries.</li>
+<li><strong><code>MemoryManager</code> (Frontend Service):</strong> Triggers semantic search for relevant memories based on conversation context.</li>
+<li><strong><code>ConversationManager</code> (Frontend Service):</strong> Manages the conversation session, potentially tagging it as a "Deep Talk" session.</li>
+</ul>
+<p><strong>Detailed Feature Requirements (UI-specific)</strong></p>
+<ol>
+<li>
+<p><strong>Specialized Conversation Interface:</strong></p>
+<ul>
+<li><strong>Visuals:</strong> Similar to the <code>ConversationScreen</code>, but with subtle visual cues indicating "Deep Talk Mode" (e.g., a different background color, a unique icon in the header).</li>
+<li><strong>Elements:</strong><ul>
+<li>Chat history display (same as <code>ConversationScreen</code>).</li>
+<li>Voice input indicator (same as <code>ConversationScreen</code>).</li>
+<li>Real-time transcription display (same as <code>ConversationScreen</code>).</li>
+<li>Input bar (same as <code>ConversationScreen</code>).</li>
+<li>Optional: "Suggested Topics" or "Memory Prompts" area (e.g., a carousel of buttons with memory snippets or questions like "Tell me more about X event").</li>
+</ul>
+</li>
+<li><strong>Interactions:</strong> Standard voice/text interaction. Tapping suggested topics injects them as a prompt.</li>
+<li><strong>States:</strong> Active Deep Talk session.</li>
+</ul>
+</li>
+<li>
+<p><strong>Memory Integration Indicators (Subtle):</strong></p>
+<ul>
+<li><strong>Visuals:</strong> When Saira's response is heavily influenced by a retrieved memory, a subtle visual indicator might appear (e.g., a small "memory" icon next to the AI's message, or a tooltip on hover revealing the source memory snippet). This is for transparency and to highlight Saira's RAG capability.</li>
+<li><strong>Elements:</strong> Small icon, tooltip/popover.</li>
+<li><strong>Interactions:</strong> Hovering/tapping the icon reveals the source memory.</li>
+<li><strong>States:</strong> Memory-augmented response, non-augmented response.</li>
+</ul>
+</li>
+</ol>
+<p><strong>Detailed Implementation Guide (UI-specific)</strong></p>
+<ol>
+<li>
+<p><strong>Frontend Architecture:</strong></p>
+<ul>
+<li><strong>Component Hierarchy:</strong> <code>DeepTalkScreen.tsx</code> will largely reuse components from <code>ConversationScreen.tsx</code> (e.g., <code>MessageList</code>, <code>VoiceInputIndicator</code>, <code>InputBar</code>). It will wrap these in a container that applies Deep Talk specific styling.</li>
+<li><strong>Reusable Component Library:</strong> Existing chat components. New <code>MemoryHint</code> component.</li>
+<li><strong>State Management:</strong><ul>
+<li>Inherits <code>conversationState</code> and <code>messages</code> state from a shared context or uses its own.</li>
+<li><code>useState</code> for <code>suggestedTopics</code> (populated by AI or based on recent memories).</li>
+<li>Global state for <code>currentConversationId</code>.</li>
+</ul>
+</li>
+<li><strong>Routing:</strong> <code>DeepTalkScreen</code> is a tab in <code>MainTabView</code>.</li>
+</ul>
+</li>
+<li>
+<p><strong>CRUD Operations (UI Perspective):</strong></p>
+<ul>
+<li><strong>Read Memories (for RAG):</strong> This is the core "Read" operation.<ul>
+<li><strong>Flow:</strong> When a user speaks/types in Deep Talk mode, the <code>ConversationScreen</code>'s ViewModel (or a dedicated <code>DeepTalkViewModel</code>) will:<ol>
+<li>Send the user's query to <code>ai_inference_server.ts</code>'s <code>/ai/embeddings/generate</code> to get an embedding.</li>
+<li>Send the embedding to <code>ai_inference_server.ts</code>'s <code>/data/search_vectors</code> to retrieve relevant <code>Memories</code> from <code>sqlite-vec</code>.</li>
+<li>These retrieved memories are then included in the prompt sent to the LLM.</li>
+</ol>
+</li>
+</ul>
+</li>
+<li><strong>Create/Read Messages:</strong> Same as <code>ConversationScreen</code>.</li>
+</ul>
+</li>
+<li>
+<p><strong>User Experience Flow (UI Perspective):</strong></p>
+<ul>
+<li><strong>Focused Interaction:</strong> The UI should encourage deeper, more reflective conversations.</li>
+<li><strong>Transparency:</strong> Subtle indicators help the user understand when Saira is drawing from its memory.</li>
+</ul>
+</li>
+<li>
+<p><strong>Security Considerations (UI Perspective):</strong></p>
+<ul>
+<li><strong>Memory Visibility:</strong> Ensure that only memories marked <code>is_active</code> and allowed by <code>memory_visibility_rules</code> are retrieved and used for RAG. The UI should reflect these settings.</li>
+</ul>
+</li>
+<li>
+<p><strong>Testing Strategy (UI Perspective):</strong></p>
+<ul>
+<li><strong>Integration Tests:</strong> Test the RAG pipeline: simulate a query, verify that relevant memories are retrieved from the mocked backend, and that the LLM response incorporates them.</li>
+<li><strong>End-to-End Tests:</strong> Simulate a Deep Talk session where the user asks about a past event, and Saira responds with details from a previously ingested memory.</li>
+</ul>
+</li>
+<li>
+<p><strong>Error Handling &amp; Logging (UI Perspective):</strong></p>
+<ul>
+<li><strong>RAG Failure:</strong> If memory retrieval or embedding generation fails, the LLM should still attempt to respond, but the UI might show a subtle warning that "Saira couldn't access all its memories."</li>
+<li><strong>Performance:</strong> Monitor RAG query latency. If too slow, provide feedback (e.g., "Saira is thinking deeply...").</li>
+</ul>
+</li>
+</ol>
+<hr />
+<h3 id="feature-profile-settings-screen">Feature: Profile Settings Screen<a class="headerlink" href="#feature-profile-settings-screen" title="Permanent link">&para;</a></h3>
+<p><strong>Feature Goal (UI-specific)</strong>
+To provide a centralized hub for users to customize Saira's behavior, manage their data, configure privacy settings, and update AI models.</p>
+<p><strong>Any API Relationships (UI-specific)</strong></p>
+<ul>
+<li><strong><code>UserManager</code> (Frontend Service):</strong> Reads/updates user preferences, privacy settings, and triggers data export/deletion.</li>
+<li><strong><code>PersonalityManager</code> (Frontend Service):</strong> Reads/updates personality profiles.</li>
+<li><strong><code>ModelManager</code> (Frontend Service):</strong> Reads model versions, triggers model downloads.</li>
+<li><strong><code>SyncService</code> (Frontend Service):</strong> Configures sync, initiates sync, handles recovery keys.</li>
+<li><strong><code>NudgeManager</code> (Frontend Service):</strong> Reads/updates nudge preferences.</li>
+</ul>
+<p><strong>Detailed Feature Requirements (UI-specific)</strong></p>
+<ol>
+<li>
+<p><strong>Main Settings Navigation (<code>ProfileSettingsScreen.tsx</code>):</strong></p>
+<ul>
+<li><strong>Visuals:</strong> A list of categories (e.g., "General," "Personality," "Privacy &amp; Data," "AI Models," "Notifications," "Sync").</li>
+<li><strong>Elements:</strong><ul>
+<li><code>FlatList</code> of <code>SettingsCategoryItem</code> components.</li>
+<li>Each item: Icon, Category Name, disclosure indicator ("&gt;").</li>
+</ul>
+</li>
+<li><strong>Interactions:</strong> Tapping a category navigates to its dedicated sub-screen.</li>
+<li><strong>States:</strong> Loading, default.</li>
+</ul>
+</li>
+<li>
+<p><strong>General Settings (<code>GeneralSettingsScreen.tsx</code>):</strong></p>
+<ul>
+<li><strong>Visuals:</strong> Basic user profile information.</li>
+<li><strong>Elements:</strong><ul>
+<li>User's Name (<code>TextInput</code>).</li>
+<li>Profile Picture (display, button to change).</li>
+<li>Preferred Tone Style (radio buttons/dropdown).</li>
+</ul>
+</li>
+<li><strong>Interactions:</strong> Editing fields updates user data.</li>
+<li><strong>States:</strong> Editing, saving.</li>
+</ul>
+</li>
+<li>
+<p><strong>Personality Settings (<code>PersonalitySettingsScreen.tsx</code>):</strong></p>
+<ul>
+<li><strong>Visuals:</strong> List of available personality profiles, with the active one highlighted.</li>
+<li><strong>Elements:</strong><ul>
+<li>Headline: "Saira's Personality."</li>
+<li><code>FlatList</code> of <code>PersonalityProfileCard</code> components:<ul>
+<li>Each card: Name, description, "Activate" button (if not active).</li>
+<li>Active card has a distinct visual style.</li>
+</ul>
+</li>
+<li>Button: "Create Custom Personality" (navigates to <code>CustomPersonalityCreationScreen</code>).</li>
+</ul>
+</li>
+<li><strong>Interactions:</strong> Tapping "Activate" changes Saira's active personality.</li>
+<li><strong>States:</strong> Loading, active/inactive profiles.</li>
+</ul>
+</li>
+<li>
+<p><strong>Privacy &amp; Data Settings (<code>PrivacyDashboardScreen.tsx</code>):</strong></p>
+<ul>
+<li><strong>Visuals:</strong> A dashboard for managing data consents and privacy actions.</li>
+<li><strong>Elements:</strong><ul>
+<li>Toggle: "Allow emotion recording from voice."</li>
+<li>Toggle: "Allow memory recording from conversations."</li>
+<li>Button: "View Audit Logs" (opens <code>AuditLogsScreen</code>).</li>
+<li>Button: "Export All My Data" (triggers data export).</li>
+<li>Button: "Delete All My Data" (triggers data deletion, with confirmation).</li>
+<li>Link to Privacy Policy.</li>
+</ul>
+</li>
+<li><strong>Interactions:</strong> Toggling changes consent. Buttons trigger respective actions.</li>
+<li><strong>States:</strong> Toggles on/off, processing states for export/delete.</li>
+</ul>
+</li>
+<li>
+<p><strong>AI Models Settings (<code>AIModelManagementScreen.tsx</code>):</strong></p>
+<ul>
+<li><strong>Visuals:</strong> List of currently loaded AI models and their versions.</li>
+<li><strong>Elements:</strong><ul>
+<li>For each model (LLM, ASR, TTS, SER, Embedding):<ul>
+<li>Model Name (e.g., "Mistral 7B," "Whisper.cpp").</li>
+<li>Current Version.</li>
+<li>Status (e.g., "Loaded," "Updating," "Available Update").</li>
+<li>Button: "Check for Updates" (for all models).</li>
+<li>Button: "Download Update" (if available for a specific model).</li>
+<li>Button: "Rollback to Previous Version" (if applicable).</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>Interactions:</strong> Tapping "Download Update" initiates download.</li>
+<li><strong>States:</strong> Loading, up-to-date, update available, downloading, installing, error.</li>
+</ul>
+</li>
+<li>
+<p><strong>Notifications Settings (<code>NotificationSettingsScreen.tsx</code>):</strong></p>
+<ul>
+<li><strong>Visuals:</strong> Controls for proactive nudges.</li>
+<li><strong>Elements:</strong><ul>
+<li>Toggle: "Enable Proactive Nudges."</li>
+<li>List of Nudge Types (e.g., "Reminders," "Positive Reinforcement," "Wellness Suggestions").</li>
+<li>For each type: Toggle to enable/disable, frequency picker (Daily, Weekly, Event-based), time picker.</li>
+</ul>
+</li>
+<li><strong>Interactions:</strong> Toggling enables/disables nudges. Adjusting frequency/time updates preferences.</li>
+<li><strong>States:</strong> Enabled/disabled, configured.</li>
+</ul>
+</li>
+<li>
+<p><strong>Sync Settings (<code>SyncSettingsScreen.tsx</code>):</strong></p>
+<ul>
+<li><strong>Visuals:</strong> Controls for optional cloud synchronization.</li>
+<li><strong>Elements:</strong><ul>
+<li>Toggle: "Enable Cloud Sync."</li>
+<li>Input fields for cloud service credentials (if using a generic E2EE service like EteSync).</li>
+<li>Dropdown: "Sync Frequency" (Manual, Daily, Weekly, On App Close).</li>
+<li>Display: "Last Synced At:"</li>
+<li>Display: "Current Status:"</li>
+<li>Button: "Sync Now".</li>
+<li>Button: "Generate Recovery Key" (for E2EE data).</li>
+<li>Button: "Resolve Conflicts" (if conflicts detected).</li>
+</ul>
+</li>
+<li><strong>Interactions:</strong> Toggling enables/disables sync. Buttons trigger sync, key generation, or conflict resolution.</li>
+<li><strong>States:</strong> Enabled/disabled, syncing, synced, conflicts, error.</li>
+</ul>
+</li>
+</ol>
+<p><strong>Detailed Implementation Guide (UI-specific)</strong></p>
+<ol>
+<li>
+<p><strong>Frontend Architecture:</strong></p>
+<ul>
+<li><strong>Component Hierarchy:</strong> <code>ProfileSettingsScreen.tsx</code> will be the root of the settings tab, using <code>React Navigation</code>'s stack navigator to push sub-screens (e.g., <code>GeneralSettingsScreen</code>, <code>PrivacyDashboardScreen</code>).</li>
+<li><strong>Reusable Component Library:</strong> <code>ToggleSwitch</code>, <code>TextInput</code>, <code>Button</code>, <code>Picker</code>, <code>List</code> components.</li>
+<li><strong>State Management:</strong><ul>
+<li><code>useState</code> for local form inputs within each settings sub-screen.</li>
+<li><code>useEffect</code> to load initial settings data from relevant managers (<code>UserManager</code>, <code>PersonalityManager</code>, etc.).</li>
+<li><code>useCallback</code> for debouncing input changes before saving to backend.</li>
+<li>Global state for <code>userId</code>, <code>currentPersonalityId</code>, <code>syncStatus</code>.</li>
+</ul>
+</li>
+<li><strong>Routing:</strong> <code>ProfileSettingsScreen</code> is a tab in <code>MainTabView</code>. Sub-screens are pushed onto its own navigation stack.</li>
+</ul>
+</li>
+<li>
+<p><strong>CRUD Operations (UI Perspective):</strong></p>
+<ul>
+<li><strong>User Preferences (Update <code>Users</code> table):</strong><ul>
+<li><strong>Flow:</strong> User changes name, tone, sync settings, nudge preferences -&gt; <code>UserManager.updateUser</code> or <code>NudgeManager.updateNudgePreference</code> is called.</li>
+<li><code>IPCService</code> sends updates to <code>data_manager.ts</code> to update <code>Users</code> or <code>NudgePreferences</code> table.</li>
+</ul>
+</li>
+<li><strong>Personality Profiles (Read/Update <code>PersonalityProfiles</code> table):</strong><ul>
+<li><strong>Flow:</strong> <code>PersonalitySettingsScreen</code> loads <code>PersonalityManager.getPersonalityProfiles()</code>. User taps "Activate" -&gt; <code>PersonalityManager.activatePersonalityProfile</code> updates <code>Users.current_personality_profile_id</code>.</li>
+</ul>
+</li>
+<li><strong>Privacy Consents (Update <code>Users</code> table):</strong><ul>
+<li><strong>Flow:</strong> Toggling consent switches calls <code>UserManager.updatePrivacySettings</code>.</li>
+</ul>
+</li>
+<li><strong>Data Export/Deletion (Trigger Backend Process):</strong><ul>
+<li><strong>Flow:</strong> User clicks "Export" -&gt; <code>UserManager.exportData()</code> calls <code>IPCService</code> to trigger a Python script (<code>data_exporter.py</code>) in the backend.</li>
+<li>User clicks "Delete" -&gt; confirmation -&gt; <code>UserManager.deleteUser()</code> calls <code>IPCService</code> to <code>data_manager.ts</code> to delete user data.</li>
+</ul>
+</li>
+<li><strong>AI Model Management (Read/Update Model Files):</strong><ul>
+<li><strong>Flow:</strong> <code>AIModelManagementScreen</code> loads <code>ModelManager.getLoadedModels()</code>. User clicks "Download Update" -&gt; <code>ModelManager.downloadModelUpdate()</code> calls <code>IPCService</code> to <code>model_manager.ts</code> (Node.js) which uses <code>model_downloader.py</code> (Python) to download the model.</li>
+<li><code>model_manager.ts</code> then loads the new model into the <code>ai_inference_addon</code>.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>User Experience Flow (UI Perspective):</strong></p>
+<ul>
+<li><strong>Clear Categorization:</strong> Settings are logically grouped to prevent overwhelming the user.</li>
+<li><strong>Instant Feedback:</strong> Toggles and input fields update immediately.</li>
+<li><strong>Confirmation:</strong> Critical actions (e.g., data deletion) require explicit confirmation.</li>
+<li><strong>Progress Indicators:</strong> Show progress for long-running operations like model downloads or data exports.</li>
+</ul>
+</li>
+<li>
+<p><strong>Security Considerations (UI Perspective):</strong></p>
+<ul>
+<li><strong>Sensitive Data Input:</strong> If cloud sync requires credentials, ensure input fields are secure (e.g., password masking).</li>
+<li><strong>Consent Visibility:</strong> Clearly display current consent status for sensitive data processing.</li>
+<li><strong>Confirmation for Destructive Actions:</strong> Double-confirm data deletion.</li>
+<li><strong>Recovery Key Display:</strong> When generating a recovery key, display it prominently with warnings about secure storage.</li>
+</ul>
+</li>
+<li>
+<p><strong>Testing Strategy (UI Perspective):</strong></p>
+<ul>
+<li><strong>Unit Tests:</strong> Test individual settings components (e.g., <code>ToggleSwitch</code>, <code>Picker</code>).</li>
+<li><strong>Integration Tests:</strong> Test data loading and saving for each settings section. Simulate model downloads and sync processes.</li>
+<li><strong>End-to-End Tests:</strong> Simulate a user changing various settings, verifying persistence and impact on app behavior (e.g., personality change affects LLM response).</li>
+</ul>
+</li>
+<li>
+<p><strong>Error Handling &amp; Logging (UI Perspective):</strong></p>
+<ul>
+<li><strong>Save Errors:</strong> Display "Failed to save settings. Please try again." for backend save failures.</li>
+<li><strong>Download Errors:</strong> Display "Failed to download model update." for model download failures.</li>
+<li><strong>Sync Errors:</strong> Display "Sync failed. Check network or credentials." for sync issues.</li>
+<li><strong>Deletion Errors:</strong> Display "Failed to delete data."</li>
+<li><strong>Logging:</strong> Log all settings changes, sync events, model updates, and data export/deletion attempts.</li>
+</ul>
+</li>
+</ol>
+<hr />
+<h3 id="feature-proactive-nudges-notifications">Feature: Proactive Nudges &amp; Notifications<a class="headerlink" href="#feature-proactive-nudges-notifications" title="Permanent link">&para;</a></h3>
+<p><strong>Feature Goal (UI-specific)</strong>
+To proactively engage the user with timely reminders, positive reinforcement, and wellness suggestions, delivered through macOS system notifications and an in-app history.</p>
+<p><strong>Any API Relationships (UI-specific)</strong></p>
+<ul>
+<li><strong><code>NotificationService</code> (Frontend Service):</strong> Registers for and displays macOS system notifications.</li>
+<li><strong><code>NudgeManager</code> (Frontend Service):</strong> Manages nudge preferences and records nudge history.</li>
+<li><strong><code>ai_inference_server.ts</code> (Node.js Backend):</strong> The LLM in the backend will generate nudge content based on user data and preferences.</li>
+<li><strong><code>data_manager.ts</code> (Node.js Backend):</strong> Stores nudge preferences and history.</li>
+</ul>
+<p><strong>Detailed Feature Requirements (UI-specific)</strong></p>
+<ol>
+<li>
+<p><strong>Notification Display (macOS System Level):</strong></p>
+<ul>
+<li><strong>Visuals:</strong> Standard macOS notification banners/alerts.</li>
+<li><strong>Elements:</strong><ul>
+<li>App icon.</li>
+<li>Title (e.g., "Saira Check-in," "Saira Motivation").</li>
+<li>Body text (the nudge message, e.g., "How are you feeling today?").</li>
+<li>Optional: Action buttons (e.g., "Log Mood," "Dismiss").</li>
+</ul>
+</li>
+<li><strong>Interactions:</strong> User can click on the notification to open the app to a relevant screen (e.g., Journaling screen for mood check-in).</li>
+<li><strong>States:</strong> Delivered, interacted.</li>
+</ul>
+</li>
+<li>
+<p><strong>In-App Nudge History (<code>NotificationSettingsScreen.tsx</code> - Sub-section):</strong></p>
+<ul>
+<li><strong>Visuals:</strong> A scrollable list of past nudges.</li>
+<li><strong>Elements:</strong><ul>
+<li><code>FlatList</code> displaying <code>NudgeHistoryItem</code> components.</li>
+<li>Each item: Date/Time, Nudge Type, Message Content.</li>
+<li>Optional: Icon indicating if user interacted with it.</li>
+</ul>
+</li>
+<li><strong>Interactions:</strong> User can review past nudges.</li>
+<li><strong>States:</strong> Loading, empty list.</li>
+</ul>
+</li>
+<li>
+<p><strong>Nudge Configuration (Part of <code>ProfileSettingsScreen.tsx</code> -&gt; <code>NotificationSettingsScreen.tsx</code>):</strong></p>
+<ul>
+<li><strong>Visuals:</strong> Toggles and selectors for customizing nudge behavior.</li>
+<li><strong>Elements:</strong><ul>
+<li>Toggle: "Enable Proactive Nudges."</li>
+<li>Section for "Nudge Types":<ul>
+<li>For each type (e.g., "Reminders," "Positive Reinforcement," "Wellness Suggestions"):<ul>
+<li>Toggle to enable/disable.</li>
+<li>Dropdown/Picker for "Frequency" (Daily, Weekly, Event-based).</li>
+<li>Time picker for daily/weekly nudges.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Button: "Customize Nudge Content" (future feature, opens a modal for prompt templates).</li>
+</ul>
+</li>
+<li><strong>Interactions:</strong> Toggling enables/disables. Selecting frequency/time updates preferences.</li>
+<li><strong>States:</strong> Enabled/disabled, configured.</li>
+</ul>
+</li>
+</ol>
+<p><strong>Detailed Implementation Guide (UI-specific)</strong></p>
+<ol>
+<li>
+<p><strong>System Architecture Overview:</strong></p>
+<ul>
+<li><strong>High-level Architecture:</strong> Nudge generation logic resides in the Node.js backend (LLM). The Node.js backend will schedule nudges and send them to the React Native frontend via IPC. The React Native frontend will then use macOS native modules to display system notifications.</li>
+<li><strong>Technology Stack:</strong><ul>
+<li><strong>Frontend (UI):</strong> React Native for macOS (TypeScript) for <code>NotificationSettingsScreen</code> and handling incoming notifications.</li>
+<li><strong>Backend (Nudge Generation &amp; Scheduling):</strong> Node.js (<code>ai_inference_server.ts</code> for LLM, <code>nudge_scheduler.ts</code> for scheduling).</li>
+<li><strong>Local Database:</strong> SQLite for <code>NudgePreferences</code> and <code>NudgeHistory</code>.</li>
+<li><strong>macOS Notifications:</strong> React Native native module (Objective-C/Swift) to interact with <code>UNUserNotificationCenter</code> for system notifications.</li>
+<li><strong>IPC:</strong> Local HTTP/WebSocket for backend to send nudge content to frontend.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Database Schema Design:</strong>
+    (Refer to "Core Application Framework" feature for <code>NudgePreferences</code> and <code>NudgeHistory</code> tables.)</p>
+</li>
+<li>
+<p><strong>Comprehensive API Design:</strong></p>
+<ul>
+<li><strong>Frontend (React Native) -&gt; Backend (Node.js) IPC (HTTP Endpoints on <code>ai_inference_server.ts</code>):</strong><ul>
+<li><code>POST /nudges/preferences</code>: Update nudge preferences.<ul>
+<li>Request: <code>{ userId: string, preferences: NudgePreferenceDTO }</code></li>
+<li>Response: <code>{ success: boolean }</code></li>
+</ul>
+</li>
+<li><code>GET /nudges/history</code>: Retrieve nudge history.<ul>
+<li>Request: <code>{ userId: string, pagination: PaginationDTO }</code></li>
+<li>Response: <code>{ history: NudgeHistoryDTO }</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>Backend (Node.js) -&gt; Frontend (React Native) IPC (WebSocket <code>ai_inference_server.ts</code> or custom local IPC):</strong><ul>
+<li><code>nudge_delivered</code>: Event sent when a nudge is generated and ready for display.<ul>
+<li>Payload: <code>{ nudgeId: string, message: string, actionType: string }</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>Node.js Backend (Internal APIs):</strong><ul>
+<li><strong><code>NudgeScheduler</code> (TypeScript Class):</strong><ul>
+<li><code>scheduleNudges(userId: string, preferences: NudgePreferenceDTO)</code>: Sets up timers/cron jobs.</li>
+<li><code>generateNudgeContent(userId: string, type: string): Promise&lt;string&gt;</code>: Calls LLM to generate content.</li>
+<li><code>recordNudgeDelivery(nudgeId: string, userId: string, message: string)</code>: Inserts into <code>NudgeHistory</code>.</li>
+</ul>
+</li>
+<li><strong><code>ai_inference_server.ts</code>:</strong> Exposes LLM for nudge content generation.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Frontend Architecture (React Native for macOS):</strong></p>
+<ul>
+<li><strong><code>NotificationSettingsScreen.tsx</code>:</strong><ul>
+<li>Displays nudge configuration UI.</li>
+<li>Fetches <code>NudgePreferences</code> and <code>NudgeHistory</code> from <code>NudgeManager</code>.</li>
+<li>Sends updates to <code>NudgeManager</code>.</li>
+</ul>
+</li>
+<li><strong><code>App.tsx</code> (or <code>AppStateManager.ts</code>):</strong> Listens for <code>nudge_delivered</code> events from the Node.js backend.</li>
+<li><strong>Native Module (Objective-C/Swift):</strong> A custom React Native native module (e.g., <code>NativeNotificationModule</code>) will be developed to interact with macOS <code>UNUserNotificationCenter</code> to display system notifications.<ul>
+<li><code>NativeNotificationModule.displayNotification(title: string, body: string, userInfo: object)</code></li>
+<li><code>NativeNotificationModule.onNotificationClicked(callback: (userInfo: object) =&gt; void)</code></li>
+</ul>
+</li>
+<li><strong>State Management:</strong> <code>useState</code> for nudge preferences and history. Global state to manage notification permissions.</li>
+<li><strong>Routing:</strong> <code>NotificationSettingsScreen</code> is a sub-screen of <code>ProfileSettingsScreen</code>.</li>
+</ul>
+</li>
+<li>
+<p><strong>Detailed CRUD Operations:</strong></p>
+<ul>
+<li><strong>Create Nudge Preference:</strong> <code>NudgeManager.createNudgePreference</code> (via UI).</li>
+<li><strong>Read Nudge Preferences:</strong> <code>NudgeManager.getNudgePreferences</code> (for UI display).</li>
+<li><strong>Update Nudge Preference:</strong> <code>NudgeManager.updateNudgePreference</code> (via UI toggles/pickers).</li>
+<li><strong>Delete Nudge Preference:</strong> <code>NudgeManager.deleteNudgePreference</code> (if user removes a custom nudge type).</li>
+<li><strong>Create Nudge History:</strong> <code>NudgeScheduler.recordNudgeDelivery</code> (backend-initiated).</li>
+<li><strong>Read Nudge History:</strong> <code>NudgeManager.getNudgeHistory</code> (for UI display).</li>
+<li><strong>Update Nudge History:</strong> <code>NudgeManager.markNudgeInteracted</code> (when user clicks a notification).</li>
+</ul>
+</li>
+<li>
+<p><strong>User Experience Flow (UI Perspective):</strong></p>
+<ul>
+<li><strong>Opt-in:</strong> User explicitly enables proactive nudges in settings.</li>
+<li><strong>System Notifications:</strong> Nudges appear as standard macOS notifications.</li>
+<li><strong>Click-through:</strong> Clicking a notification opens Saira to a relevant screen (e.g., Journaling for a mood check-in nudge).</li>
+<li><strong>In-app Review:</strong> Users can review past nudges in settings.</li>
+</ul>
+</li>
+<li>
+<p><strong>Security Considerations (UI Perspective):</strong></p>
+<ul>
+<li><strong>Notification Permissions:</strong> The app will request macOS notification permissions.</li>
+<li><strong>Privacy:</strong> Nudge content should be general and not expose sensitive user data in the notification itself.</li>
+<li><strong>Consent Adherence:</strong> Nudges related to emotion/memory will only be sent if the user has given consent for those data types.</li>
+</ul>
+</li>
+<li>
+<p><strong>Testing Strategy (UI Perspective):</strong></p>
+<ul>
+<li><strong>Unit Tests:</strong> Test <code>NotificationSettingsScreen</code> components.</li>
+<li><strong>Integration Tests:</strong> Test the flow from backend nudge generation -&gt; IPC -&gt; frontend notification display. Test click-through behavior.</li>
+<li><strong>End-to-End Tests:</strong> Simulate scheduled nudges appearing and user interaction.</li>
+</ul>
+</li>
+<li>
+<p><strong>Data Management:</strong></p>
+<ul>
+<li><strong>Nudge Preferences:</strong> Stored in <code>NudgePreferences</code> table.</li>
+<li><strong>Nudge History:</strong> Stored in <code>NudgeHistory</code> table. Consider purging old history after a certain period to manage database size.</li>
+</ul>
+</li>
+<li>
+<p><strong>Error Handling &amp; Logging (UI Perspective):</strong></p>
+<ul>
+<li><strong>Notification Delivery Failures:</strong> Log if macOS fails to display a notification.</li>
+<li><strong>Nudge Generation Errors:</strong> If LLM fails to generate nudge content, log the error and skip that nudge.</li>
+<li><strong>User Feedback:</strong> If nudge scheduling fails, inform the user in settings.</li>
+</ul>
+</li>
+</ol>
+<hr />
+<p>This concludes the UI-focused feature specification, providing a granular breakdown of each screen and its associated requirements and implementation considerations. This level of detail should be highly beneficial for your task planning.\&lt;ctrl95&gt;## Feature Specifications (UI-Focused)</p>
+<h3 id="feature-onboarding-flow_1">Feature: Onboarding Flow<a class="headerlink" href="#feature-onboarding-flow_1" title="Permanent link">&para;</a></h3>
+<p><strong>Feature Goal (UI-specific)</strong>
+To guide new users through an intuitive, multi-step setup process, collecting essential preferences and obtaining necessary consents to personalize their Saira experience from the first interaction.</p>
+<p><strong>Any API Relationships (UI-specific)</strong></p>
+<ul>
+<li><strong><code>UserManager</code> (Frontend Service):</strong> Calls <code>createUser</code> with collected preferences and consent data.</li>
+<li><strong><code>PersonalityManager</code> (Frontend Service):</strong> Fetches pre-defined personality profiles for selection.</li>
+<li><strong><code>DataStoreService</code> (Frontend Service):</strong> Persists initial user data locally.</li>
+</ul>
+<p><strong>Detailed Feature Requirements (UI-specific)</strong></p>
+<ol>
+<li>
+<p><strong>Welcome Screen (<code>OnboardingScreen.tsx</code> - Step 1):</strong></p>
+<ul>
+<li><strong>Visuals:</strong> Full-screen splash with Saira logo, a welcoming tagline (e.g., "Your Emotion-Aware Life Companion"), and a brief, compelling description of Saira's purpose.</li>
+<li><strong>Elements:</strong><ul>
+<li>Large, centered Saira logo/icon.</li>
+<li>Headline text: "Welcome to Saira."</li>
+<li>Body text: "An AI that understands your emotions, grows with you, and helps you manage your mental, emotional, and personal life through intelligent, natural conversations."</li>
+<li>Primary Call-to-Action (CTA) button: "Get Started" (or "Begin Your Journey").</li>
+</ul>
+</li>
+<li><strong>Interactions:</strong> Tapping "Get Started" navigates to the Consent Screen.</li>
+<li><strong>States:</strong> Initial load state.</li>
+</ul>
+</li>
+<li>
+<p><strong>Consent Screen (<code>OnboardingScreen.tsx</code> - Step 2):</strong></p>
+<ul>
+<li><strong>Visuals:</strong> A clear, concise screen presenting privacy commitments and requiring explicit user consent for sensitive data processing.</li>
+<li><strong>Elements:</strong><ul>
+<li>Headline: "Your Privacy, Our Priority."</li>
+<li>Body text explaining Saira's privacy-first approach (local processing, E2EE sync).</li>
+<li>Checkbox: "I agree to Saira's Privacy Policy and Terms of Service." (Link to full policy).</li>
+<li>Checkbox: "Allow Saira to record and analyze my emotional tone from voice for personalized support." (Optional, with clear explanation).</li>
+<li>Checkbox: "Allow Saira to record and store memories from our conversations to build long-term context." (Optional, with clear explanation).</li>
+<li>Primary CTA button: "Continue" (disabled until mandatory consents are checked).</li>
+<li>Secondary button: "Learn More About Privacy" (opens external link or in-app modal).</li>
+</ul>
+</li>
+<li><strong>Interactions:</strong><ul>
+<li>Tapping checkboxes toggles their state.</li>
+<li>"Continue" button enables only when "Privacy Policy" checkbox is checked.</li>
+<li>Tapping "Continue" navigates to Personality Selection.</li>
+</ul>
+</li>
+<li><strong>States:</strong> Button disabled/enabled states.</li>
+</ul>
+</li>
+<li>
+<p><strong>Personality Selection Screen (<code>OnboardingScreen.tsx</code> - Step 3):</strong></p>
+<ul>
+<li><strong>Visuals:</strong> A grid or carousel of pre-defined personality profiles with brief descriptions.</li>
+<li><strong>Elements:</strong><ul>
+<li>Headline: "Choose Saira's Initial Personality."</li>
+<li>Description: "You can change this anytime in settings."</li>
+<li>List/Grid of <code>PersonalityProfileCard</code> components:<ul>
+<li>Each card displays: Personality Name (e.g., "The Coach," "The Best Friend," "The Mom").</li>
+<li>Short description of personality traits and interaction style.</li>
+<li>Visual indicator for selection (e.g., border, checkmark).</li>
+</ul>
+</li>
+<li>Primary CTA button: "Next".</li>
+</ul>
+</li>
+<li><strong>Interactions:</strong><ul>
+<li>Tapping a <code>PersonalityProfileCard</code> selects it. Only one can be active.</li>
+<li>"Next" button navigates to Goal Setting.</li>
+</ul>
+</li>
+<li><strong>States:</strong> Selected/unselected card states.</li>
+</ul>
+</li>
+<li>
+<p><strong>Goal Setting Screen (<code>OnboardingScreen.tsx</code> - Step 4):</strong></p>
+<ul>
+<li><strong>Visuals:</strong> A screen for users to define initial personal goals.</li>
+<li><strong>Elements:</strong><ul>
+<li>Headline: "What are your initial goals with Saira?"</li>
+<li>Description: "Saira can help you track and achieve personal goals. You can add more later."</li>
+<li><code>TextInput</code> field: "Add a new goal..." (e.g., "Improve sleep," "Reduce stress," "Learn a new skill").</li>
+<li>Button: "Add Goal" (adds text from input to a list).</li>
+<li><code>FlatList</code> or <code>ScrollView</code> displaying added goals:<ul>
+<li>Each goal item: Text of the goal, small "x" button to remove.</li>
+</ul>
+</li>
+<li>Primary CTA button: "Next".</li>
+<li>Secondary button: "Skip for now".</li>
+</ul>
+</li>
+<li><strong>Interactions:</strong><ul>
+<li>Typing in <code>TextInput</code> updates its value.</li>
+<li>Tapping "Add Goal" adds the goal to the list.</li>
+<li>Tapping "x" removes a goal.</li>
+<li>"Next" navigates to Tone Style Preference.</li>
+<li>"Skip for now" navigates to Tone Style Preference.</li>
+</ul>
+</li>
+<li><strong>States:</strong> Empty input, populated list.</li>
+</ul>
+</li>
+<li>
+<p><strong>Tone Style Preference Screen (<code>OnboardingScreen.tsx</code> - Step 5):</strong></p>
+<ul>
+<li><strong>Visuals:</strong> A screen for users to select Saira's preferred response tone.</li>
+<li><strong>Elements:</strong><ul>
+<li>Headline: "How should Saira speak to you?"</li>
+<li>Description: "Choose a general tone style for Saira's responses."</li>
+<li>Radio buttons or segmented control for tone options: "Empathetic," "Direct," "Neutral," "Playful."</li>
+<li>Short example text for each tone option.</li>
+<li>Primary CTA button: "Finish Setup".</li>
+</ul>
+</li>
+<li><strong>Interactions:</strong> Tapping a radio button selects the tone. "Finish Setup" button navigates to the Main Application.</li>
+<li><strong>States:</strong> Selected/unselected tone options.</li>
+</ul>
+</li>
+<li>
+<p><strong>Onboarding Complete Screen (<code>OnboardingScreen.tsx</code> - Final Step):</strong></p>
+<ul>
+<li><strong>Visuals:</strong> A celebratory screen confirming setup completion.</li>
+<li><strong>Elements:</strong><ul>
+<li>Large success icon/animation.</li>
+<li>Headline: "You're All Set!"</li>
+<li>Body text: "Saira is ready to begin your journey together."</li>
+<li>Primary CTA button: "Start Talking to Saira".</li>
+</ul>
+</li>
+<li><strong>Interactions:</strong> Tapping "Start Talking to Saira" dismisses the onboarding flow and navigates to the <code>ConversationScreen</code>.</li>
+<li><strong>States:</strong> Success animation.</li>
+</ul>
+</li>
+</ol>
+<p><strong>Detailed Implementation Guide (UI-specific)</strong></p>
+<ol>
+<li>
+<p><strong>Frontend Architecture:</strong></p>
+<ul>
+<li><strong>Component Hierarchy:</strong> <code>OnboardingScreen.tsx</code> will be a single React Native component that manages the state for which step of the onboarding the user is on. It will conditionally render sub-components for each step (e.g., <code>WelcomeStep</code>, <code>ConsentStep</code>, <code>PersonalityStep</code>, <code>GoalStep</code>, <code>ToneStep</code>, <code>CompletionStep</code>).</li>
+<li><strong>Reusable Component Library:</strong> Utilize <code>Button</code>, <code>TextInput</code>, <code>Checkbox</code>, <code>RadioGroup</code>, <code>Card</code> components from a shared library.</li>
+<li><strong>State Management:</strong><ul>
+<li><code>useState</code> hook within <code>OnboardingScreen.tsx</code> to manage the <code>currentStep</code> (integer).</li>
+<li><code>useState</code> for form inputs (e.g., <code>userName</code>, <code>selectedPersonalityId</code>, <code>goalsList</code>, <code>selectedTone</code>).</li>
+<li><code>useState</code> for consent checkbox states.</li>
+<li><code>useEffect</code> to enable/disable "Continue" buttons based on validation.</li>
+<li>Global state (e.g., <code>Zustand</code> store) to persist onboarding data temporarily before final submission.</li>
+</ul>
+</li>
+<li><strong>Routing:</strong><ul>
+<li><code>AppNavigator.tsx</code> will check an <code>onboarding_completed</code> flag (from <code>UserManager</code>) on app launch. If <code>false</code>, it navigates to <code>OnboardingScreen</code>.</li>
+<li>Internal navigation within <code>OnboardingScreen</code> will update <code>currentStep</code> state.</li>
+<li>Upon "Finish Setup," <code>AppNavigator</code> will replace the onboarding stack with the <code>MainTabView</code> stack.</li>
+</ul>
+</li>
+<li><strong>Responsive Design:</strong> Use <code>Flexbox</code> for layout. Ensure content scrolls on smaller window sizes if necessary. Text sizes should scale appropriately.</li>
+</ul>
+</li>
+<li>
+<p><strong>CRUD Operations (UI Perspective):</strong></p>
+<ul>
+<li><strong>Create User:</strong> The entire onboarding flow is a "Create" operation for the <code>User</code> entity. Data is collected across multiple screens and submitted once on "Finish Setup."<ul>
+<li><strong>Validation:</strong> Frontend validation for required fields (e.g., name not empty, consent checked).</li>
+<li><strong>Required Fields:</strong> <code>name</code>, <code>gdpr_ccpa_consent</code>, <code>emotion_recording_consent</code>, <code>memory_recording_consent</code> (from <code>Users</code> table schema).</li>
+<li><strong>Flow:</strong><ol>
+<li>User inputs data in each step.</li>
+<li>On "Finish Setup," <code>OnboardingScreen</code> collects all <code>useState</code> data.</li>
+<li>Calls <code>UserManager.createUser(collectedData)</code>.</li>
+<li><code>UserManager</code> sends this data via <code>IPCService</code> to the Node.js <code>data_manager.ts</code> to insert into the <code>Users</code> table.</li>
+<li><code>UserManager</code> updates the <code>onboarding_completed</code> flag in local storage.</li>
+</ol>
+</li>
+</ul>
+</li>
+<li><strong>Read Personality Profiles:</strong> <code>PersonalitySelectionScreen</code> performs a "Read" operation to fetch available <code>PersonalityProfiles</code> from <code>PersonalityManager</code>.<ul>
+<li><strong>Flow:</strong> <code>PersonalitySelectionScreen</code> <code>useEffect</code> calls <code>PersonalityManager.getPersonalityProfiles()</code> -&gt; <code>IPCService</code> to <code>data_manager.ts</code> to query <code>PersonalityProfiles</code> table.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>User Experience Flow (UI Perspective):</strong></p>
+<ul>
+<li><strong>Visual Progress:</strong> A simple progress indicator (e.g., "Step X of Y" or a progress bar) at the top of each onboarding screen.</li>
+<li><strong>Clear Instructions:</strong> Concise headings and body text to guide the user.</li>
+<li><strong>Feedback:</strong> Immediate visual feedback on button presses (e.g., loading spinner on "Finish Setup").</li>
+<li><strong>Error Handling:</strong> If <code>UserManager.createUser</code> fails (e.g., database error), display a user-friendly error message (e.g., "Setup failed. Please try again.") and allow retries.</li>
+</ul>
+</li>
+<li>
+<p><strong>Security Considerations (UI Perspective):</strong></p>
+<ul>
+<li><strong>Consent Display:</strong> Clearly present privacy policy and consent checkboxes. Ensure they are prominent and require explicit interaction.</li>
+<li><strong>Input Masking:</strong> If any sensitive input (e.g., future password for sync) is added, ensure it's masked.</li>
+<li><strong>No Sensitive Data in UI State:</strong> Avoid storing sensitive user data directly in easily inspectable UI state. Pass it to backend services immediately.</li>
+</ul>
+</li>
+<li>
+<p><strong>Testing Strategy (UI Perspective):</strong></p>
+<ul>
+<li><strong>Unit Tests:</strong> Test individual <code>OnboardingScreen</code> sub-components for rendering, state updates, and button interactions.</li>
+<li><strong>Integration Tests:</strong> Test the full multi-step flow, ensuring data is correctly collected and passed between steps. Mock <code>UserManager</code> calls.</li>
+<li><strong>End-to-End Tests:</strong> Simulate a full user onboarding from app launch to <code>MainTabView</code> display, verifying all UI elements and interactions.</li>
+</ul>
+</li>
+<li>
+<p><strong>Error Handling &amp; Logging (UI Perspective):</strong></p>
+<ul>
+<li><strong>Frontend Validation Errors:</strong> Display inline error messages for invalid inputs (e.g., "Name cannot be empty").</li>
+<li><strong>Backend Errors:</strong> If <code>createUser</code> API call fails, display a generic error message (e.g., "Failed to save preferences. Please try again.") in a toast or alert. Log detailed error to <code>Logger.ts</code>.</li>
+</ul>
+</li>
+</ol>
+<hr />
+<h3 id="feature-main-application-navigation_1">Feature: Main Application Navigation<a class="headerlink" href="#feature-main-application-navigation_1" title="Permanent link">&para;</a></h3>
+<p><strong>Feature Goal (UI-specific)</strong>
+To provide a clear, intuitive, and persistent navigation structure that allows users to easily switch between the primary sections of the Saira application.</p>
+<p><strong>Any API Relationships (UI-specific)</strong></p>
+<ul>
+<li><strong><code>AppStateManager</code> (Frontend Service):</strong> May update global state based on active tab (e.g., to pause/resume background processes).</li>
+</ul>
+<p><strong>Detailed Feature Requirements (UI-specific)</strong></p>
+<ol>
+<li>
+<p><strong>Tab Bar Display:</strong></p>
+<ul>
+<li><strong>Visuals:</strong> A persistent tab bar at the bottom (or left sidebar for macOS desktop feel) of the main application window.</li>
+<li><strong>Elements:</strong><ul>
+<li>Icons and text labels for each primary section: "Conversation," "Journal," "Deep Talk," "Profile."</li>
+<li>Visual indication of the currently active tab.</li>
+</ul>
+</li>
+<li><strong>Interactions:</strong> Tapping a tab icon/label switches to the corresponding screen.</li>
+<li><strong>States:</strong> Active/inactive tab states.</li>
+</ul>
+</li>
+<li>
+<p><strong>Screen Switching:</strong></p>
+<ul>
+<li><strong>Visuals:</strong> Smooth transitions between screens when switching tabs.</li>
+<li><strong>Behavior:</strong> Each tab maintains its own navigation stack (e.g., navigating deep within "Journal" and then switching to "Conversation" and back, returns to the deep state in "Journal").</li>
+</ul>
+</li>
+</ol>
+<p><strong>Detailed Implementation Guide (UI-specific)</strong></p>
+<ol>
+<li>
+<p><strong>Frontend Architecture:</strong></p>
+<ul>
+<li><strong>Component Hierarchy:</strong> <code>App.tsx</code> (root) renders <code>AppNavigator.tsx</code>. <code>AppNavigator.tsx</code> uses <code>React Navigation</code>'s <code>createBottomTabNavigator</code> (for mobile) or <code>createMaterialTopTabNavigator</code> (can be styled for desktop sidebar) to define the main tab structure. Each tab will render its own root screen component (e.g., <code>ConversationScreen</code>, <code>JournalingScreen</code>).</li>
+<li><strong>Reusable Component Library:</strong> Standard React Native <code>Tab.Navigator</code> and <code>Tab.Screen</code> components. Custom icons for tabs.</li>
+<li><strong>State Management:</strong> <code>React Navigation</code> handles internal state for active tab and navigation stacks.</li>
+<li><strong>Routing:</strong> <code>React Navigation</code>'s declarative API defines the tab routes.</li>
+</ul>
+</li>
+<li>
+<p><strong>CRUD Operations (UI Perspective):</strong></p>
+<ul>
+<li>This feature is purely navigational and does not directly involve CRUD operations on data entities. It facilitates access to other features that perform CRUD.</li>
+</ul>
+</li>
+<li>
+<p><strong>User Experience Flow (UI Perspective):</strong></p>
+<ul>
+<li><strong>Immediate Feedback:</strong> Tapping a tab should instantly switch the view.</li>
+<li><strong>Consistency:</strong> Tab bar remains visible and in the same position across all main screens.</li>
+</ul>
+</li>
+<li>
+<p><strong>Security Considerations (UI Perspective):</strong></p>
+<ul>
+<li>No direct security implications for the navigation component itself. Access to sensitive tabs (e.g., Profile Settings) is implicitly protected by the overall app's local authentication.</li>
+</ul>
+</li>
+<li>
+<p><strong>Testing Strategy (UI Perspective):</strong></p>
+<ul>
+<li><strong>Unit Tests:</strong> Test <code>AppNavigator</code> component for correct tab rendering and initial route.</li>
+<li><strong>Integration Tests:</strong> Verify that tapping tabs correctly switches screens and that navigation stacks are maintained.</li>
+<li><strong>End-to-End Tests:</strong> Simulate user navigating between all main tabs.</li>
+</ul>
+</li>
+<li>
+<p><strong>Error Handling &amp; Logging (UI Perspective):</strong></p>
+<ul>
+<li>No specific error handling for navigation itself, beyond standard React Native error boundaries.</li>
+</ul>
+</li>
+</ol>
+<hr />
+<h3 id="feature-conversation-screen_1">Feature: Conversation Screen<a class="headerlink" href="#feature-conversation-screen_1" title="Permanent link">&para;</a></h3>
+<p><strong>Feature Goal (UI-specific)</strong>
+To provide a dynamic and intuitive chat interface for real-time voice and text interaction with Saira, displaying conversational history, real-time transcription, and AI responses.</p>
+<p><strong>Any API Relationships (UI-specific)</strong></p>
+<ul>
+<li><strong><code>IPCService</code> (Frontend Service):</strong> Sends audio chunks, text input, and receives transcription updates, emotion data, LLM text, and TTS audio.</li>
+<li><strong><code>MessageManager</code> (Frontend Service):</strong> Adds new messages (user and AI) to the local database.</li>
+<li><strong><code>ConversationManager</code> (Frontend Service):</strong> Manages the current conversation session (e.g., starting a new one, updating title).</li>
+<li><strong><code>MemoryManager</code> (Frontend Service):</strong> Triggers memory formation based on conversation turns.</li>
+</ul>
+<p><strong>Detailed Feature Requirements (UI-specific)</strong></p>
+<ol>
+<li>
+<p><strong>Chat History Display:</strong></p>
+<ul>
+<li><strong>Visuals:</strong> A scrollable list of chat bubbles, visually distinguishing between user messages and AI responses.</li>
+<li><strong>Elements:</strong><ul>
+<li><code>FlatList</code> or <code>ScrollView</code> to display <code>MessageBubble</code> components.</li>
+<li>Each <code>MessageBubble</code> displays text content.</li>
+<li>User messages aligned right, AI messages aligned left.</li>
+<li>Timestamps for messages (optional, on hover or grouped).</li>
+</ul>
+</li>
+<li><strong>Interactions:</strong> Auto-scroll to bottom on new message. User can manually scroll up to view history.</li>
+<li><strong>States:</strong> Empty state (e.g., "Say 'Hey Saira' to begin!"), loading state for initial history.</li>
+</ul>
+</li>
+<li>
+<p><strong>Voice Input Indicator:</strong></p>
+<ul>
+<li><strong>Visuals:</strong> A prominent, dynamic indicator (e.g., a pulsing microphone icon, a waveform visualization) that changes based on the AI's listening/processing state.</li>
+<li><strong>Elements:</strong><ul>
+<li>Microphone icon.</li>
+<li>Optional: Simple waveform animation or pulsating circle.</li>
+<li>Text status: "Listening...", "Thinking...", "Speaking...", "Idle."</li>
+</ul>
+</li>
+<li><strong>Interactions:</strong> Tapping the microphone icon can manually toggle listening (if not using wake word).</li>
+<li><strong>States:</strong> Idle, Listening, Processing (AI thinking), Speaking (AI responding).</li>
+</ul>
+</li>
+<li>
+<p><strong>Real-time Transcription Display:</strong></p>
+<ul>
+<li><strong>Visuals:</strong> Text area above the input bar that updates as the user speaks.</li>
+<li><strong>Elements:</strong><ul>
+<li><code>Text</code> component displaying the current partial or final transcription.</li>
+<li>Text color/style might change to indicate finality.</li>
+</ul>
+</li>
+<li><strong>Interactions:</strong> Updates dynamically.</li>
+<li><strong>States:</strong> Empty, partial transcription, final transcription.</li>
+</ul>
+</li>
+<li>
+<p><strong>Input Bar:</strong></p>
+<ul>
+<li><strong>Visuals:</strong> A persistent input area at the bottom of the screen.</li>
+<li><strong>Elements:</strong><ul>
+<li><code>TextInput</code> for typing messages.</li>
+<li>Microphone button (to initiate voice input if wake word is off, or to manually stop/start recording).</li>
+<li>Send button (for text input).</li>
+</ul>
+</li>
+<li><strong>Interactions:</strong><ul>
+<li>Typing in <code>TextInput</code> updates its value.</li>
+<li>Tapping microphone button toggles voice input.</li>
+<li>Tapping send button sends text message.</li>
+</ul>
+</li>
+<li><strong>States:</strong> Empty, text entered, sending.</li>
+</ul>
+</li>
+<li>
+<p><strong>AI Response Playback:</strong></p>
+<ul>
+<li><strong>Behavior:</strong> Audio plays automatically as AI response text appears.</li>
+<li><strong>Visuals:</strong> No explicit UI for playback, but the <code>VoiceInputIndicator</code> should show "Speaking..." state.</li>
+</ul>
+</li>
+</ol>
+<p><strong>Detailed Implementation Guide (UI-specific)</strong></p>
+<ol>
+<li>
+<p><strong>Frontend Architecture:</strong></p>
+<ul>
+<li><strong>Component Hierarchy:</strong> <code>ConversationScreen.tsx</code> will be the main screen. It will contain <code>MessageList</code> (a <code>FlatList</code> of <code>MessageBubble</code> components), <code>VoiceInputIndicator</code>, and <code>InputBar</code>.</li>
+<li><strong>Reusable Component Library:</strong> <code>MessageBubble</code>, <code>VoiceInputIndicator</code>, <code>InputBar</code> components.</li>
+<li><strong>State Management:</strong><ul>
+<li><code>useState</code> for <code>currentTranscription</code>, <code>aiResponseText</code>, <code>inputMessageText</code>.</li>
+<li><code>useState</code> for <code>conversationState</code> (e.g., 'idle', 'listening', 'processing', 'speaking').</li>
+<li><code>useState</code> for <code>messages</code> array (local display cache).</li>
+<li><code>useEffect</code> to manage WebSocket connection to <code>ai_inference_server.ts</code>.</li>
+<li><code>useEffect</code> to auto-scroll <code>FlatList</code> when new messages arrive.</li>
+<li>Global state (e.g., <code>Zustand</code> store) for <code>currentConversationId</code>, <code>activePersonalityId</code>.</li>
+</ul>
+</li>
+<li><strong>Routing:</strong> <code>ConversationScreen</code> is the default tab in <code>MainTabView</code>.</li>
+</ul>
+</li>
+<li>
+<p><strong>CRUD Operations (UI Perspective):</strong></p>
+<ul>
+<li><strong>Read Messages:</strong> <code>ConversationScreen</code> performs a "Read" operation to fetch initial conversation history.<ul>
+<li><strong>Flow:</strong> On component mount, <code>ConversationScreen</code> calls <code>MessageManager.getMessages(currentConversationId, pagination)</code> -&gt; <code>IPCService</code> to <code>data_manager.ts</code> to query <code>Messages</code> table.</li>
+</ul>
+</li>
+<li><strong>Create Message (User):</strong><ul>
+<li><strong>Flow (Voice):</strong> <code>audio_processor.ts</code> streams audio to <code>ai_inference_server.ts</code> -&gt; <code>ai_inference_server.ts</code> sends <code>transcription_update</code> via WebSocket -&gt; <code>ConversationScreen</code> updates <code>currentTranscription</code>. When <code>isFinal</code> is true, <code>MessageManager.addMessage</code> is called.</li>
+<li><strong>Flow (Text):</strong> User types and presses send -&gt; <code>MessageManager.addMessage</code> is called.</li>
+<li><code>MessageManager</code> sends message data via <code>IPCService</code> to <code>data_manager.ts</code> to insert into <code>Messages</code> table.</li>
+</ul>
+</li>
+<li><strong>Create Message (AI):</strong><ul>
+<li><strong>Flow:</strong> <code>ai_inference_server.ts</code> sends <code>ai_response_text</code> via WebSocket -&gt; <code>ConversationScreen</code> updates UI. Once full response received, <code>MessageManager.addMessage</code> is called to store AI's message.</li>
+<li><code>MessageManager</code> sends message data via <code>IPCService</code> to <code>data_manager.ts</code> to insert into <code>Messages</code> table.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>User Experience Flow (UI Perspective):</strong></p>
+<ul>
+<li><strong>Real-time Feedback:</strong> Visual and textual indicators for AI's state (listening, thinking, speaking).</li>
+<li><strong>Smooth Scrolling:</strong> Ensure <code>FlatList</code> performs well with many messages.</li>
+<li><strong>Typing vs. Voice:</strong> Seamless switch between typing and voice input modes.</li>
+</ul>
+</li>
+<li>
+<p><strong>Security Considerations (UI Perspective):</strong></p>
+<ul>
+<li><strong>Microphone Permission:</strong> React Native will trigger the macOS system prompt for microphone access. The UI should guide the user if permission is denied.</li>
+<li><strong>No Raw Audio Display:</strong> Raw audio data is processed by the backend and never displayed in the UI.</li>
+<li><strong>Consent Adherence:</strong> If emotion/memory recording consent is denied, the UI should reflect this (e.g., disable related indicators or features).</li>
+</ul>
+</li>
+<li>
+<p><strong>Testing Strategy (UI Perspective):</strong></p>
+<ul>
+<li><strong>Unit Tests:</strong> Test <code>MessageBubble</code>, <code>VoiceInputIndicator</code>, <code>InputBar</code> components for rendering and basic interactions.</li>
+<li><strong>Integration Tests:</strong> Test WebSocket connection, real-time transcription updates, and message display. Mock backend responses.</li>
+<li><strong>End-to-End Tests:</strong> Simulate full voice conversations, verifying UI updates, message persistence, and AI response playback.</li>
+</ul>
+</li>
+<li>
+<p><strong>Error Handling &amp; Logging (UI Perspective):</strong></p>
+<ul>
+<li><strong>Connection Errors:</strong> If WebSocket connection to backend fails, display a prominent error message (e.g., "Saira's brain is offline. Please restart the app.") and disable voice input.</li>
+<li><strong>Transcription Errors:</strong> If ASR fails, display "Could not understand. Please try again."</li>
+<li><strong>LLM Errors:</strong> If LLM fails to generate a response, display "Saira is having trouble thinking. Please try again."</li>
+<li><strong>Audio Playback Errors:</strong> Log errors if TTS audio fails to play.</li>
+<li><strong>Logging:</strong> Detailed logs of audio stream events, AI processing steps, and message storage.</li>
+</ul>
+</li>
+</ol>
+<hr />
+<h3 id="feature-daily-check-ins-journaling-screen_1">Feature: Daily Check-ins &amp; Journaling Screen<a class="headerlink" href="#feature-daily-check-ins-journaling-screen_1" title="Permanent link">&para;</a></h3>
+<p><strong>Feature Goal (UI-specific)</strong>
+To provide a dedicated space for users to reflect on their emotional state, log daily moods, and create personal journal entries, with visual summaries of emotional patterns over time.</p>
+<p><strong>Any API Relationships (UI-specific)</strong></p>
+<ul>
+<li><strong><code>JournalManager</code> (Frontend Service):</strong> Creates, reads, updates, and deletes journal entries and mood summaries.</li>
+<li><strong><code>MessageManager</code> (Frontend Service):</strong> May retrieve emotion data from past messages for mood summaries.</li>
+<li><strong><code>MemoryManager</code> (Frontend Service):</strong> Journal entries can trigger memory formation.</li>
+</ul>
+<p><strong>Detailed Feature Requirements (UI-specific)</strong></p>
+<ol>
+<li>
+<p><strong>Daily Mood Summary (<code>JournalingScreen.tsx</code> - Main View):</strong></p>
+<ul>
+<li><strong>Visuals:</strong> A calendar-like view or a series of daily cards displaying aggregated mood data.</li>
+<li><strong>Elements:</strong><ul>
+<li>Date navigation (e.g., left/right arrows to change day/week/month).</li>
+<li>For each day:<ul>
+<li>Date display.</li>
+<li>Aggregated mood representation (e.g., a dominant emoji, a color gradient, or a simple text summary like "Mostly Neutral").</li>
+<li>Count of journal entries for that day.</li>
+<li>Link/button to view/add journal entry for that day.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>Interactions:</strong> Tapping a day navigates to its journal entry list/detail.</li>
+<li><strong>States:</strong> Loading state, empty state for days with no data.</li>
+</ul>
+</li>
+<li>
+<p><strong>Emotional Check-in Interface (<code>JournalingScreen.tsx</code> - Button/Modal):</strong></p>
+<ul>
+<li><strong>Visuals:</strong> A prominent button on the main journaling screen, or a modal that appears when triggered.</li>
+<li><strong>Elements:</strong><ul>
+<li>Button: "How are you feeling today?"</li>
+<li><strong>Modal/Screen:</strong><ul>
+<li>Headline: "Log Your Mood."</li>
+<li>Mood picker: A visual slider for Arousal (Calm to Excited) and Valence (Negative to Positive), or a selection of emotion emojis/categories (e.g., Happy, Sad, Angry, Neutral).</li>
+<li>Optional <code>TextInput</code>: "Add a note about your mood..."</li>
+<li>Button: "Save Mood".</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>Interactions:</strong> Tapping the button opens the modal. Interacting with sliders/pickers updates mood selection. Tapping "Save Mood" submits the data.</li>
+<li><strong>States:</strong> Default, selected mood, saving.</li>
+</ul>
+</li>
+<li>
+<p><strong>Journal Entry List (<code>JournalingScreen.tsx</code> - Sub-section/Screen):</strong></p>
+<ul>
+<li><strong>Visuals:</strong> A scrollable list of journal entries, ordered by date.</li>
+<li><strong>Elements:</strong><ul>
+<li><code>FlatList</code> displaying <code>JournalEntryCard</code> components.</li>
+<li>Each <code>JournalEntryCard</code> displays: Date, a snippet of the entry content, and a small mood indicator (if available).</li>
+<li>Button: "New Journal Entry" (floating action button or prominent header button).</li>
+</ul>
+</li>
+<li><strong>Interactions:</strong> Tapping a <code>JournalEntryCard</code> navigates to <code>JournalEntryDetailView</code>. Tapping "New Journal Entry" navigates to <code>JournalEntryCreationView</code>.</li>
+<li><strong>States:</strong> Loading, empty list.</li>
+</ul>
+</li>
+<li>
+<p><strong>Journal Entry Creation/Detail (<code>JournalEntryCreationView.tsx</code>/<code>JournalEntryDetailView.tsx</code>):</strong></p>
+<ul>
+<li><strong>Visuals:</strong> A dedicated screen for writing/editing a journal entry.</li>
+<li><strong>Elements:</strong><ul>
+<li>Date/Time display (auto-filled, editable).</li>
+<li>Large <code>TextInput</code> for journal content.</li>
+<li>Optional: Mood picker (similar to check-in) if not already set.</li>
+<li>Button: "Save Entry".</li>
+<li>For detail view: "Edit" button, "Delete" button.</li>
+</ul>
+</li>
+<li><strong>Interactions:</strong> Typing updates content. Tapping "Save Entry" persists. "Edit" makes content editable. "Delete" prompts confirmation then deletes.</li>
+<li><strong>States:</strong> Editing, viewing, saving, deleting.</li>
+</ul>
+</li>
+</ol>
+<p><strong>Detailed Implementation Guide (UI-specific)</strong></p>
+<ol>
+<li>
+<p><strong>Frontend Architecture:</strong></p>
+<ul>
+<li><strong>Component Hierarchy:</strong> <code>JournalingScreen.tsx</code> will be the main tab screen. It will contain <code>MoodSummaryCalendar</code> and <code>JournalEntryList</code> components. <code>JournalEntryCreationView.tsx</code> and <code>JournalEntryDetailView.tsx</code> will be separate screens navigated to from <code>JournalingScreen</code>.</li>
+<li><strong>Reusable Component Library:</strong> <code>MoodSummaryCard</code>, <code>JournalEntryCard</code>, <code>DatePicker</code>, <code>Slider</code>, <code>EmojiPicker</code> (custom).</li>
+<li><strong>State Management:</strong><ul>
+<li><code>useState</code> for <code>selectedDate</code>, <code>journalEntries</code> array, <code>moodSummaries</code> array.</li>
+<li><code>useState</code> for <code>currentJournalContent</code>, <code>selectedMood</code>.</li>
+<li><code>useEffect</code> to fetch data from <code>JournalManager</code> based on <code>selectedDate</code> or filters.</li>
+<li>Global state for <code>userId</code>.</li>
+</ul>
+</li>
+<li><strong>Routing:</strong> <code>JournalingScreen</code> is a tab in <code>MainTabView</code>. <code>JournalEntryCreationView</code> and <code>JournalEntryDetailView</code> are pushed onto the <code>JournalingScreen</code>'s navigation stack.</li>
+</ul>
+</li>
+<li>
+<p><strong>CRUD Operations (UI Perspective):</strong></p>
+<ul>
+<li><strong>Create Journal Entry:</strong><ul>
+<li><strong>Flow:</strong> User types in <code>JournalEntryCreationView</code> -&gt; taps "Save Entry" -&gt; <code>JournalManager.createJournalEntry</code> is called.</li>
+<li><code>JournalManager</code> sends data via <code>IPCService</code> to <code>data_manager.ts</code> to insert into <code>JournalEntries</code> table.</li>
+<li>Also triggers <code>JournalManager.generateMoodSummary</code> for the relevant date.</li>
+</ul>
+</li>
+<li><strong>Read Journal Entries:</strong><ul>
+<li><strong>Flow:</strong> <code>JournalingScreen</code> or <code>JournalEntryList</code> mounts -&gt; <code>JournalManager.getJournalEntries</code> is called (with date range/pagination) -&gt; <code>IPCService</code> to <code>data_manager.ts</code> to query <code>JournalEntries</code>.</li>
+<li><code>JournalManager.getMoodSummaries</code> is called for the calendar view.</li>
+</ul>
+</li>
+<li><strong>Update Journal Entry:</strong><ul>
+<li><strong>Flow:</strong> User edits in <code>JournalEntryDetailView</code> -&gt; taps "Save" -&gt; <code>JournalManager.updateJournalEntry</code> is called.</li>
+<li><code>JournalManager</code> sends data via <code>IPCService</code> to <code>data_manager.ts</code> to update <code>JournalEntries</code> table.</li>
+</ul>
+</li>
+<li><strong>Delete Journal Entry:</strong><ul>
+<li><strong>Flow:</strong> User taps "Delete" in <code>JournalEntryDetailView</code> -&gt; confirmation dialog -&gt; <code>JournalManager.deleteJournalEntry</code> is called.</li>
+<li><code>JournalManager</code> sends data via <code>IPCService</code> to <code>data_manager.ts</code> to delete from <code>JournalEntries</code> table.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>User Experience Flow (UI Perspective):</strong></p>
+<ul>
+<li><strong>Intuitive Logging:</strong> Easy access to mood check-in and new journal entry creation.</li>
+<li><strong>Visual Summaries:</strong> Mood calendar provides a quick overview of emotional trends.</li>
+<li><strong>Seamless Editing:</strong> Smooth transition from viewing to editing journal entries.</li>
+</ul>
+</li>
+<li>
+<p><strong>Security Considerations (UI Perspective):</strong></p>
+<ul>
+<li><strong>Data Privacy:</strong> Remind users about the privacy of their journal entries.</li>
+<li><strong>Consent Adherence:</strong> Ensure emotion data is only recorded/displayed if consent was given.</li>
+</ul>
+</li>
+<li>
+<p><strong>Testing Strategy (UI Perspective):</strong></p>
+<ul>
+<li><strong>Unit Tests:</strong> Test <code>MoodSummaryCard</code>, <code>JournalEntryCard</code>, <code>MoodPicker</code> components.</li>
+<li><strong>Integration Tests:</strong> Test the full flow of creating, viewing, editing, and deleting journal entries. Verify mood summary generation.</li>
+<li><strong>End-to-End Tests:</strong> Simulate a user logging moods and creating multiple journal entries over several days.</li>
+</ul>
+</li>
+<li>
+<p><strong>Error Handling &amp; Logging (UI Perspective):</strong></p>
+<ul>
+<li><strong>Save Errors:</strong> Display "Failed to save entry. Please try again."</li>
+<li><strong>Load Errors:</strong> Display "Could not load journal entries."</li>
+<li><strong>Logging:</strong> Log all CRUD operations on journal entries and mood summaries.</li>
+</ul>
+</li>
+</ol>
+<hr />
+<h3 id="feature-deep-talk-screen_1">Feature: Deep Talk Screen<a class="headerlink" href="#feature-deep-talk-screen_1" title="Permanent link">&para;</a></h3>
+<p><strong>Feature Goal (UI-specific)</strong>
+To provide a specialized conversational mode that encourages deeper exploration of complex personal topics, leveraging Saira's long-term memory (RAG) to provide more insightful and context-rich responses.</p>
+<p><strong>Any API Relationships (UI-specific)</strong></p>
+<ul>
+<li><strong><code>IPCService</code> (Frontend Service):</strong> Sends audio/text input, receives AI responses, specifically optimized for RAG queries.</li>
+<li><strong><code>MemoryManager</code> (Frontend Service):</strong> Triggers semantic search for relevant memories based on conversation context.</li>
+<li><strong><code>ConversationManager</code> (Frontend Service):</strong> Manages the conversation session, potentially tagging it as a "Deep Talk" session.</li>
+</ul>
+<p><strong>Detailed Feature Requirements (UI-specific)</strong></p>
+<ol>
+<li>
+<p><strong>Specialized Conversation Interface:</strong></p>
+<ul>
+<li><strong>Visuals:</strong> Similar to the <code>ConversationScreen</code>, but with subtle visual cues indicating "Deep Talk Mode" (e.g., a different background color, a unique icon in the header).</li>
+<li><strong>Elements:</strong><ul>
+<li>Chat history display (same as <code>ConversationScreen</code>).</li>
+<li>Voice input indicator (same as <code>ConversationScreen</code>).</li>
+<li>Real-time transcription display (same as <code>ConversationScreen</code>).</li>
+<li>Input bar (same as <code>ConversationScreen</code>).</li>
+<li>Optional: "Suggested Topics" or "Memory Prompts" area (e.g., a carousel of buttons with memory snippets or questions like "Tell me more about X event").</li>
+</ul>
+</li>
+<li><strong>Interactions:</strong> Standard voice/text interaction. Tapping suggested topics injects them as a prompt.</li>
+<li><strong>States:</strong> Active Deep Talk session.</li>
+</ul>
+</li>
+<li>
+<p><strong>Memory Integration Indicators (Subtle):</strong></p>
+<ul>
+<li><strong>Visuals:</strong> When Saira's response is heavily influenced by a retrieved memory, a subtle visual indicator might appear (e.g., a small "memory" icon next to the AI's message, or a tooltip on hover revealing the source memory snippet). This is for transparency and to highlight Saira's RAG capability.</li>
+<li><strong>Elements:</strong> Small icon, tooltip/popover.</li>
+<li><strong>Interactions:</strong> Hovering/tapping the icon reveals the source memory.</li>
+<li><strong>States:</strong> Memory-augmented response, non-augmented response.</li>
+</ul>
+</li>
+</ol>
+<p><strong>Detailed Implementation Guide (UI-specific)</strong></p>
+<ol>
+<li>
+<p><strong>Frontend Architecture:</strong></p>
+<ul>
+<li><strong>Component Hierarchy:</strong> <code>DeepTalkScreen.tsx</code> will largely reuse components from <code>ConversationScreen.tsx</code> (e.g., <code>MessageList</code>, <code>VoiceInputIndicator</code>, <code>InputBar</code>). It will wrap these in a container that applies Deep Talk specific styling.</li>
+<li><strong>Reusable Component Library:</strong> Existing chat components. New <code>MemoryHint</code> component.</li>
+<li><strong>State Management:</strong><ul>
+<li>Inherits <code>conversationState</code> and <code>messages</code> state from a shared context or uses its own.</li>
+<li><code>useState</code> for <code>suggestedTopics</code> (populated by AI or based on recent memories).</li>
+<li>Global state for <code>userId</code>, <code>currentConversationId</code>.</li>
+</ul>
+</li>
+<li><strong>Routing:</strong> <code>DeepTalkScreen</code> is a tab in <code>MainTabView</code>.</li>
+</ul>
+</li>
+<li>
+<p><strong>CRUD Operations (UI Perspective):</strong></p>
+<ul>
+<li><strong>Read Memories (for RAG):</strong> This is the core "Read" operation.<ul>
+<li><strong>Flow:</strong> When a user speaks/types in Deep Talk mode, the <code>ConversationScreen</code>'s ViewModel (or a dedicated <code>DeepTalkViewModel</code>) will:<ol>
+<li>Send the user's query to <code>ai_inference_server.ts</code>'s <code>/ai/embeddings/generate</code> to get an embedding.</li>
+<li>Send the embedding to <code>ai_inference_server.ts</code>'s <code>/data/search_vectors</code> to retrieve relevant <code>Memories</code> from <code>sqlite-vec</code>.</li>
+<li>These retrieved memories are then included in the LLM's prompt.</li>
+</ol>
+</li>
+</ul>
+</li>
+<li><strong>Create/Read Messages:</strong> Same as <code>ConversationScreen</code>.</li>
+</ul>
+</li>
+<li>
+<p><strong>User Experience Flow (UI Perspective):</strong></p>
+<ul>
+<li><strong>Focused Interaction:</strong> The UI should encourage deeper, more reflective conversations.</li>
+<li><strong>Transparency:</strong> Subtle indicators help the user understand when Saira is drawing from its memory.</li>
+</ul>
+</li>
+<li>
+<p><strong>Security Considerations (UI Perspective):</strong></p>
+<ul>
+<li><strong>Memory Visibility:</strong> Ensure that only memories marked <code>is_active</code> and allowed by <code>memory_visibility_rules</code> are retrieved and used for RAG. The UI should reflect these settings.</li>
+</ul>
+</li>
+<li>
+<p><strong>Testing Strategy (UI Perspective):</strong></p>
+<ul>
+<li><strong>Integration Tests:</strong> Test the RAG pipeline: simulate a query, verify that relevant memories are retrieved from the mocked backend, and that the LLM response incorporates them.</li>
+<li><strong>End-to-End Tests:</strong> Simulate a Deep Talk session where the user asks about a past event, and Saira responds with details from a previously ingested memory.</li>
+</ul>
+</li>
+<li>
+<p><strong>Error Handling &amp; Logging (UI Perspective):</strong></p>
+<ul>
+<li><strong>RAG Failure:</strong> If memory retrieval or embedding generation fails, the LLM should still attempt to respond, but the UI might show a subtle warning that "Saira couldn't access all its memories."</li>
+<li><strong>Performance:</strong> Monitor RAG query latency. If too slow, provide feedback (e.g., "Saira is thinking deeply...").</li>
+</ul>
+</li>
+</ol>
+<hr />
+<h3 id="feature-profile-settings-screen_1">Feature: Profile Settings Screen<a class="headerlink" href="#feature-profile-settings-screen_1" title="Permanent link">&para;</a></h3>
+<p><strong>Feature Goal (UI-specific)</strong>
+To provide a centralized hub for users to customize Saira's behavior, manage their data, configure privacy settings, and update AI models.</p>
+<p><strong>Any API Relationships (UI-specific)</strong></p>
+<ul>
+<li><strong><code>UserManager</code> (Frontend Service):</strong> Reads/updates user preferences, privacy settings, and triggers data export/deletion.</li>
+<li><strong><code>PersonalityManager</code> (Frontend Service):):</strong> Reads/updates personality profiles.</li>
+<li><strong><code>ModelManager</code> (Frontend Service):</strong> Reads model versions, triggers model downloads.</li>
+<li><strong><code>SyncService</code> (Frontend Service):</strong> Configures sync, initiates sync, handles recovery keys.</li>
+<li><strong><code>NudgeManager</code> (Frontend Service):</strong> Reads/updates nudge preferences.</li>
+</ul>
+<p><strong>Detailed Feature Requirements (UI-specific)</strong></p>
+<ol>
+<li>
+<p><strong>Main Settings Navigation (<code>ProfileSettingsScreen.tsx</code>):</strong></p>
+<ul>
+<li><strong>Visuals:</strong> A list of categories (e.g., "General," "Personality," "Privacy &amp; Data," "AI Models," "Notifications," "Sync").</li>
+<li><strong>Elements:</strong><ul>
+<li><code>FlatList</code> of <code>SettingsCategoryItem</code> components.</li>
+<li>Each item: Icon, Category Name, disclosure indicator ("&gt;").</li>
+</ul>
+</li>
+<li><strong>Interactions:</strong> Tapping a category navigates to its dedicated sub-screen.</li>
+<li><strong>States:</strong> Loading, default.</li>
+</ul>
+</li>
+<li>
+<p><strong>General Settings (<code>GeneralSettingsScreen.tsx</code>):</strong></p>
+<ul>
+<li><strong>Visuals:</strong> Basic user profile information.</li>
+<li><strong>Elements:</strong><ul>
+<li>User's Name (<code>TextInput</code>).</li>
+<li>Profile Picture (display, button to change).</li>
+<li>Preferred Tone Style (radio buttons/dropdown).</li>
+</ul>
+</li>
+<li><strong>Interactions:</strong> Editing fields updates user data.</li>
+<li><strong>States:</strong> Editing, saving.</li>
+</ul>
+</li>
+<li>
+<p><strong>Personality Settings (<code>PersonalitySettingsScreen.tsx</code>):</strong></p>
+<ul>
+<li><strong>Visuals:</strong> List of available personality profiles, with the active one highlighted.</li>
+<li><strong>Elements:</strong><ul>
+<li>Headline: "Saira's Personality."</li>
+<li><code>FlatList</code> of <code>PersonalityProfileCard</code> components:<ul>
+<li>Each card: Name, description, "Activate" button (if not active).</li>
+<li>Active card has a distinct visual style.</li>
+</ul>
+</li>
+<li>Button: "Create Custom Personality" (navigates to <code>CustomPersonalityCreationScreen</code>).</li>
+</ul>
+</li>
+<li><strong>Interactions:</strong> Tapping "Activate" changes Saira's active personality.</li>
+<li><strong>States:</strong> Loading, active/inactive profiles.</li>
+</ul>
+</li>
+<li>
+<p><strong>Privacy &amp; Data Settings (<code>PrivacyDashboardScreen.tsx</code>):</strong></p>
+<ul>
+<li><strong>Visuals:</strong> A dashboard for managing data consents and privacy actions.</li>
+<li><strong>Elements:</strong><ul>
+<li>Toggle: "Allow emotion recording from voice."</li>
+<li>Toggle: "Allow memory recording from conversations."</li>
+<li>Button: "View Audit Logs" (opens <code>AuditLogsScreen</code>).</li>
+<li>Button: "Export All My Data" (triggers data export).</li>
+<li>Button: "Delete All My Data" (triggers data deletion, with confirmation).</li>
+<li>Link to Privacy Policy.</li>
+</ul>
+</li>
+<li><strong>Interactions:</strong> Toggling changes consent. Buttons trigger respective actions.</li>
+<li><strong>States:</strong> Toggles on/off, processing states for export/delete.</li>
+</ul>
+</li>
+<li>
+<p><strong>AI Models Settings (<code>AIModelManagementScreen.tsx</code>):</strong></p>
+<ul>
+<li><strong>Visuals:</strong> List of currently loaded AI models and their versions.</li>
+<li><strong>Elements:</strong><ul>
+<li>For each model (LLM, ASR, TTS, SER, Embedding):<ul>
+<li>Model Name (e.g., "Mistral 7B," "Whisper.cpp").</li>
+<li>Current Version.</li>
+<li>Status (e.g., "Loaded," "Updating," "Available Update").</li>
+<li>Button: "Check for Updates" (for all models).</li>
+<li>Button: "Download Update" (if available for a specific model).</li>
+<li>Button: "Rollback to Previous Version" (if applicable).</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>Interactions:</strong> Tapping "Download Update" initiates download.</li>
+<li><strong>States:</strong> Loading, up-to-date, update available, downloading, installing, error.</li>
+</ul>
+</li>
+<li>
+<p><strong>Notifications Settings (<code>NotificationSettingsScreen.tsx</code>):</strong></p>
+<ul>
+<li><strong>Visuals:</strong> Controls for proactive nudges.</li>
+<li><strong>Elements:</strong><ul>
+<li>Toggle: "Enable Proactive Nudges."</li>
+<li>List of Nudge Types (e.g., "Reminders," "Positive Reinforcement," "Wellness Suggestions").</li>
+<li>For each type: Toggle to enable/disable, frequency picker (Daily, Weekly, Event-based), time picker.</li>
+</ul>
+</li>
+<li><strong>Interactions:</strong> Toggling enables/disables nudges. Adjusting frequency/time updates preferences.</li>
+<li><strong>States:</strong> Enabled/disabled, configured.</li>
+</ul>
+</li>
+<li>
+<p><strong>Sync Settings (<code>SyncSettingsScreen.tsx</code>):</strong></p>
+<ul>
+<li><strong>Visuals:</strong> Controls for optional cloud synchronization.</li>
+<li><strong>Elements:</strong><ul>
+<li>Toggle: "Enable Cloud Sync."</li>
+<li>Input fields for cloud service credentials (if using a generic E2EE service like EteSync).</li>
+<li>Dropdown: "Sync Frequency" (Manual, Daily, Weekly, On App Close).</li>
+<li>Display: "Last Synced At:"</li>
+<li>Display: "Current Status:"</li>
+<li>Button: "Sync Now".</li>
+<li>Button: "Generate Recovery Key" (for E2EE data).</li>
+<li>Button: "Resolve Conflicts" (if conflicts detected).</li>
+</ul>
+</li>
+<li><strong>Interactions:</strong> Toggling enables/disables sync. Buttons trigger sync, key generation, or conflict resolution.</li>
+<li><strong>States:</strong> Enabled/disabled, syncing, synced, conflicts, error.</li>
+</ul>
+</li>
+</ol>
+<p><strong>Detailed Implementation Guide (UI-specific)</strong></p>
+<ol>
+<li>
+<p><strong>Frontend Architecture:</strong></p>
+<ul>
+<li><strong>Component Hierarchy:</strong> <code>ProfileSettingsScreen.tsx</code> will be the root of the settings tab, using <code>React Navigation</code>'s stack navigator to push sub-screens (e.g., <code>GeneralSettingsScreen</code>, <code>PrivacyDashboardScreen</code>).</li>
+<li><strong>Reusable Component Library:</strong> <code>ToggleSwitch</code>, <code>TextInput</code>, <code>Button</code>, <code>Picker</code>, <code>List</code> components.</li>
+<li><strong>State Management:</strong><ul>
+<li><code>useState</code> for local form inputs within each settings sub-screen.</li>
+<li><code>useEffect</code> to load initial settings data from relevant managers (<code>UserManager</code>, <code>PersonalityManager</code>, etc.).</li>
+<li><code>useCallback</code> for debouncing input changes before saving to backend.</li>
+<li>Global state for <code>userId</code>, <code>currentPersonalityId</code>, <code>syncStatus</code>.</li>
+</ul>
+</li>
+<li><strong>Routing:</strong> <code>ProfileSettingsScreen</code> is a tab in <code>MainTabView</code>. Sub-screens are pushed onto its own navigation stack.</li>
+</ul>
+</li>
+<li>
+<p><strong>CRUD Operations (UI Perspective):</strong></p>
+<ul>
+<li><strong>User Preferences (Update <code>Users</code> table):</strong><ul>
+<li><strong>Flow:</strong> User changes name, tone, sync settings, nudge preferences -&gt; <code>UserManager.updateUser</code> or <code>NudgeManager.updateNudgePreference</code> is called.</li>
+<li><code>IPCService</code> sends updates to <code>data_manager.ts</code> to update <code>Users</code> or <code>NudgePreferences</code> table.</li>
+</ul>
+</li>
+<li><strong>Personality Profiles (Read/Update <code>PersonalityProfiles</code> table):</strong><ul>
+<li><strong>Flow:</strong> <code>PersonalitySettingsScreen</code> loads <code>PersonalityManager.getPersonalityProfiles()</code>. User taps "Activate" -&gt; <code>PersonalityManager.activatePersonalityProfile</code> updates <code>Users.current_personality_profile_id</code>.</li>
+</ul>
+</li>
+<li><strong>Privacy Consents (Update <code>Users</code> table):</strong><ul>
+<li><strong>Flow:</strong> Toggling consent switches calls <code>UserManager.updatePrivacySettings</code>.</li>
+</ul>
+</li>
+<li><strong>Data Export/Deletion (Trigger Backend Process):</strong><ul>
+<li><strong>Flow:</strong> User clicks "Export" -&gt; <code>UserManager.exportData()</code> calls <code>IPCService</code> to trigger a Python script (<code>data_exporter.py</code>) in the backend.</li>
+<li>User clicks "Delete" -&gt; confirmation -&gt; <code>UserManager.deleteUser()</code> calls <code>IPCService</code> to <code>data_manager.ts</code> to delete user data.</li>
+</ul>
+</li>
+<li><strong>AI Model Management (Read/Update Model Files):</strong><ul>
+<li><strong>Flow:</strong> <code>AIModelManagementScreen</code> loads <code>ModelManager.getLoadedModels()</code>. User clicks "Download Update" -&gt; <code>ModelManager.downloadModelUpdate()</code> calls <code>IPCService</code> to <code>model_manager.ts</code> (Node.js) which uses <code>model_downloader.py</code> (Python) to download the model.</li>
+<li><code>model_manager.ts</code> then loads the new model into the <code>ai_inference_addon</code>.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>User Experience Flow (UI Perspective):</strong></p>
+<ul>
+<li><strong>Clear Categorization:</strong> Settings are logically grouped to prevent overwhelming the user.</li>
+<li><strong>Instant Feedback:</strong> Toggles and input fields update immediately.</li>
+<li><strong>Confirmation:</strong> Critical actions (e.g., data deletion) require explicit confirmation.</li>
+<li><strong>Progress Indicators:</strong> Show progress for long-running operations like model downloads or data exports.</li>
+</ul>
+</li>
+<li>
+<p><strong>Security Considerations (UI Perspective):</strong></p>
+<ul>
+<li><strong>Sensitive Data Input:</strong> If cloud sync requires credentials, ensure input fields are secure (e.g., password masking).</li>
+<li><strong>Consent Visibility:</strong> Clearly display current consent status for sensitive data processing.</li>
+<li><strong>Confirmation for Destructive Actions:</strong> Double-confirm data deletion.</li>
+<li><strong>Recovery Key Display:</strong> When generating a recovery key, display it prominently with warnings about secure storage.</li>
+</ul>
+</li>
+<li>
+<p><strong>Testing Strategy (UI Perspective):</strong></p>
+<ul>
+<li><strong>Unit Tests:</strong> Test individual settings components (e.g., <code>ToggleSwitch</code>, <code>Picker</code>).</li>
+<li><strong>Integration Tests:</strong> Test data loading and saving for each settings section. Simulate model downloads and sync processes.</li>
+<li><strong>End-to-End Tests:</strong> Simulate a user changing various settings, verifying persistence and impact on app behavior (e.g., personality change affects LLM response).</li>
+</ul>
+</li>
+<li>
+<p><strong>Error Handling &amp; Logging (UI Perspective):</strong></p>
+<ul>
+<li><strong>Save Errors:</strong> Display "Failed to save settings. Please try again." for backend save failures.</li>
+<li><strong>Download Errors:</strong> Display "Failed to download model update." for model download failures.</li>
+<li><strong>Sync Errors:</strong> Display "Sync failed. Check network or credentials." for sync issues.</li>
+<li><strong>Deletion Errors:</strong> Display "Failed to delete data."</li>
+<li><strong>Logging:</strong> Log all settings changes, sync events, model updates, and data export/deletion attempts.</li>
+</ul>
+</li>
+</ol>
+<hr />
+<h3 id="feature-proactive-nudges-notifications_1">Feature: Proactive Nudges &amp; Notifications<a class="headerlink" href="#feature-proactive-nudges-notifications_1" title="Permanent link">&para;</a></h3>
+<p><strong>Feature Goal (UI-specific)</strong>
+To proactively engage the user with timely reminders, positive reinforcement, and wellness suggestions, delivered through macOS system notifications and an in-app history.</p>
+<p><strong>Any API Relationships (UI-specific)</strong></p>
+<ul>
+<li><strong><code>NotificationService</code> (Frontend Service):</strong> Registers for and displays macOS system notifications.</li>
+<li><strong><code>NudgeManager</code> (Frontend Service):</strong> Manages nudge preferences and records nudge history.</li>
+<li><strong><code>ai_inference_server.ts</code> (Node.js Backend):</strong> The LLM in the backend will generate nudge content based on user data and preferences.</li>
+<li><strong><code>data_manager.ts</code> (Node.js Backend):</strong> Stores nudge preferences and history.</li>
+</ul>
+<p><strong>Detailed Feature Requirements (UI-specific)</strong></p>
+<ol>
+<li>
+<p><strong>Notification Display (macOS System Level):</strong></p>
+<ul>
+<li><strong>Visuals:</strong> Standard macOS notification banners/alerts.</li>
+<li><strong>Elements:</strong><ul>
+<li>App icon.</li>
+<li>Title (e.g., "Saira Check-in," "Saira Motivation").</li>
+<li>Body text (the nudge message, e.g., "How are you feeling today?").</li>
+<li>Optional: Action buttons (e.g., "Log Mood," "Dismiss").</li>
+</ul>
+</li>
+<li><strong>Interactions:</strong> User can click on the notification to open the app to a relevant screen (e.g., Journaling screen for mood check-in).</li>
+<li><strong>States:</strong> Delivered, interacted.</li>
+</ul>
+</li>
+<li>
+<p><strong>In-App Nudge History (<code>NotificationSettingsScreen.tsx</code> - Sub-section):</strong></p>
+<ul>
+<li><strong>Visuals:</strong> A scrollable list of past nudges.</li>
+<li><strong>Elements:</strong><ul>
+<li><code>FlatList</code> displaying <code>NudgeHistoryItem</code> components.</li>
+<li>Each item: Date/Time, Nudge Type, Message Content.</li>
+<li>Optional: Icon indicating if user interacted with it.</li>
+</ul>
+</li>
+<li><strong>Interactions:</strong> User can review past nudges.</li>
+<li><strong>States:</strong> Loading, empty list.</li>
+</ul>
+</li>
+<li>
+<p><strong>Nudge Configuration (Part of <code>ProfileSettingsScreen.tsx</code> -&gt; <code>NotificationSettingsScreen.tsx</code>):</strong></p>
+<ul>
+<li><strong>Visuals:</strong> Toggles and selectors for customizing nudge behavior.</li>
+<li><strong>Elements:</strong><ul>
+<li>Toggle: "Enable Proactive Nudges."</li>
+<li>Section for "Nudge Types":<ul>
+<li>For each type (e.g., "Reminders," "Positive Reinforcement," "Wellness Suggestions"):<ul>
+<li>Toggle to enable/disable.</li>
+<li>Dropdown/Picker for "Frequency" (Daily, Weekly, Event-based).</li>
+<li>Time picker for daily/weekly nudges.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Button: "Customize Nudge Content" (future feature, opens a modal for prompt templates).</li>
+</ul>
+</li>
+<li><strong>Interactions:</strong> Toggling enables/disables. Selecting frequency/time updates preferences.</li>
+<li><strong>States:</strong> Enabled/disabled, configured.</li>
+</ul>
+</li>
+</ol>
+<p><strong>Detailed Implementation Guide (UI-specific)</strong></p>
+<ol>
+<li><strong>System Architecture Overview:</strong><ul>
+<li><strong>High-level Architecture:</strong> Nudge generation logic resides in the Node.js</li>
+</ul>
+</li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/saurabhBatav/saira-ai-companion" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["navigation.tabs", "navigation.instant", "content.code.annotate", "search.suggest", "search.highlight"], "search": "../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.c8d2eff1.min.js"></script>
+      
+    
+  </body>
+</html>
