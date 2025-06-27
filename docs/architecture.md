@@ -88,13 +88,13 @@ _Consider replacing or extending this with a graphical diagram (e.g., system-dia
 
 ## References
 
-- [Project README](../README.md)
+- [Project README](README.md)
 - [UI Implementation](ui_implemenation.md)
 - [Low-fidelity Prototype](Low-fidelity Prototype.pdf)
 - [High-level Component Diagram](highlevel_component_diagram.svg)
 - [Contributing Guide](contribution.md)
 <!-- - [Privacy Policy](../PRIVACY.md) -->
-- [System Diagrams](highlevel_component_diagram.png)
+- [System Diagrams](highlevel_component_diagram.png) _(add/update as needed)_
 
 ---
 
