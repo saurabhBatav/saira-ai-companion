@@ -12,8 +12,8 @@
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
     "moduleResolution": "node",
-    "types": ["react", "react-native"]
+    "types": ["react", "react-native", "jest", "node"]
   },
-  "include": ["src", "App.tsx"],
+  "include": ["src", "App.tsx","tests"],
   "exclude": ["node_modules", "dist"]
 }
