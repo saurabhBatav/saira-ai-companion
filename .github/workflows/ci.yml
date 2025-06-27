@@ -33,50 +33,26 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
 
-      - name: 🔍 Debug - List Directory Structure
-        run: |
-          echo "Root directory contents:"
-          ls -la
-          echo "Looking for workspace directories:"
-          ls -la Saira/ 2>/dev/null || echo "Saira directory not found"
-          ls -la SairaBackendServices/ 2>/dev/null || echo "SairaBackendServices directory not found"
-          echo "Checking for package.json files:"
-          [ -f "Saira/package.json" ] && echo "✅ Saira/package.json exists" || echo "❌ Saira/package.json missing"
-          [ -f "SairaBackendServices/package.json" ] && echo "✅ SairaBackendServices/package.json exists" || echo "❌ SairaBackendServices/package.json missing"
-
-      - name: 🔍 Debug - Check npm workspaces
-        run: |
-          echo "npm workspace list:"
-          npm ls --workspaces=false --depth=0 2>/dev/null || echo "Failed to list workspaces"
-          echo "npm workspace info:"
-          npm query ".workspace" 2>/dev/null || echo "No workspaces found by npm"
-
       - name: 📦 Install All Dependencies (Root + Workspaces)
-        run: |
-          echo "Running in: $(pwd)"
-          npm install
+        run: npm install
 
-      - name: 🧹 Lint All Workspaces
-        run: |
-          echo "Running in: $(pwd)"
-          npm run lint
+      # Lint
+      - name: 🧹 Lint Frontend (React Native)
+        run: npm run lint --workspace=Saira
 
-      - name: 🧪 Test All Workspaces
-        run: |
-          echo "Running in: $(pwd)"
-          npm run test
+      - name: 🧹 Lint Backend (Node.js Services)
+        run: npm run lint --workspace=SairaBackendServices
 
-      # - name: 🏗️ Build All Workspaces
-      #   run: |
-      #     echo "Running in: $(pwd)"
-      #     npm run build
+      # Tests
+      - name: 🧪 Test Frontend (React Native)
+        run: npm run test --workspace=Saira
 
+      - name: 🧪 Test Backend (Node.js Services)
+        run: npm run test --workspace=SairaBackendServices
+
+      # Type Check
       - name: 🧾 TypeScript Check – Frontend
-        run: |
-          echo "Running in: $(pwd)"
-          npm run tsc --workspace=Saira -- --noEmit
+        run: npm run tsc --workspace=Saira
 
       - name: 🧾 TypeScript Check – Backend
-        run: |
-          echo "Running in: $(pwd)"
-          npm run tsc --workspace=SairaBackendServices -- --noEmit
+        run: npm run tsc --workspace=SairaBackendServices
