@@ -29,7 +29,7 @@ saira-app/
 │       ├── journaling.md
 │       └── nudges.md
 │
-├── SairaReactNativeApp/                     # Main macOS/iOS application (React Native + TypeScript)
+├── Saira/                     # Main macOS/iOS application (React Native + TypeScript)
 │   ├── package.json                         # Node.js dependencies for React Native [3]
 │   ├── tsconfig.json                        # TypeScript configuration [4, 5]
 │   ├── index.js                             # Entry point for React Native app [6]
@@ -63,14 +63,14 @@ saira-app/
 │   │       ├── Logger.ts                    # Structured logging utility
 │   │       └── Permissions.ts               # Handles system permissions
 │   ├── ios/                                 # iOS native project (Objective-C/Swift)
-│   │   ├── SairaReactNativeApp.xcodeproj/
-│   │   ├── SairaReactNativeApp/
+│   │   ├── Saira.xcodeproj/
+│   │   ├── Saira/
 │   │   │   ├── AppDelegate.mm               # Objective-C++ for native module bridging [7, 8, 9]
 │   │   │   └── Info.plist
 │   │   └── Podfile                          # CocoaPods for iOS dependencies [1]
 │   ├── macos/                               # macOS native project (Objective-C/Swift)
-│   │   ├── SairaReactNativeApp.xcodeproj/
-│   │   ├── SairaReactNativeApp/
+│   │   ├── Saira.xcodeproj/
+│   │   ├── Saira/
 │   │   │   ├── AppDelegate.mm               # Objective-C++ for native module bridging [7, 8, 9]
 │   │   │   └── Info.plist
 │   │   └── Podfile                          # CocoaPods for macOS dependencies [1]
@@ -176,7 +176,7 @@ saira-app/
 
 **System Architecture Overview**
 
-High-level Architecture: The application will consist of a React Native for macOS frontend (`SairaReactNativeApp/`) and a Node.js/Python backend (`SairaBackendServices/`). The frontend handles the UI and high-level application logic. The backend handles all performance-critical AI inference, low-level audio I/O, and local data management. Communication between the frontend and backend will primarily occur via Inter-Process Communication (IPC) using local HTTP/WebSocket servers or Node.js `child_process` module.
+High-level Architecture: The application will consist of a React Native for macOS frontend (`Saira/`) and a Node.js/Python backend (`SairaBackendServices/`). The frontend handles the UI and high-level application logic. The backend handles all performance-critical AI inference, low-level audio I/O, and local data management. Communication between the frontend and backend will primarily occur via Inter-Process Communication (IPC) using local HTTP/WebSocket servers or Node.js `child_process` module.
 
 **Technology Stack:**
 
@@ -371,7 +371,7 @@ The local database will be SQLite, encrypted with SQLCipher. All tables will inc
 
 The primary API will be internal, facilitating communication between the React Native frontend and the Node.js backend services. This will likely involve a local HTTP server or WebSocket server running within the Node.js backend process.
 
-#### React Native Frontend APIs (Internal to `SairaReactNativeApp/src/services/`):
+#### React Native Frontend APIs (Internal to `Saira/src/services/`):
 
 These are TypeScript interfaces and classes that define the communication contracts between the React Native UI and the backend services. They will use `fetch` for HTTP requests and WebSocket for real-time streaming to the local Node.js backend.
 
@@ -413,7 +413,7 @@ These are TypeScript interfaces and classes that define the communication contra
     * `deleteNudgePreference(id: string) => Promise<void>` (D)
     * `getNudgeHistory(userId: string, pagination: PaginationDTO) => Promise<NudgeHistory[]>` (R)
     * `markNudgeInteracted(nudgeHistoryId: string) => Promise<void>` (U)
-* **TaskManagerClient (NEW - TypeScript Class in `SairaReactNativeApp/src/services/`):**
+* **TaskManagerClient (NEW - TypeScript Class in `Saira/src/services/`):**
     * `createTask(userId: string, taskType: TaskType, taskData: any): Promise<Task>`
         * **Purpose:** Initiates a background task (e.g., `createJournalEntry`, `setReminder`). Returns a `Task` object immediately with `pending` status.
     * `getTaskStatus(taskId: string): Promise<TaskStatus>`
@@ -747,7 +747,7 @@ These are TypeScript interfaces and classes that define the communication contra
 6.  **User Experience Flow**
 
     *   **Onboarding Flow:**
-        1.  **App Launch (First Time):** `SairaReactNativeApp` detects no existing user profile.
+        1.  **App Launch (First Time):** `Saira` detects no existing user profile.
         2.  **Welcome Screen:** Displays Saira's purpose and privacy commitment.
         3.  **Consent Screen:** Presents GDPR/CCPA, emotion recording, and memory recording consents. User must explicitly accept.
         4.  **Personality Selection:** User chooses an initial personality mode (e.g., "Best Friend", "Coach") from pre-defined options.
@@ -811,7 +811,7 @@ These are TypeScript interfaces and classes that define the communication contra
 8.  **Testing Strategy**
 
     *   **Unit Test Requirements:**
-        *   **React Native (`SairaReactNativeApp/__tests__`):** Jest for all React/TypeScript components, hooks, and services. Mock backend IPC calls.
+        *   **React Native (`Saira/__tests__`):** Jest for all React/TypeScript components, hooks, and services. Mock backend IPC calls.
         *   **Node.js (`SairaBackendServices/tests`):** Jest/Mocha for Node.js services (AI inference server, data manager, model manager). Mock C++ native addon calls.
         *   **Python (`SairaBackendServices/tests`):** Pytest for Python scripts (RAG ingestion, model downloader).
         *   **C++ Native Addons (`SairaBackendServices/native_addons/`):** Google Test/Catch2 for C++ code within native addons.
@@ -920,7 +920,7 @@ To enable natural, real-time conversational interaction with Saira through voice
 **Detailed Implementation Guide**
 
 1.  **System Architecture Overview**
-    *   **High-level Architecture:** This feature is primarily handled by the `SairaBackendServices` (Node.js/Python/C++ addons) due to its performance-critical nature. The `SairaReactNativeApp` (React Native) acts as the client, sending audio input and receiving text/audio output via a local WebSocket server.
+    *   **High-level Architecture:** This feature is primarily handled by the `SairaBackendServices` (Node.js/Python/C++ addons) due to its performance-critical nature. The `Saira` (React Native) acts as the client, sending audio input and receiving text/audio output via a local WebSocket server.
     *   **Technology Stack:**
         *   **Frontend (UI):** React Native for macOS (TypeScript) for microphone access (via native module), displaying real-time transcription, and playing back audio.
         *   **Backend (Orchestration & IPC):** Node.js (`ai_inference_server.ts`, `audio_processor.ts`). Node.js will manage the audio streams, orchestrate calls to AI models, and handle WebSocket communication with the frontend. Node.js is generally faster than Python for I/O-bound tasks and concurrent API requests.

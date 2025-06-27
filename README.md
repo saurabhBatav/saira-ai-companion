@@ -77,7 +77,7 @@ saira-app/
 │       ├── journaling.md
 │       └── nudges.md
 │
-├── SairaReactNativeApp/                     # Main macOS/iOS application (React Native + TypeScript)
+├── Saira/                     # Main macOS/iOS application (React Native + TypeScript)
 │   ├── package.json                         # Node.js dependencies for React Native [3]
 │   ├── tsconfig.json                        # TypeScript configuration [4, 5]
 │   ├── index.js                             # Entry point for React Native app [6]
@@ -111,14 +111,14 @@ saira-app/
 │   │       ├── Logger.ts                    # Structured logging utility
 │   │       └── Permissions.ts               # Handles system permissions
 │   ├── ios/                                 # iOS native project (Objective-C/Swift)
-│   │   ├── SairaReactNativeApp.xcodeproj/
-│   │   ├── SairaReactNativeApp/
+│   │   ├── Saira.xcodeproj/
+│   │   ├── Saira/
 │   │   │   ├── AppDelegate.mm               # Objective-C++ for native module bridging [7, 8, 9]
 │   │   │   └── Info.plist
 │   │   └── Podfile                          # CocoaPods for iOS dependencies [1]
 │   ├── macos/                               # macOS native project (Objective-C/Swift)
-│   │   ├── SairaReactNativeApp.xcodeproj/
-│   │   ├── SairaReactNativeApp/
+│   │   ├── Saira.xcodeproj/
+│   │   ├── Saira/
 │   │   │   ├── AppDelegate.mm               # Objective-C++ for native module bridging [7, 8, 9]
 │   │   │   └── Info.plist
 │   │   └── Podfile                          # CocoaPods for macOS dependencies [1]
