@@ -9,7 +9,7 @@
     "start": "react-native start",
     "build": "react-native bundle --platform=macos --entry-file=index.js --bundle-output=build/main.jsbundle --dev=false",
     "test": "jest --config=jest.config.js",
-    "tsc": "tsc"
+    "tsc": "tsc --noEmit"
   },
   "dependencies": {
     "@react-native/new-app-screen": "0.80.0",
@@ -32,7 +32,8 @@
     "@testing-library/jest-native": "^5.4.3",
     "@testing-library/react-native": "^13.2.0",
     "@types/jest": "^29.5.14",
-    "@types/react": "^19.0.0",
+    "@types/react": "^19.1.8",
+    "@types/react-native": "^0.72.8",
     "@types/react-test-renderer": "^19.0.0",
     "babel-jest": "^29.7.0",
     "eslint": "^8.19.0",

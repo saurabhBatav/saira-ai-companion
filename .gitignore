@@ -63,6 +63,9 @@ Saira/.yarn/*
 # Backend specific ignores (if any)
 SairaBackendServices/.env
 SairaBackendServices/node_modules/
+SairaBackendServices/dist/
+SairaBackendServices/build/
+
 .env
 
 # ===== GENERAL =====
