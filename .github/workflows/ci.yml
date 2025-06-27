@@ -35,37 +35,55 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
 
-      # - name: 📦 Install Root Dependencies
-      #   run: npm install
+      - name: 📦 Install Root Dependencies
+        run: |
+          echo "Running in: $(pwd)"
+          npm install
 
       - name: 📦 Install Frontend Dependencies
         working-directory: ./Saira
-        run: npm install
+        run: |
+          echo "Running in: $(pwd)"
+          npm install
 
       - name: 📦 Install Backend Dependencies
         working-directory: ./SairaBackendServices
-        run: npm install
+        run: |
+          echo "Running in: $(pwd)"
+          npm install
 
       - name: 🧹 Lint Frontend (React Native)
         working-directory: ./Saira
-        run: npm run lint
+        run: |
+          echo "Running in: $(pwd)"
+          npm run lint
 
       - name: 🧹 Lint Backend (Node.js Services)
         working-directory: ./SairaBackendServices
-        run: npm run lint
+        run: |
+          echo "Running in: $(pwd)"
+          npm run lint
 
       - name: 🧪 Test Frontend (React Native)
         working-directory: ./Saira
-        run: npm run test
+        run: |
+          echo "Running in: $(pwd)"
+          npm run test
 
       - name: 🧪 Test Backend (Node.js Services)
         working-directory: ./SairaBackendServices
-        run: npm run test
+        run: |
+          echo "Running in: $(pwd)"
+          npm run test
       
       - name: 🧾 TypeScript Check – Frontend
         working-directory: ./Saira
-        run: npm run tsc --noEmit
+        run: |
+          echo "Running in: $(pwd)"
+          npm run tsc --noEmit
 
       - name: 🧾 TypeScript Check – Backend
         working-directory: ./SairaBackendServices
-        run: npm run tsc --noEmit
+        run: |
+          echo "Running in: $(pwd)"
+          npm run tsc --noEmit
