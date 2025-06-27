@@ -88,7 +88,7 @@ _Consider replacing or extending this with a graphical diagram (e.g., system-dia
 
 ## References
 
-- [Project README](README.md)
+- [Project README](https://github.com/saurabhBatav/saira-ai-companion/blob/main/README.md)
 - [UI Implementation](ui_implemenation.md)
 - [Low-fidelity Prototype](Low-fidelity Prototype.pdf)
 - [High-level Component Diagram](highlevel_component_diagram.svg)
