@@ -8,7 +8,8 @@
         "build": "npm run build --workspace=Saira && npm run build --workspace=SairaBackendServices",
         "test": "npm run test --workspace=Saira && npm run test --workspace=SairaBackendServices",
         "lint": "npm run lint --workspace=Saira && npm run lint --workspace=SairaBackendServices",
-        "format": "prettier --write ."
+        "format": "prettier --write .",
+        "tsc": "npm run tsc --workspace=Saira && npm run tsc --workspace=SairaBackendServices"
     },
     "devDependencies": {
         "@types/jest": "^30.0.0",

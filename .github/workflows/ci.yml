@@ -23,13 +23,36 @@ jobs:
           node-version: 20
           cache: 'npm'
 
-      - name: 📦 Install Root Dependencies
+      - name: 🗂️ Cache node_modules
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.npm
+            **/node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: 📦 Install All Dependencies (Root + Workspaces)
         run: npm install
 
-      - name: 📦 Install Frontend Dependencies
-        working-directory: ./Saira
-        run: npm install
+      # Lint
+      - name: 🧹 Lint Frontend (React Native)
+        run: npm run lint --workspace=Saira
 
-      - name: 📦 Install Backend Dependencies
-        working-directory: ./SairaBackendServices
-        run: npm install
+      - name: 🧹 Lint Backend (Node.js Services)
+        run: npm run lint --workspace=SairaBackendServices
+
+      # Tests
+      - name: 🧪 Test Frontend (React Native)
+        run: npm run test --workspace=Saira
+
+      - name: 🧪 Test Backend (Node.js Services)
+        run: npm run test --workspace=SairaBackendServices
+
+      # Type Check
+      - name: 🧾 TypeScript Check – Frontend
+        run: npm run tsc --workspace=Saira
+
+      - name: 🧾 TypeScript Check – Backend
+        run: npm run tsc --workspace=SairaBackendServices

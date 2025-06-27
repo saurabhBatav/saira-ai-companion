@@ -8,7 +8,7 @@
   },
   "scripts": {
     "start:dev": "ts-node-dev --respawn src/node_services/main.ts",
-    "build": "tsc",
+    "tsc": "tsc --noEmit",
     "test": "jest --config=jest.config.js",
     "lint": "eslint src || true"
   },

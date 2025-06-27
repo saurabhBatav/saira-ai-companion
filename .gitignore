@@ -1,3 +1,75 @@
+# ===== FRONTEND (React Native - Saira) =====
+# OSX
+Saira/.DS_Store
+
+# Xcode
+Saira/build/
+Saira/*.pbxuser
+!Saira/default.pbxuser
+Saira/*.mode1v3
+!Saira/default.mode1v3
+Saira/*.mode2v3
+!Saira/default.mode2v3
+Saira/*.perspectivev3
+!Saira/default.perspectivev3
+Saira/xcuserdata
+Saira/*.xccheckout
+Saira/*.moved-aside
+Saira/DerivedData
+Saira/*.hmap
+Saira/*.ipa
+Saira/*.xcuserstate
+Saira/**/.xcode.env.local
+
+# Android/IntelliJ
+Saira/build/
+Saira/.idea
+Saira/.gradle
+Saira/local.properties
+Saira/*.iml
+Saira/*.hprof
+Saira/.cxx/
+Saira/*.keystore
+!Saira/debug.keystore
+Saira/.kotlin/
+
+# React Native specific
+Saira/node_modules/
+Saira/npm-debug.log
+Saira/yarn-error.log
+Saira/*.jsbundle
+Saira/.metro-health-check*
+Saira/coverage/
+
+# fastlane
+Saira/**/fastlane/report.xml
+Saira/**/fastlane/Preview.html
+Saira/**/fastlane/screenshots
+Saira/**/fastlane/test_output
+
+# Ruby / CocoaPods
+Saira/**/Pods/
+Saira/vendor/bundle/
+
+# Yarn
+Saira/.yarn/*
+!Saira/.yarn/patches
+!Saira/.yarn/plugins
+!Saira/.yarn/releases
+!Saira/.yarn/sdks
+!Saira/.yarn/versions
+
+# ===== BACKEND =====
+# Backend specific ignores (if any)
 SairaBackendServices/.env
-/SairaBackendServices/node_modules
-node_modules
+SairaBackendServices/node_modules/
+SairaBackendServices/dist/
+SairaBackendServices/build/
+
+.env
+
+# ===== GENERAL =====
+# Root level
+node_modules/
+.DS_Store
+*.log

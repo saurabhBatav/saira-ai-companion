@@ -10,7 +10,7 @@ This project adheres to [Semantic Versioning](https://semver.org/) and follows t
 
 ### Added
 
-- Initialized monorepo structure with `SairaReactNativeApp` and `SairaBackendServices`
+- Initialized monorepo structure with `Saira` and `SairaBackendServices`
 - Set up React Native for macOS with TypeScript and ESLint
 - Implemented initial folder structure for frontend (components, screens, services)
 - Integrated React Navigation with macOS support
