@@ -2,7 +2,7 @@
 
 Welcome to the official documentation for Saira AI Companion, the emotion-aware life companion AI.
 
-- [Project Overview](architecture.md)
+- [Architecture](architecture.md)
 - [API Reference](api/README.md)
 - [Development Guide](development.md)
 - [Deployment](deployment.md)
