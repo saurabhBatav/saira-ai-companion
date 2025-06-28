@@ -30,6 +30,8 @@ interface AudioIOAddon {
   
   stopCapture(instance: unknown): boolean;
   
+  playAudio(instance: unknown, audioBuffer: Int16Array): boolean;
+  
   // For testing
   sayHello(): string;
 }
@@ -128,6 +130,33 @@ export function stopAllCaptures(): void {
   activeCaptures.clear();
 }
 
+/**
+ * Play audio buffer through the default audio output device
+ * @param audioBuffer The audio buffer to play (16-bit PCM)
+ * @param instance The audio instance (from startCapture)
+ * @returns boolean indicating success
+ */
+export function playAudio(audioBuffer: Int16Array, instance?: unknown): boolean {
+  try {
+    if (!(audioBuffer instanceof Int16Array)) {
+      console.error('Audio buffer must be an Int16Array');
+      return false;
+    }
+    
+    console.log(`Playing audio buffer of ${audioBuffer.length} samples`);
+    
+    // If no instance is provided, create a dummy one
+    const targetInstance = instance || {};
+    console.log('Calling native playAudio with instance and buffer');
+    const result = audioAddon.playAudio(targetInstance, audioBuffer);
+    console.log('Native playAudio result:', result);
+    return result;
+  } catch (error) {
+    console.error('Error playing audio:', error);
+    return false;
+  }
+}
+
 // For testing purposes
 export function sayHelloFromAddon(): string {
   try {
@@ -143,5 +172,6 @@ export default {
   startCapture,
   stopCapture,
   stopAllCaptures,
+  playAudio,
   sayHelloFromAddon
 };

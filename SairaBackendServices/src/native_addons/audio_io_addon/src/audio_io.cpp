@@ -15,12 +15,197 @@ OSStatus AudioInputCallback(void *inRefCon,
                           UInt32 inNumberFrames,
                           AudioBufferList *ioData);
 
+// Forward declaration for the audio playback callback
+static OSStatus AudioPlaybackCallback(void *inRefCon,
+                                    AudioUnitRenderActionFlags *ioActionFlags,
+                                    const AudioTimeStamp *inTimeStamp,
+                                    UInt32 inBusNumber,
+                                    UInt32 inNumberFrames,
+                                    AudioBufferList *ioData);
+
+// Audio playback state structure
+struct AudioPlaybackState {
+    AudioComponentInstance audioUnit{nullptr};
+    std::vector<int16_t> audioBuffer;
+    size_t position{0};
+    std::mutex bufferMutex;
+    std::condition_variable bufferCV;
+    bool isPlaying{false};
+    
+    ~AudioPlaybackState() {
+        stop();
+    }
+    
+    void stop() {
+        std::unique_lock<std::mutex> lock(bufferMutex);
+        if (!isPlaying) return;
+        
+        isPlaying = false;
+        audioBuffer.clear();
+        position = 0;
+        bufferCV.notify_all();
+        
+        if (audioUnit) {
+            AudioOutputUnitStop(audioUnit);
+            AudioUnitUninitialize(audioUnit);
+            AudioComponentInstanceDispose(audioUnit);
+            audioUnit = nullptr;
+        }
+    }
+    
+    OSStatus render(AudioUnitRenderActionFlags *ioActionFlags,
+                   const AudioTimeStamp *inTimeStamp,
+                   UInt32 inBusNumber,
+                   UInt32 inNumberFrames,
+                   AudioBufferList *ioData) {
+        std::unique_lock<std::mutex> lock(bufferMutex);
+        
+        if (!isPlaying || position >= audioBuffer.size()) {
+            // Fill with silence if no more data
+            for (UInt32 i = 0; i < ioData->mNumberBuffers; i++) {
+                memset(ioData->mBuffers[i].mData, 0, ioData->mBuffers[i].mDataByteSize);
+            }
+            return noErr;
+        }
+        
+        // Copy audio data to output buffer
+        int16_t *outBuffer = static_cast<int16_t*>(ioData->mBuffers[0].mData);
+        size_t framesToCopy = std::min(static_cast<size_t>(inNumberFrames), 
+                                     (audioBuffer.size() - position) / ioData->mNumberBuffers);
+        
+        for (UInt32 i = 0; i < framesToCopy; i++) {
+            for (UInt32 ch = 0; ch < ioData->mNumberBuffers; ch++) {
+                outBuffer[i * ioData->mNumberBuffers + ch] = audioBuffer[position++];
+            }
+        }
+        
+        // Fill the rest with silence if needed
+        for (UInt32 i = framesToCopy; i < inNumberFrames; i++) {
+            for (UInt32 ch = 0; ch < ioData->mNumberBuffers; ch++) {
+                outBuffer[i * ioData->mNumberBuffers + ch] = 0;
+            }
+        }
+        
+        return noErr;
+    }
+    
+    bool playAudio(const std::vector<int16_t>& buffer) {
+        std::unique_lock<std::mutex> lock(bufferMutex);
+        
+        if (buffer.empty()) {
+            return false;
+        }
+        
+        // Copy the audio data
+        audioBuffer = buffer;
+        position = 0;
+        
+        // If not already playing, set up the audio unit
+        if (!isPlaying) {
+            // Configure audio format
+            AudioComponentDescription desc;
+            desc.componentType = kAudioUnitType_Output;
+            desc.componentSubType = kAudioUnitSubType_DefaultOutput;
+            desc.componentManufacturer = kAudioUnitManufacturer_Apple;
+            desc.componentFlags = 0;
+            desc.componentFlagsMask = 0;
+            
+            // Get default output component
+            AudioComponent comp = AudioComponentFindNext(nullptr, &desc);
+            if (!comp) {
+                std::cerr << "Error finding audio component" << std::endl;
+                return false;
+            }
+            
+            // Create audio unit
+            OSStatus err = AudioComponentInstanceNew(comp, &audioUnit);
+            if (err != noErr) {
+                std::cerr << "Error creating audio unit: " << err << std::endl;
+                return false;
+            }
+            
+            // Set up audio format (16-bit PCM)
+            AudioStreamBasicDescription audioFormat;
+            audioFormat.mSampleRate = 16000;  // 16kHz
+            audioFormat.mFormatID = kAudioFormatLinearPCM;
+            audioFormat.mFormatFlags = kAudioFormatFlagIsSignedInteger | kAudioFormatFlagIsPacked;
+            audioFormat.mFramesPerPacket = 1;
+            audioFormat.mChannelsPerFrame = 1;  // Mono
+            audioFormat.mBitsPerChannel = 16;
+            audioFormat.mBytesPerFrame = audioFormat.mChannelsPerFrame * (audioFormat.mBitsPerChannel / 8);
+            audioFormat.mBytesPerPacket = audioFormat.mFramesPerPacket * audioFormat.mBytesPerFrame;
+            audioFormat.mReserved = 0;
+            
+            // Apply format
+            err = AudioUnitSetProperty(audioUnit,
+                                     kAudioUnitProperty_StreamFormat,
+                                     kAudioUnitScope_Input,
+                                     0,
+                                     &audioFormat,
+                                     sizeof(audioFormat));
+            if (err != noErr) {
+                std::cerr << "Error setting audio format: " << err << std::endl;
+                return false;
+            }
+            
+            // Set up render callback
+            AURenderCallbackStruct callbackInfo;
+            callbackInfo.inputProc = &AudioPlaybackCallback;
+            callbackInfo.inputProcRefCon = this;
+            
+            err = AudioUnitSetProperty(audioUnit,
+                                     kAudioUnitProperty_SetRenderCallback,
+                                     kAudioUnitScope_Input,
+                                     0,
+                                     &callbackInfo,
+                                     sizeof(callbackInfo));
+            if (err != noErr) {
+                std::cerr << "Error setting render callback: " << err << std::endl;
+                return false;
+            }
+            
+            // Initialize audio unit
+            err = AudioUnitInitialize(audioUnit);
+            if (err != noErr) {
+                std::cerr << "Error initializing audio unit: " << err << std::endl;
+                return false;
+            }
+            
+            isPlaying = true;
+            
+            // Start playback
+            err = AudioOutputUnitStart(audioUnit);
+            if (err != noErr) {
+                std::cerr << "Error starting audio unit: " << err << std::endl;
+                return false;
+            }
+        }
+        
+        return true;
+    }
+};
+
+// Audio playback callback function
+static OSStatus AudioPlaybackCallback(void *inRefCon,
+                                    AudioUnitRenderActionFlags *ioActionFlags,
+                                    const AudioTimeStamp *inTimeStamp,
+                                    UInt32 inBusNumber,
+                                    UInt32 inNumberFrames,
+                                    AudioBufferList *ioData) {
+    AudioPlaybackState* state = static_cast<AudioPlaybackState*>(inRefCon);
+    if (state) {
+        return state->render(ioActionFlags, inTimeStamp, inBusNumber, inNumberFrames, ioData);
+    }
+    return noErr;
+}
+
 // Audio capture state structure
 struct AudioCaptureState {
     AudioComponentInstance audioUnit{nullptr};
     Napi::ThreadSafeFunction tsfn;
     std::atomic<bool> isRunning{false};
     std::mutex mutex;
+    std::unique_ptr<AudioPlaybackState> playbackState;
     
     ~AudioCaptureState() {
         stop();
@@ -48,6 +233,113 @@ struct AudioCaptureState {
         
         isRunning = false;
     }
+    
+    bool playAudio(const std::vector<int16_t>& buffer) {
+        if (!playbackState) {
+            playbackState = std::make_unique<AudioPlaybackState>();
+            
+            // Configure audio format
+            AudioComponentDescription desc;
+            desc.componentType = kAudioUnitType_Output;
+            desc.componentSubType = kAudioUnitSubType_DefaultOutput;
+            desc.componentManufacturer = kAudioUnitManufacturer_Apple;
+            desc.componentFlags = 0;
+            desc.componentFlagsMask = 0;
+            
+            // Get default output component
+            AudioComponent comp = AudioComponentFindNext(nullptr, &desc);
+            if (!comp) {
+                std::cerr << "Error finding audio component" << std::endl;
+                return false;
+            }
+            
+            // Create audio unit
+            OSStatus err = AudioComponentInstanceNew(comp, &playbackState->audioUnit);
+            if (err != noErr) {
+                std::cerr << "Error creating audio unit: " << err << std::endl;
+                return false;
+            }
+            
+            // Set up audio format (16-bit PCM)
+            AudioStreamBasicDescription audioFormat;
+            audioFormat.mSampleRate = 16000;  // 16kHz
+            audioFormat.mFormatID = kAudioFormatLinearPCM;
+            audioFormat.mFormatFlags = kAudioFormatFlagIsSignedInteger | kAudioFormatFlagIsPacked;
+            audioFormat.mFramesPerPacket = 1;
+            audioFormat.mChannelsPerFrame = 1;  // Mono
+            audioFormat.mBitsPerChannel = 16;
+            audioFormat.mBytesPerFrame = audioFormat.mChannelsPerFrame * (audioFormat.mBitsPerChannel / 8);
+            audioFormat.mBytesPerPacket = audioFormat.mFramesPerPacket * audioFormat.mBytesPerFrame;
+            audioFormat.mReserved = 0;
+            
+            // Apply format
+            err = AudioUnitSetProperty(playbackState->audioUnit,
+                                     kAudioUnitProperty_StreamFormat,
+                                     kAudioUnitScope_Input,
+                                     0,
+                                     &audioFormat,
+                                     sizeof(audioFormat));
+            if (err != noErr) {
+                std::cerr << "Error setting audio format: " << err << std::endl;
+                return false;
+            }
+            
+            // Set up render callback
+            AURenderCallbackStruct callbackInfo;
+            callbackInfo.inputProc = &AudioPlaybackCallback;
+            callbackInfo.inputProcRefCon = this;
+            
+            err = AudioUnitSetProperty(playbackState->audioUnit,
+                                     kAudioUnitProperty_SetRenderCallback,
+                                     kAudioUnitScope_Input,
+                                     0,
+                                     &callbackInfo,
+                                     sizeof(callbackInfo));
+            if (err != noErr) {
+                std::cerr << "Error setting render callback: " << err << std::endl;
+                return false;
+            }
+            
+            // Initialize audio unit
+            err = AudioUnitInitialize(playbackState->audioUnit);
+            if (err != noErr) {
+                std::cerr << "Error initializing audio unit: " << err << std::endl;
+                return false;
+            }
+            
+            playbackState->isPlaying = true;
+            
+            // Start playback
+            err = AudioOutputUnitStart(playbackState->audioUnit);
+            if (err != noErr) {
+                std::cerr << "Error starting audio unit: " << err << std::endl;
+                return false;
+            }
+        }
+        
+        // Copy audio data
+        {
+            std::unique_lock<std::mutex> lock(playbackState->bufferMutex);
+            playbackState->audioBuffer = buffer;
+            playbackState->position = 0;
+        }
+        
+        return true;
+    }
+    
+    static OSStatus AudioPlaybackCallback(void *inRefCon,
+                                        AudioUnitRenderActionFlags *ioActionFlags,
+                                        const AudioTimeStamp *inTimeStamp,
+                                        UInt32 inBusNumber,
+                                        UInt32 inNumberFrames,
+                                        AudioBufferList *ioData) {
+        AudioCaptureState* state = static_cast<AudioCaptureState*>(inRefCon);
+        if (state && state->playbackState) {
+            return state->playbackState->render(ioActionFlags, inTimeStamp, inBusNumber, inNumberFrames, ioData);
+        }
+        return noErr;
+    }
+    
     int sampleRate{44100};
     int channels{1};
     std::string deviceId;
@@ -306,11 +598,62 @@ Napi::Value StopCapture(const Napi::CallbackInfo& info) {
         return Napi::Boolean::New(env, false);
     }
 }
+Napi::Value PlayAudio(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
+    
+    try {
+        // We expect the audio buffer as the first argument
+        if (info.Length() < 2 || !info[1].IsTypedArray()) {
+            Napi::TypeError::New(env, "Audio buffer (Int16Array) expected as second argument").ThrowAsJavaScriptException();
+            return env.Null();
+        }
+        
+        // Get the audio buffer (second argument)
+        Napi::TypedArray buffer = info[1].As<Napi::TypedArray>();
+        
+        // Verify it's an Int16Array
+        if (buffer.TypedArrayType() != napi_typedarray_type::napi_int16_array) {
+            Napi::TypeError::New(env, "Expected Int16Array for audio data").ThrowAsJavaScriptException();
+            return env.Null();
+        }
+        
+        // Create a new playback state if needed
+        static AudioPlaybackState* playbackState = new AudioPlaybackState();
+        
+        // Copy the audio data to a vector
+        size_t sampleCount = buffer.ElementLength();
+        std::vector<int16_t> audioData(sampleCount);
+        
+        // Get the raw data from the TypedArray
+        void* data = buffer.ArrayBuffer().Data();
+        if (!data) {
+            Napi::Error::New(env, "Failed to get audio data from buffer").ThrowAsJavaScriptException();
+            return env.Null();
+        }
+        
+        // Copy the data
+        memcpy(audioData.data(), data, sampleCount * sizeof(int16_t));
+        
+        // Play the audio
+        bool success = playbackState->playAudio(audioData);
+        
+        return Napi::Boolean::New(env, success);
+    } catch (const std::exception& e) {
+        Napi::Error::New(env, std::string("Error playing audio: ") + e.what())
+            .ThrowAsJavaScriptException();
+        return env.Null();
+    } catch (...) {
+        Napi::Error::New(env, "Unknown error playing audio")
+            .ThrowAsJavaScriptException();
+        return env.Null();
+    }
+}
 
 // Module initialization
 Napi::Object Init(Napi::Env env, Napi::Object exports) {
     exports.Set("startCapture", Napi::Function::New(env, StartCapture));
     exports.Set("stopCapture", Napi::Function::New(env, StopCapture));
+    exports.Set("playAudio", Napi::Function::New(env, PlayAudio));
     return exports;
 }
 
