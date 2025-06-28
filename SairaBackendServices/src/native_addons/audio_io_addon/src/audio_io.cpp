@@ -19,18 +19,38 @@ OSStatus AudioInputCallback(void *inRefCon,
 struct AudioCaptureState {
     AudioComponentInstance audioUnit{nullptr};
     Napi::ThreadSafeFunction tsfn;
-    bool isRunning{false};
-    int sampleRate{44100};
-    int channels{1};
-    std::string deviceId;
+    std::atomic<bool> isRunning{false};
+    std::mutex mutex;
     
     ~AudioCaptureState() {
+        stop();
+    }
+    
+    void stop() {
+        std::lock_guard<std::mutex> lock(mutex);
+        if (!isRunning) return;
+        
+        // Stop the audio unit first
         if (audioUnit) {
             AudioOutputUnitStop(audioUnit);
             AudioUnitUninitialize(audioUnit);
             AudioComponentInstanceDispose(audioUnit);
+            audioUnit = nullptr;
         }
+        
+        // Release the ThreadSafeFunction
+        if (tsfn) {
+            auto status = tsfn.Release();
+            if (status != napi_ok) {
+                std::cerr << "Error releasing ThreadSafeFunction" << std::endl;
+            }
+        }
+        
+        isRunning = false;
     }
+    int sampleRate{44100};
+    int channels{1};
+    std::string deviceId;
 };
 
 // Global state
@@ -268,13 +288,23 @@ Napi::Value StopCapture(const Napi::CallbackInfo& info) {
     Napi::External<AudioCaptureState> external = info[0].As<Napi::External<AudioCaptureState>>();
     AudioCaptureState* state = external.Data();
     
-    if (state) {
-        // The actual cleanup will happen when the external is garbage collected
-        // or when the finalizer runs
-        return Napi::Boolean::New(env, true);
+    if (!state) {
+        return Napi::Boolean::New(env, false);
     }
     
-    return Napi::Boolean::New(env, false);
+    try {
+        // Stop the capture and clean up resources
+        state->stop();
+        return Napi::Boolean::New(env, true);
+    } catch (const std::exception& e) {
+        Napi::Error::New(env, std::string("Error stopping audio capture: ") + e.what())
+            .ThrowAsJavaScriptException();
+        return Napi::Boolean::New(env, false);
+    } catch (...) {
+        Napi::Error::New(env, "Unknown error stopping audio capture")
+            .ThrowAsJavaScriptException();
+        return Napi::Boolean::New(env, false);
+    }
 }
 
 // Module initialization

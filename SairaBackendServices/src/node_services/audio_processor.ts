@@ -29,6 +29,9 @@ interface AudioIOAddon {
   }, callback: (buffer: ArrayBuffer) => void): unknown;
   
   stopCapture(instance: unknown): boolean;
+  
+  // For testing
+  sayHello(): string;
 }
 
 // Load the native addon
@@ -112,6 +115,8 @@ export function stopCapture(stopFunction: () => void): void {
   if (activeCaptures.has(stopFunction)) {
     stopFunction();
     activeCaptures.delete(stopFunction);
+  } else {
+    console.warn('Attempted to stop a capture that is not active');
   }
 }
 
@@ -125,7 +130,12 @@ export function stopAllCaptures(): void {
 
 // For testing purposes
 export function sayHelloFromAddon(): string {
-  return 'Hello from audio_io_addon!';
+  try {
+    return audioAddon.sayHello();
+  } catch (error) {
+    console.error('Error calling native sayHello:', error);
+    return 'Error calling native addon';
+  }
 }
 
 // Export all functionality
