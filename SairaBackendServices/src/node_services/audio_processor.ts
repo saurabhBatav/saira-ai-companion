@@ -21,6 +21,13 @@ const addonPath = path.join(
 );
 
 // Define the native addon interface
+export interface DeviceInfo {
+  id: string;
+  name: string;
+  type: 'input' | 'output';
+  isDefault: boolean;
+}
+
 interface AudioIOAddon {
   startCapture(options: {
     deviceId?: string;
@@ -31,6 +38,8 @@ interface AudioIOAddon {
   stopCapture(instance: unknown): boolean;
   
   playAudio(instance: unknown, audioBuffer: Int16Array): boolean;
+  
+  getDevices(): DeviceInfo[];
   
   // For testing
   sayHello(): string;
@@ -167,11 +176,26 @@ export function sayHelloFromAddon(): string {
   }
 }
 
+/**
+ * Get a list of available audio devices
+ * @returns Promise that resolves to an array of audio devices
+ */
+export async function getDevices(): Promise<DeviceInfo[]> {
+  try {
+    // The native addon's getDevices is synchronous, but we expose it as async for consistency
+    return audioAddon.getDevices();
+  } catch (error) {
+    console.error('Error getting audio devices:', error);
+    return [];
+  }
+}
+
 // Export all functionality
 export default {
   startCapture,
   stopCapture,
   stopAllCaptures,
   playAudio,
+  getDevices,
   sayHelloFromAddon
 };

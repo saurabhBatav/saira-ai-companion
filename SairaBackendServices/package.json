@@ -12,6 +12,7 @@
     "test": "NODE_OPTIONS='--experimental-vm-modules' jest --config=jest.config.js",
     "test:audio": "NODE_OPTIONS='--loader ts-node/esm' node tests/test_audio_addon.ts",
     "test:playback": "NODE_OPTIONS='--loader ts-node/esm' node tests/test_audio_playback.ts",
+    "test:devices": "NODE_OPTIONS='--loader ts-node/esm' node tests/test_audio_devices.ts",
     "lint": "eslint src || true"
   },
   "keywords": [],

@@ -1,11 +1,16 @@
 #include <napi.h>
+#include <AudioUnit/AudioUnit.h>
 #include <AudioToolbox/AudioToolbox.h>
 #include <CoreAudio/CoreAudio.h>
-#include <CoreFoundation/CoreFoundation.h>
+#include <CoreFoundation/CFString.h>
 #include <iostream>
 #include <memory>
 #include <string>
 #include <vector>
+#include <mutex>
+#include <cstring>
+#include <sstream>
+#include <map>
 
 // Forward declarations
 OSStatus AudioInputCallback(void *inRefCon,
@@ -22,6 +27,17 @@ static OSStatus AudioPlaybackCallback(void *inRefCon,
                                     UInt32 inBusNumber,
                                     UInt32 inNumberFrames,
                                     AudioBufferList *ioData);
+
+// Device info structure
+struct AudioDeviceInfo {
+    std::string id;
+    std::string name;
+    bool isInput;
+    bool isDefault;
+};
+
+// Forward declaration for device enumeration
+std::vector<AudioDeviceInfo> EnumerateAudioDevices();
 
 // Audio playback state structure
 struct AudioPlaybackState {
@@ -650,10 +666,172 @@ Napi::Value PlayAudio(const Napi::CallbackInfo& info) {
 }
 
 // Module initialization
+// Helper function to convert CFString to std::string
+static std::string CFStringToStdString(CFStringRef cfStr) {
+    if (!cfStr) return "";
+    
+    CFIndex length = CFStringGetLength(cfStr);
+    CFIndex maxSize = CFStringGetMaximumSizeForEncoding(length, kCFStringEncodingUTF8) + 1;
+    std::string buffer(maxSize, 0);
+    
+    if (CFStringGetCString(cfStr, &buffer[0], maxSize, kCFStringEncodingUTF8)) {
+        buffer.resize(strlen(buffer.c_str()));
+        return buffer;
+    }
+    
+    return "";
+}
+
+// Implementation of device enumeration
+std::vector<AudioDeviceInfo> EnumerateAudioDevices() {
+    std::vector<AudioDeviceInfo> devices;
+    
+    // Get default input and output device IDs
+    AudioDeviceID defaultInputDeviceID = kAudioObjectUnknown;
+    AudioDeviceID defaultOutputDeviceID = kAudioObjectUnknown;
+    
+    UInt32 defaultInputSize = sizeof(AudioDeviceID);
+    AudioObjectPropertyAddress defaultInputAddress = {
+        kAudioHardwarePropertyDefaultInputDevice,
+        kAudioObjectPropertyScopeGlobal,
+        kAudioObjectPropertyElementMain
+    };
+    
+    UInt32 defaultOutputSize = sizeof(AudioDeviceID);
+    AudioObjectPropertyAddress defaultOutputAddress = {
+        kAudioHardwarePropertyDefaultOutputDevice,
+        kAudioObjectPropertyScopeGlobal,
+        kAudioObjectPropertyElementMain
+    };
+    
+    AudioObjectGetPropertyData(kAudioObjectSystemObject, &defaultInputAddress, 0, NULL, &defaultInputSize, &defaultInputDeviceID);
+    AudioObjectGetPropertyData(kAudioObjectSystemObject, &defaultOutputAddress, 0, NULL, &defaultOutputSize, &defaultOutputDeviceID);
+    
+    // Get all audio devices
+    AudioObjectPropertyAddress propertyAddress = {
+        kAudioHardwarePropertyDevices,
+        kAudioObjectPropertyScopeGlobal,
+        kAudioObjectPropertyElementMain
+    };
+    
+    UInt32 dataSize = 0;
+    OSStatus status = AudioObjectGetPropertyDataSize(kAudioObjectSystemObject, &propertyAddress, 0, NULL, &dataSize);
+    if (status != noErr || dataSize == 0) {
+        return devices;
+    }
+    
+    UInt32 deviceCount = dataSize / sizeof(AudioDeviceID);
+    std::vector<AudioDeviceID> deviceIDs(deviceCount);
+    
+    status = AudioObjectGetPropertyData(kAudioObjectSystemObject, &propertyAddress, 0, NULL, &dataSize, deviceIDs.data());
+    if (status != noErr) {
+        return devices;
+    }
+    
+    // Enumerate each device
+    for (const auto& deviceID : deviceIDs) {
+        // Skip invalid devices
+        if (deviceID == kAudioObjectUnknown) continue;
+        
+        // Get device name
+        CFStringRef deviceName = NULL;
+        UInt32 nameSize = sizeof(CFStringRef);
+        propertyAddress.mSelector = kAudioObjectPropertyName;
+        propertyAddress.mScope = kAudioObjectPropertyScopeGlobal;
+        
+        status = AudioObjectGetPropertyData(deviceID, &propertyAddress, 0, NULL, &nameSize, &deviceName);
+        if (status != noErr || !deviceName) continue;
+        
+        std::string name = CFStringToStdString(deviceName);
+        CFRelease(deviceName);
+        
+        // Get device UID (used as a stable identifier)
+        CFStringRef deviceUID = NULL;
+        UInt32 uidSize = sizeof(CFStringRef);
+        propertyAddress.mSelector = kAudioDevicePropertyDeviceUID;
+        
+        status = AudioObjectGetPropertyData(deviceID, &propertyAddress, 0, NULL, &uidSize, &deviceUID);
+        if (status != noErr || !deviceUID) continue;
+        
+        std::string uid = CFStringToStdString(deviceUID);
+        CFRelease(deviceUID);
+        
+        // Check input channels
+        bool hasInput = false;
+        propertyAddress.mSelector = kAudioDevicePropertyStreams;
+        propertyAddress.mScope = kAudioObjectPropertyScopeInput;
+        
+        status = AudioObjectGetPropertyDataSize(deviceID, &propertyAddress, 0, NULL, &dataSize);
+        if (status == noErr && dataSize > 0) {
+            hasInput = true;
+            
+            // Add input device
+            AudioDeviceInfo inputDevice;
+            inputDevice.id = "input:" + uid;
+            inputDevice.name = name + " (Input)";
+            inputDevice.isInput = true;
+            inputDevice.isDefault = (deviceID == defaultInputDeviceID);
+            devices.push_back(inputDevice);
+        }
+        
+        // Check output channels
+        bool hasOutput = false;
+        propertyAddress.mScope = kAudioObjectPropertyScopeOutput;
+        
+        status = AudioObjectGetPropertyDataSize(deviceID, &propertyAddress, 0, NULL, &dataSize);
+        if (status == noErr && dataSize > 0) {
+            hasOutput = true;
+            
+            // Add output device
+            AudioDeviceInfo outputDevice;
+            outputDevice.id = "output:" + uid;
+            outputDevice.name = name + (hasInput ? " (Output)" : "");
+            outputDevice.isInput = false;
+            outputDevice.isDefault = (deviceID == defaultOutputDeviceID);
+            devices.push_back(outputDevice);
+        }
+    }
+    
+    return devices;
+}
+
+// N-API binding for getDevices
+Napi::Value GetDevices(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
+    
+    try {
+        auto devices = EnumerateAudioDevices();
+        Napi::Array result = Napi::Array::New(env, devices.size());
+        
+        for (size_t i = 0; i < devices.size(); i++) {
+            const auto& device = devices[i];
+            Napi::Object deviceObj = Napi::Object::New(env);
+            
+            deviceObj.Set("id", device.id);
+            deviceObj.Set("name", device.name);
+            deviceObj.Set("type", device.isInput ? "input" : "output");
+            deviceObj.Set("isDefault", device.isDefault);
+            
+            result[i] = deviceObj;
+        }
+        
+        return result;
+    } catch (const std::exception& e) {
+        Napi::Error::New(env, std::string("Error enumerating audio devices: ") + e.what())
+            .ThrowAsJavaScriptException();
+        return env.Null();
+    } catch (...) {
+        Napi::Error::New(env, "Unknown error enumerating audio devices")
+            .ThrowAsJavaScriptException();
+        return env.Null();
+    }
+}
+
 Napi::Object Init(Napi::Env env, Napi::Object exports) {
     exports.Set("startCapture", Napi::Function::New(env, StartCapture));
     exports.Set("stopCapture", Napi::Function::New(env, StopCapture));
     exports.Set("playAudio", Napi::Function::New(env, PlayAudio));
+    exports.Set("getDevices", Napi::Function::New(env, GetDevices));
     return exports;
 }
 
