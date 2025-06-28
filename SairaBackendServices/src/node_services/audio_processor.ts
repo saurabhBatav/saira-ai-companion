@@ -2,7 +2,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { createRequire } from 'module';
 
-// Get directory name in ESM
+// Get the current module's directory
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -20,26 +20,118 @@ const addonPath = path.join(
   'audio_io_addon.node'
 );
 
-// Load the native addon
-let audioIOAddon: { hello: () => string };
+// Define the native addon interface
+interface AudioIOAddon {
+  startCapture(options: {
+    deviceId?: string;
+    sampleRate: number;
+    channels: number;
+  }, callback: (buffer: ArrayBuffer) => void): unknown;
+  
+  stopCapture(instance: unknown): boolean;
+}
 
-try {
-  // @ts-ignore - We know the shape of our addon
-  audioIOAddon = require(addonPath);
-} catch (error) {
-  console.error('Failed to load audio_io_addon:', error);
-  throw new Error('Native audio addon could not be loaded. Please ensure it is built correctly.');
+// Load the native addon
+const audioAddon: AudioIOAddon = require(addonPath);
+
+// Track active capture instances
+const activeCaptures: Set<() => void> = new Set();
+
+// Clean up all active captures on process exit
+process.on('exit', () => {
+  activeCaptures.forEach(stop => stop());
+  activeCaptures.clear();
+});
+
+// Handle process termination signals
+['SIGINT', 'SIGTERM'].forEach(signal => {
+  process.on(signal, () => {
+    activeCaptures.forEach(stop => stop());
+    activeCaptures.clear();
+    process.exit(0);
+  });
+});
+
+/**
+ * Audio capture options
+ */
+export interface AudioCaptureOptions {
+  /** Device ID (optional, uses default if not specified) */
+  deviceId?: string;
+  /** Sample rate in Hz (e.g., 44100, 48000) */
+  sampleRate: number;
+  /** Number of audio channels (1 for mono, 2 for stereo) */
+  channels: number;
 }
 
 /**
- * Returns a greeting message from the native addon
- * @returns {string} A greeting message from the native addon
+ * Start capturing audio from the default input device
+ * @param options Audio capture options
+ * @param callback Function to call with audio data
+ * @returns A function to stop the capture
  */
-export function sayHelloFromAddon(): string {
-  return audioIOAddon.hello();
+export function startCapture(
+  options: Partial<AudioCaptureOptions> = {},
+  callback: (buffer: ArrayBuffer) => void
+): () => void {
+  // Set default values
+  const captureOptions: AudioCaptureOptions = {
+    sampleRate: 44100,
+    channels: 1,
+    ...options
+  };
+
+  try {
+    // Start the capture and store the instance
+    const instance = audioAddon.startCapture(captureOptions, callback);
+    
+    // Create a stop function that properly cleans up
+    const stopCapture = () => {
+      if (typeof instance === 'function') {
+        instance();
+      } else if (typeof instance === 'object' && instance !== null) {
+        audioAddon.stopCapture(instance);
+      }
+      activeCaptures.delete(stopCapture);
+    };
+    
+    // Store the stop function for cleanup
+    activeCaptures.add(stopCapture);
+    return stopCapture;
+  } catch (error) {
+    console.error('Failed to start audio capture:', error);
+    throw new Error(`Audio capture failed to start: ${error instanceof Error ? error.message : String(error)}`);
+  }
 }
 
-// Export other audio processing functions here
+/**
+ * Stop a specific audio capture instance
+ * @param stopFunction The stop function returned by startCapture
+ */
+export function stopCapture(stopFunction: () => void): void {
+  if (activeCaptures.has(stopFunction)) {
+    stopFunction();
+    activeCaptures.delete(stopFunction);
+  }
+}
+
+/**
+ * Stop all active audio captures
+ */
+export function stopAllCaptures(): void {
+  activeCaptures.forEach(stop => stop());
+  activeCaptures.clear();
+}
+
+// For testing purposes
+export function sayHelloFromAddon(): string {
+  return 'Hello from audio_io_addon!';
+}
+
+// Export all functionality
 export default {
-  sayHelloFromAddon,
+  startCapture,
+  stopCapture,
+  stopAllCaptures,
+  sayHelloFromAddon
 };
