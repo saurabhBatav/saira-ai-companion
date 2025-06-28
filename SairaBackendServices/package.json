@@ -1,7 +1,7 @@
 {
   "name": "sairabackendservices",
   "version": "1.0.0",
-  "description": "",
+  "description": "This directory houses the backend services for **Saira – The Emotion-Aware Life Companion AI**. It provides Node.js (TypeScript) and Python-based services to handle AI inference, audio I/O, SQLite data operations, and native addon integrations. Designed for cross-process communication with the macOS frontend, this backend acts as the brain and memory core of the assistant.",
   "main": "index.js",
   "directories": {
     "test": "tests"
@@ -33,6 +33,7 @@
   "dependencies": {
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
+    "node-addon-api": "^8.4.0",
     "winston": "^3.17.0"
   }
 }

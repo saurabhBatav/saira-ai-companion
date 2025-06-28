@@ -47,6 +47,9 @@ Saira/**/fastlane/Preview.html
 Saira/**/fastlane/screenshots
 Saira/**/fastlane/test_output
 
+# Native Addons Build
+SairaBackendServices/src/native_addons/audio_io_addon/build/
+
 # Ruby / CocoaPods
 Saira/**/Pods/
 Saira/vendor/bundle/
