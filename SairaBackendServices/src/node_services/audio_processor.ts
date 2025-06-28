@@ -48,8 +48,13 @@ interface AudioIOAddon {
 // Load the native addon
 const audioAddon: AudioIOAddon = require(addonPath);
 
-// Track active capture instances
-const activeCaptures: Set<() => void> = new Set();
+// Track active capture instances and their corresponding instances
+const activeCaptures: Map<() => void, any> = new Map();
+
+// For testing purposes
+export function _getActiveInstance(stopFunction: () => void): any | null {
+  return activeCaptures.get(stopFunction) || null;
+}
 
 // Clean up all active captures on process exit
 process.on('exit', () => {
@@ -109,8 +114,8 @@ export function startCapture(
       activeCaptures.delete(stopCapture);
     };
     
-    // Store the stop function for cleanup
-    activeCaptures.add(stopCapture);
+    // Store the stop function and instance for cleanup
+    activeCaptures.set(stopCapture, instance);
     return stopCapture;
   } catch (error) {
     console.error('Failed to start audio capture:', error);

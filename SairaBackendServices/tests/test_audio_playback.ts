@@ -1,4 +1,8 @@
-import { startCapture, playAudio, stopAllCaptures, AudioCaptureOptions } from '../src/node_services/audio_processor.js';
+import { startCapture, playAudio, stopAllCaptures, AudioCaptureOptions, _getActiveInstance } from '../src/node_services/audio_processor.js';
+
+// Global audio capture instance for testing
+let stopCapture: (() => void) | null = null;
+let audioInstance: any = null;
 
 /**
  * Generate a sine wave audio buffer
@@ -28,10 +32,41 @@ async function testAudioPlayback() {
   console.log('🚀 Starting audio playback test...');
   
   try {
+    // Initialize audio capture instance for playback
+    console.log('Initializing audio capture instance...');
+    
+    // Start audio capture and get the instance
+    stopCapture = startCapture({ sampleRate: 16000, channels: 1 }, () => {
+      // This callback is required but we don't need to do anything with the captured audio
+    });
+    
+    // Get the instance using our helper function
+    audioInstance = _getActiveInstance(stopCapture);
+    
+    if (!audioInstance) {
+      throw new Error('Failed to get audio instance');
+    }
+    
+    // Wait a bit for the audio system to initialize
+    await new Promise(resolve => setTimeout(resolve, 500));
+    // Helper function to ensure we have a valid audio instance
+    const ensureAudioInstance = () => {
+      if (!audioInstance) {
+        if (!stopCapture) {
+          throw new Error('Audio capture not initialized');
+        }
+        audioInstance = _getActiveInstance(stopCapture);
+        if (!audioInstance) {
+          throw new Error('No active audio instance available');
+        }
+      }
+      return audioInstance;
+    };
+
     // Test 1: Play a simple 440Hz sine wave (A4 note)
     console.log('\n🔊 Test 1: Playing 440Hz sine wave (A4 note) for 1 second...');
     const testTone1 = generateSineWave(440, 1000);
-    if (!playAudio(testTone1)) {
+    if (!playAudio(testTone1, ensureAudioInstance())) {
       console.error('❌ Test 1 failed: Could not play 440Hz tone');
       return;
     }
@@ -43,7 +78,7 @@ async function testAudioPlayback() {
       const freq = frequencies[i];
       console.log(`\n🔊 Test 2.${i + 1}: Playing ${freq.toFixed(2)}Hz tone for 0.5s...`);
       const tone = generateSineWave(freq, 500);
-      if (!playAudio(tone)) {
+      if (!playAudio(tone, ensureAudioInstance())) {
         console.error(`❌ Test 2.${i + 1} failed: Could not play ${freq}Hz tone`);
         return;
       }
@@ -57,7 +92,7 @@ async function testAudioPlayback() {
       const volume = volumes[i];
       console.log(`\n🔊 Test 3.${i + 1}: Playing 440Hz at ${Math.round(volume * 100)}% volume...`);
       const tone = generateSineWave(440, 500, 16000, volume);
-      if (!playAudio(tone)) {
+      if (!playAudio(tone, ensureAudioInstance())) {
         console.error(`❌ Test 3.${i + 1} failed: Could not play at ${volume} volume`);
         return;
       }
@@ -87,7 +122,7 @@ async function testAudioPlayback() {
     for (let i = 0; i < melody.length; i++) {
       const note = melody[i];
       const tone = generateSineWave(note.freq, note.duration);
-      if (!playAudio(tone)) {
+      if (!playAudio(tone, ensureAudioInstance())) {
         console.error(`❌ Test 4 failed at note ${i + 1}`);
         return;
       }
@@ -100,10 +135,14 @@ async function testAudioPlayback() {
   } catch (error) {
     console.error('❌ Audio playback test failed:', error);
   } finally {
-    // Ensure all captures are stopped
+    // Clean up
+    console.log('Cleaning up...');
+    if (stopCapture) {
+      stopCapture();
+    }
     stopAllCaptures();
-    process.exit(0);
-  }
+  } 
+  process.exit(0);
 }
 
 // Run the test
