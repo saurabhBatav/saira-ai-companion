@@ -37,6 +37,8 @@
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "node-addon-api": "^8.4.0",
+    "node-llama-cpp": "^3.10.0",
+    "smart-whisper": "^0.8.1",
     "winston": "^3.17.0"
   }
 }

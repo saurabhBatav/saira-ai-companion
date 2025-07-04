@@ -1,0 +1,1 @@
+cmd_Release/ai_inference_addon.node := c++ -bundle -undefined dynamic_lookup -Wl,-search_paths_first -mmacosx-version-min=10.15 -arch arm64 -L./Release -stdlib=libc++  -o Release/ai_inference_addon.node Release/obj.target/ai_inference_addon/../src/ai_inference_addon.o 
